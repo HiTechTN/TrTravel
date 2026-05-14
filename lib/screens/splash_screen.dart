@@ -10,6 +10,23 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+class AnimatedBuilder extends AnimatedWidget {
+  final Widget Function(BuildContext, Widget?) builder;
+  final Widget? child;
+
+  const AnimatedBuilder({
+    super.key,
+    required Animation<double> animation,
+    required this.builder,
+    this.child,
+  }) : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    return builder(context, child);
+  }
+}
+
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -88,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             stops: [0.0, 0.5, 1.0],
           ),
         ),
-        child: SafeArea(
+child: SafeArea(
           child: Center(
             child: AnimatedBuilder(
               animation: _controller,

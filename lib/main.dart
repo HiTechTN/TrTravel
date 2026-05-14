@@ -20,26 +20,38 @@ import 'screens/main_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final services = await _initializeServices();
+  try {
+    final services = await _initializeServices();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: services.itinerary),
-        ChangeNotifierProvider(create: (_) => ItineraryGeneratorService()),
-        ChangeNotifierProvider.value(value: services.currency),
-        ChangeNotifierProvider(create: (_) => ExchangeOfficeService()),
-        ChangeNotifierProvider.value(value: services.offline),
-        ChangeNotifierProvider(create: (_) => TranslationService()),
-        ChangeNotifierProvider(create: (_) => JournalService()),
-        ChangeNotifierProvider(create: (_) => TravelAssistant()),
-        ChangeNotifierProvider.value(value: services.shopping),
-        ChangeNotifierProvider.value(value: services.appUpdate),
-        ChangeNotifierProvider.value(value: services.pushNotification),
-      ],
-      child: const TrTravelApp(),
-    ),
-  );
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: services.itinerary),
+          ChangeNotifierProvider(create: (_) => ItineraryGeneratorService()),
+          ChangeNotifierProvider.value(value: services.currency),
+          ChangeNotifierProvider(create: (_) => ExchangeOfficeService()),
+          ChangeNotifierProvider.value(value: services.offline),
+          ChangeNotifierProvider(create: (_) => TranslationService()),
+          ChangeNotifierProvider(create: (_) => JournalService()),
+          ChangeNotifierProvider(create: (_) => TravelAssistant()),
+          ChangeNotifierProvider.value(value: services.shopping),
+          ChangeNotifierProvider.value(value: services.appUpdate),
+          ChangeNotifierProvider.value(value: services.pushNotification),
+        ],
+        child: const TrTravelApp(),
+      ),
+    );
+  } catch (e, stack) {
+    print('Fatal error during initialization: $e');
+    print('Stack trace: $stack');
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Erreur de démarrage: $e'),
+        ),
+      ),
+    ));
+  }
 }
 
 Future<_InitializedServices> _initializeServices() async {
