@@ -35,9 +35,37 @@ class _MainScreenState extends State<MainScreen> {
     const OfflineSettingsScreen(),
   ];
 
+  // Note: _screens list is kept for documentation but _buildCurrentScreen() uses switch-case
+  // to avoid IndexedStack rendering issues that cause gray/white overlay on RedMagic 10s Pro
+
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
     HapticFeedback.selectionClick();
+  }
+
+  Widget _buildCurrentScreen() {
+    switch (_selectedIndex) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const TranslationScreen();
+      case 2:
+        return const CurrencyScreen();
+      case 3:
+        return const ItineraryGeneratorScreen();
+      case 4:
+        return const MapScreen();
+      case 5:
+        return const JournalScreen();
+      case 6:
+        return const TravelAssistantScreen();
+      case 7:
+        return const TravelWikisScreen();
+      case 8:
+        return const OfflineSettingsScreen();
+      default:
+        return const HomeScreen();
+    }
   }
 
   void _showQuickActions() {
@@ -279,10 +307,7 @@ class _MainScreenState extends State<MainScreen> {
         stops: [0.0, 1.0],
       ),
     ),
-    child: IndexedStack(
-      index: _selectedIndex,
-      children: _screens,
-    ),
+    child: _buildCurrentScreen(),
   ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
