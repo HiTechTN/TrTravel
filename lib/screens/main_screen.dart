@@ -20,52 +20,190 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  late AnimationController _fabAnimController;
+  late Animation<double> _fabScaleAnimation;
 
-  final List<Widget> _screens = <Widget>[
-    const HomeScreen(),
-    const TranslationScreen(),
-    const CurrencyScreen(),
-    const ItineraryGeneratorScreen(),
-    const MapScreen(),
-    const JournalScreen(),
-    const TravelAssistantScreen(),
-    const TravelWikisScreen(),
-    const OfflineSettingsScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fabAnimController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fabScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fabAnimController, curve: Curves.elasticOut),
+    );
+    _fabAnimController.forward();
+  }
 
-  // Note: _screens list is kept for documentation but _buildCurrentScreen() uses switch-case
-  // to avoid IndexedStack rendering issues that cause gray/white overlay on RedMagic 10s Pro
+  @override
+  void dispose() {
+    _fabAnimController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
     HapticFeedback.selectionClick();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // Use AnnotatedRegion to control system UI without Scaffold interference
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFFE30A17),
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            // Background gradient
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFFE30A17), Color(0xFFCC0815)],
+                  stops: [0.0, 1.0],
+                ),
+              ),
+            ),
+            // Active screen content
+            _buildCurrentScreen(),
+            // Bottom navigation bar overlay
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  child: NavigationBar(
+                    selectedIndex: _selectedIndex,
+                    onDestinationSelected: _onItemTapped,
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                    height: 72,
+                    indicatorColor: const Color(0xFFE30A17).withValues(alpha: 0.1),
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.home_outlined, size: 26),
+                        selectedIcon: Icon(Icons.home, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Accueil',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.translate_outlined, size: 26),
+                        selectedIcon: Icon(Icons.translate, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Traduire',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.currency_exchange_outlined, size: 26),
+                        selectedIcon: Icon(Icons.currency_exchange, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Change',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.route_outlined, size: 26),
+                        selectedIcon: Icon(Icons.route, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Itinéraire',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.map_outlined, size: 26),
+                        selectedIcon: Icon(Icons.map, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Carte',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.book_outlined, size: 26),
+                        selectedIcon: Icon(Icons.book, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Journal',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.support_agent_outlined, size: 26),
+                        selectedIcon: Icon(Icons.support_agent, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Assistant',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.menu_book_outlined, size: 26),
+                        selectedIcon: Icon(Icons.menu_book, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Wiki',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.settings_outlined, size: 26),
+                        selectedIcon: Icon(Icons.settings, size: 26, color: Color(0xFFE30A17)),
+                        label: 'Paramètres',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Floating Action Button
+            Positioned(
+              right: 20,
+              bottom: 90,
+              child: ScaleTransition(
+                scale: _fabScaleAnimation,
+                child: const FloatingTravelAssistant(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildCurrentScreen() {
-    switch (_selectedIndex) {
-      case 0:
-        return const HomeScreen();
-      case 1:
-        return const TranslationScreen();
-      case 2:
-        return const CurrencyScreen();
-      case 3:
-        return const ItineraryGeneratorScreen();
-      case 4:
-        return const MapScreen();
-      case 5:
-        return const JournalScreen();
-      case 6:
-        return const TravelAssistantScreen();
-      case 7:
-        return const TravelWikisScreen();
-      case 8:
-        return const OfflineSettingsScreen();
-      default:
-        return const HomeScreen();
-    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 80), // Space for bottom nav
+      child: Builder(
+        builder: (context) {
+          switch (_selectedIndex) {
+            case 0:
+              return const HomeScreen();
+            case 1:
+              return const TranslationScreen();
+            case 2:
+              return const CurrencyScreen();
+            case 3:
+              return const ItineraryGeneratorScreen();
+            case 4:
+              return const MapScreen();
+            case 5:
+              return const JournalScreen();
+            case 6:
+              return const TravelAssistantScreen();
+            case 7:
+              return const TravelWikisScreen();
+            case 8:
+              return const OfflineSettingsScreen();
+            default:
+              return const HomeScreen();
+          }
+        },
+      ),
+    );
   }
 
   void _showQuickActions() {
@@ -73,7 +211,7 @@ class _MainScreenState extends State<MainScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       builder: (context) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -249,144 +387,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Color(0xFFE30A17),
-          statusBarIconBrightness: Brightness.light,
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.flight_takeoff, size: 18, color: Colors.white),
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'TrTravel',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.flash_on, size: 20),
-            ),
-            onPressed: _showQuickActions,
-          ),
-        ],
-      ),
-  body: Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Color(0xFFE30A17), Color(0xFFCC0815)],
-        stops: [0.0, 1.0],
-      ),
-    ),
-    child: _buildCurrentScreen(),
-  ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
-            ),
-          ],
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          child: NavigationBar(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onItemTapped,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            height: 72,
-            indicatorColor: const Color(0xFFE30A17).withValues(alpha: 0.1),
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.home_outlined, size: 26),
-                selectedIcon: Icon(Icons.home, size: 26, color: Color(0xFFE30A17)),
-                label: 'Accueil',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.translate_outlined, size: 26),
-                selectedIcon: Icon(Icons.translate, size: 26, color: Color(0xFFE30A17)),
-                label: 'Traduire',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.currency_exchange_outlined, size: 26),
-                selectedIcon: Icon(Icons.currency_exchange, size: 26, color: Color(0xFFE30A17)),
-                label: 'Change',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.route_outlined, size: 26),
-                selectedIcon: Icon(Icons.route, size: 26, color: Color(0xFFE30A17)),
-                label: 'Itinéraire',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.map_outlined, size: 26),
-                selectedIcon: Icon(Icons.map, size: 26, color: Color(0xFFE30A17)),
-                label: 'Carte',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.book_outlined, size: 26),
-                selectedIcon: Icon(Icons.book, size: 26, color: Color(0xFFE30A17)),
-                label: 'Journal',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.support_agent_outlined, size: 26),
-                selectedIcon: Icon(Icons.support_agent, size: 26, color: Color(0xFFE30A17)),
-                label: 'Assistant',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.menu_book_outlined, size: 26),
-                selectedIcon: Icon(Icons.menu_book, size: 26, color: Color(0xFFE30A17)),
-                label: 'Wiki',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.settings_outlined, size: 26),
-                selectedIcon: Icon(Icons.settings, size: 26, color: Color(0xFFE30A17)),
-                label: 'Paramètres',
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: const FloatingTravelAssistant(),
     );
   }
 }
