@@ -12,11 +12,15 @@ import 'services/journal_service.dart';
 import 'services/travel_assistant_service.dart';
 import 'services/shopping_service.dart';
 import 'services/app_update_service.dart';
+import 'services/push_notification_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.initialize();
   
   final offlineService = OfflineService();
   await offlineService.init();
@@ -45,6 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TravelAssistant()),
         ChangeNotifierProvider.value(value: shoppingService),
         ChangeNotifierProvider.value(value: appUpdateService),
+        ChangeNotifierProvider.value(value: pushNotificationService),
       ],
       child: const TrTravelApp(),
     ),
