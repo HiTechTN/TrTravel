@@ -270,29 +270,20 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFE30A17), Color(0xFFCC0815)],
-            stops: [0.0, 1.0],
-          ),
-        ),
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF5F7FA),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(0),
-              topRight: Radius.circular(0),
-            ),
-          ),
-          child: IndexedStack(
-            index: _selectedIndex,
-            children: _screens,
-          ),
-        ),
+  body: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Color(0xFFE30A17), Color(0xFFCC0815)],
+        stops: [0.0, 1.0],
       ),
+    ),
+    child: IndexedStack(
+      index: _selectedIndex,
+      children: _screens,
+    ),
+  ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
