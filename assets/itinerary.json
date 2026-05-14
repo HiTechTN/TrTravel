@@ -1,0 +1,483 @@
+[
+  {
+    "date": "04 JUILLET 2026",
+    "dayName": "SAMEDI",
+    "location": "ISTANBUL -> ANTALYA",
+    "activities": [
+      {
+        "time": "03H00",
+        "description": "ARRIVÉE À L’AÉROPORT DE TUNIS CARTHAGE"
+      },
+      {
+        "time": "05H30",
+        "description": "DÉPART SUR LE VOL NOUVELAIR BJ640 VERS ISTANBUL"
+      },
+      {
+        "time": "10H20",
+        "description": "ARRIVÉE A L’AEROPORT D’ISTANBUL"
+      },
+      {
+        "time": "12H00",
+        "description": "SORTIE DE L’AEROPORT D’INSTANBUL",
+        "details": "CHANGE ET RECHARGE ISTANBUL KARD"
+      },
+      {
+        "time": "12H40",
+        "description": "NAVETTE EN BUS VERS LA GARE D’ESENLER",
+        "details": "QUAI N°5 – BUS N° HVL-3 DIRECTION OTOGAR ESENLER"
+      },
+      {
+        "time": "14H00",
+        "description": "ARRIVE A LA GARE D’ESENLER",
+        "details": "MISE DES BAGAGES DANS LA CONSIGNE ET DIRECTION LE MALL FORUM ISTANBUL (13MN À PIED)"
+      },
+      {
+        "time": "14H30",
+        "description": "DEJEUNER ET SHOPPING AU MALL FORM"
+      },
+      {
+        "time": "19H15",
+        "description": "RETOUR A PIED VERS LA GARE ESENLER"
+      },
+      {
+        "time": "20H30",
+        "description": "DEPART EN BUS A DESTINATION D’ANTALYA",
+        "details": "QUAI N°141-146 – LIGNE N° KK0701 À DESTINATION DE LA GARE ROUTIÈRE D'ANTALYA"
+      }
+    ]
+  },
+  {
+    "date": "05 JUILLET 2026",
+    "dayName": "DIMANCHE",
+    "location": "ANTALYA",
+    "activities": [
+      {
+        "time": "10H45",
+        "description": "ARRIVEE A LA GARE ROUTIERE D’ANTALYA",
+        "details": "ACHAT ET RECHARGE ANTALYA KARD"
+      },
+      {
+        "time": "11H32",
+        "description": "DEPART EN BUS VERS L’HOTEL",
+        "details": "STATION CEBESOY CD-10 ; BUS N° TC16A"
+      },
+      {
+        "time": "11H38",
+        "description": "DÉCENTE À BEŞŞEHITLER PARK (À 4MN À PIED DE L’HOTEL)"
+      },
+      {
+        "time": "11H45",
+        "description": "ARRIVEE A L’HÔTEL BLUE MARINA ANTALYA"
+      },
+      {
+        "time": "12H00",
+        "description": "CHECK’IN ET REPOS"
+      },
+      {
+        "time": "15H00",
+        "description": "DÉPART A PIED VERS LA VIEILLE VILLE"
+      },
+      {
+        "time": "15H30",
+        "description": "DEJEUNER"
+      },
+      {
+        "time": "16H00 – 18H30",
+        "description": "VISITE DU CENTRE VILLE DE KALEIÇI: LA PORTE D’HADRIEN, LA TOUR D'HIDIRLIK …"
+      },
+      {
+        "time": "18H30",
+        "description": "RETOUR A L’HÔTEL – REPOS"
+      },
+      {
+        "time": "20H30",
+        "description": "DEPART VERS KALEIÇI POUR DINER ET SOIRÉE DANCANTE"
+      },
+      {
+        "time": "22H30",
+        "description": "RETOUR A L’HOTEL"
+      }
+    ]
+  },
+  {
+    "date": "06 JUILLET 2026",
+    "dayName": "LUNDI",
+    "location": "ANTALYA",
+    "activities": [
+      {
+        "time": "09H00",
+        "description": "PETIT DEJEUNER A L’HÖTEL"
+      },
+      {
+        "time": "10H30",
+        "description": "DÉPART EN BUS VERS LA PLAGE DE KONYAALTI"
+      },
+      {
+        "time": "11H00",
+        "description": "ARRIVÉE SUR PLACE : DÉTENTE SOUS LE PARASOL, BAIGNADE, DÉJEUNER…"
+      },
+      {
+        "time": "17H00",
+        "description": "DÉPART VERS LE MALL MARKANTALYA POUR SHOPPING"
+      },
+      {
+        "time": "17H30 – 20H00",
+        "description": "SHOPPING A MARKANTALYA"
+      },
+      {
+        "time": "20H00",
+        "description": "RETOUR À L’HOTEL – REPOS"
+      },
+      {
+        "time": "21H30",
+        "description": "DÉPART VERS LA MARINA POUR DINER ET SOIRÉE DANCANTE, BOITE DE NUIT …"
+      },
+      {
+        "time": "01H00",
+        "description": "RETOUR A L’HÔTEL - REPOS"
+      }
+    ]
+  },
+  {
+    "date": "07 JUILLET 2026",
+    "dayName": "MARDI",
+    "location": "ANTALYA",
+    "activities": [
+      {
+        "time": "08H00",
+        "description": "PETIT DEJEUNER A L’HÖTEL"
+      },
+      {
+        "time": "08H30",
+        "description": "RAMASSAGE EN BUS DEPUIS L’HOTEL VERS LA BALADE EN MER EN BATEAU"
+      },
+      {
+        "time": "09H00",
+        "description": "ARRIVÉE AU PORT DE PLAISANCE",
+        "details": "DEPART EN BATEAU VERS L’ILE DE SULUADA : BALADE EN MER, BAIGNADE DANS LES EAUX CRISTALINE, DÉJEUNER, PHOTOS A LA GROTTE …"
+      },
+      {
+        "time": "17H30",
+        "description": "RETOUR EN BUS À L’HÔTEL"
+      },
+      {
+        "time": "18H00",
+        "description": "ARRIVÉE À L’HÔTEL - REPOS"
+      },
+      {
+        "time": "20H30",
+        "description": "DEPART POUR BEACH PARTY"
+      },
+      {
+        "time": "00H00",
+        "description": "RETOUR À L’HÔTEL"
+      }
+    ]
+  },
+  {
+    "date": "08 JUILLET 2026",
+    "dayName": "MERCREDI",
+    "location": "ANTALYA",
+    "activities": [
+      {
+        "time": "09H00",
+        "description": "PETIT DÉJEUNER À L’HÔTEL"
+      },
+      {
+        "time": "09H30",
+        "description": "DÉPART VERS LES CHUTTES DE DÜDEN"
+      },
+      {
+        "time": "10H00 – 11H30",
+        "description": "VISITE DES CASCADES (INFÉRIEURES ET SUPÉRIEURES)"
+      },
+      {
+        "time": "11H30",
+        "description": "DÉPART EN BUS POUR SHOPPING AU MALL OF ANTALYA"
+      },
+      {
+        "time": "12H00 – 16H00",
+        "description": "SHOPPING"
+      },
+      {
+        "time": "13H30",
+        "description": "PAUSE DÉJEUNER SUR PLACE"
+      },
+      {
+        "time": "16H00",
+        "description": "RETOUR À L’HÔTEL – REPOS"
+      },
+      {
+        "time": "18H30",
+        "description": "DÉPART EN BUS VERS LE PARC « THE LAND OF LEGENDS » POUR LE SHOW DE NUIT ET SOIRÉE"
+      },
+      {
+        "time": "20H00",
+        "description": "ARRIVÉE AU PARC D’ATTRACTION"
+      },
+      {
+        "time": "20H – 22H",
+        "description": "SPECTACLE DE NUITS"
+      },
+      {
+        "time": "22H00",
+        "description": "BALADE AU CENTRE COMMERCIAL"
+      },
+      {
+        "time": "23H00",
+        "description": "RETOUR EN BUS VERS L’HÔTEL"
+      },
+      {
+        "time": "00H30",
+        "description": "ARRIVÉE À L’HÔTEL"
+      }
+    ]
+  },
+  {
+    "date": "09 JUILLET 2026",
+    "dayName": "JEUDI",
+    "location": "KOPRULU CANYON",
+    "activities": [
+      {
+        "time": "07H00",
+        "description": "PETIT DÉJEUNER À L’HÔTEL"
+      },
+      {
+        "time": "07H30",
+        "description": "RAMASSAGE EN BUS DE L’HOTEL VERS LE PARC NATIONAL DE KOPRULU CANYON"
+      },
+      {
+        "time": "09H30",
+        "description": "ARRIVÉE AU PARC"
+      },
+      {
+        "time": "09H30 – 16H30",
+        "description": "RAFTING ET LE CANYONING"
+      },
+      {
+        "time": "12H30",
+        "description": "BAIGNADE ET DE DÉJEUNER AU BORD DE LA RIVIÈRE"
+      },
+      {
+        "time": "16H30",
+        "description": "RETOUR EN BUS À L’HÔTEL"
+      },
+      {
+        "time": "18H30",
+        "description": "ARRIVÉE À L’HÔTEL – REPOS"
+      },
+      {
+        "time": "21H30",
+        "description": "DÉPART VERS LA MARINA POUR DINER ROMANTIQUE"
+      },
+      {
+        "time": "01H00",
+        "description": "RETOUR A L’HÔTEL - REPOS"
+      }
+    ]
+  },
+  {
+    "date": "10 JUILLET 2026",
+    "dayName": "VENDREDI",
+    "location": "ANTALYA",
+    "activities": [
+      {
+        "time": "09H00",
+        "description": "PETIT DÉJEUNER À L’HÔTEL"
+      },
+      {
+        "time": "09H30",
+        "description": "DÉPART EN BUS VERS LE MALL MARKANTALYA POUR SHOPPING"
+      },
+      {
+        "time": "10H00 – 13H30",
+        "description": "SHOPPING AU MALL MARKANTALYA"
+      },
+      {
+        "time": "13H30",
+        "description": "DÉJEUNER AU MALL"
+      },
+      {
+        "time": "14H00",
+        "description": "RETOUR A L’HÔTEL"
+      },
+      {
+        "time": "15H00",
+        "description": "DÉPART VERS LARA BEACH POUR UN APRÈS MIDI DÉTENTE"
+      },
+      {
+        "time": "16H00 – 20H00",
+        "description": "APRÈS MIDI DÉTENTE A LARA BEACH"
+      },
+      {
+        "time": "20H00",
+        "description": "RETOUR EN BUS À L’HÔTEL"
+      },
+      {
+        "time": "20H30",
+        "description": "ARRIVÉE À L’HÔTEL REPOS"
+      },
+      {
+        "time": "22H00",
+        "description": "DEPART POUR SOIREE A KALEIÇI"
+      },
+      {
+        "time": "01H00",
+        "description": "RETOUR À L’HÔTEL"
+      }
+    ]
+  },
+  {
+    "date": "11 JUILLET 2026",
+    "dayName": "SAMEDI",
+    "location": "ÇIRALI BEACH -> ISTANBUL",
+    "activities": [
+      {
+        "time": "09H00",
+        "description": "PETIT DÉJEUNER À L’HÔTEL"
+      },
+      {
+        "time": "09H30",
+        "description": "DÉPART VERS ÇIRALI BEACH"
+      },
+      {
+        "time": "10H00",
+        "description": "ARRIVÉE À LA PLAGE ÇIRALI BEACH",
+        "details": "DÉTENTE SOUS LE PARASOL, BAIGNADE, DÉJEUNER…"
+      },
+      {
+        "time": "18H00",
+        "description": "RETOUR À L’HÔTEL POUR RÉCUPÉRER LES BAGAGES"
+      },
+      {
+        "time": "19H00",
+        "description": "DÉPART EN BUS VERS LA ROUTIERE D’ANTALYA"
+      },
+      {
+        "time": "19H30",
+        "description": "ARRIVÉE À LA GARE ROUTIÈRE"
+      },
+      {
+        "time": "20H30",
+        "description": "DÉPART EN BUS VERS ISTANBUL",
+        "details": "QUAI N°10-14 – LIGNE N° KK0701 À DESTINATION DE LA GARE ROUTIÈRE D’ISTANBUL ESELNER"
+      }
+    ]
+  },
+  {
+    "date": "12 JUILLET 2026",
+    "dayName": "DIMANCHE",
+    "location": "ISTANBUL",
+    "activities": [
+      {
+        "time": "10H00",
+        "description": "ARRIVÉE À LA GARE D’ESENLER"
+      },
+      {
+        "time": "10H30",
+        "description": "DEPART EN TAXI VERS L’HOTEL GONEN TAKSIM"
+      },
+      {
+        "time": "11H00",
+        "description": "ARRIVÉE À L’HÔTEL GONEN TAKSIM",
+        "details": "CHECK’IN ET REPOS"
+      },
+      {
+        "time": "14H00",
+        "description": "DÉJEUNER À TAKSIM"
+      },
+      {
+        "time": "15H00 – 18H00",
+        "description": "BALADE A TAKSIM"
+      },
+      {
+        "time": "18H00",
+        "description": "RETOUR À L’HÔTEL – REPOS"
+      },
+      {
+        "time": "21H00",
+        "description": "DEPART VERS GALATA & GALATA PORT"
+      },
+      {
+        "time": "23H00",
+        "description": "GÂTEAU ET CAFE CHEZ HAFIZ MUSTAFA"
+      },
+      {
+        "time": "00H00",
+        "description": "RETOUR À L’HÔTEL",
+        "details": "REPOS"
+      }
+    ]
+  },
+  {
+    "date": "13 JUILLET 2026",
+    "dayName": "LUNDI",
+    "location": "ISTANBUL",
+    "activities": [
+      {
+        "time": "09H00",
+        "description": "PETIT DEJEUNER À L’HÔTEL"
+      },
+      {
+        "time": "09H30",
+        "description": "DEPART EN BUS VERS CEVAHIR MALL"
+      },
+      {
+        "time": "10H00",
+        "description": "ARRIVÉE À CEVAHIR MALL"
+      },
+      {
+        "time": "10H00 – 13H00",
+        "description": "SHOPPING"
+      },
+      {
+        "time": "13H00",
+        "description": "DÉJEUNER SUR PLACE"
+      },
+      {
+        "time": "14H00",
+        "description": "RETOUR À L’HÔTEL - REPOS"
+      },
+      {
+        "time": "18H00",
+        "description": "DÉPART POUR UNE DERNIÈRE BALADE ET SOIRÉE STAMBOULIOTE : ORTAKOY, KARAKÖY, ÜSKÜDAR …"
+      },
+      {
+        "time": "22H30",
+        "description": "DÎNER ET SOIREE AU LOTIZ LOUNGE ISTANBUL"
+      },
+      {
+        "time": "01H00",
+        "description": "RETOUR À L’HÔTEL"
+      }
+    ]
+  },
+  {
+    "date": "14 JUILLET 2026",
+    "dayName": "MARDI",
+    "location": "ISTANBUL -> TUNIS",
+    "activities": [
+      {
+        "time": "08H30",
+        "description": "PETIT DEJEUNER À L'HÔTEL"
+      },
+      {
+        "time": "09H30",
+        "description": "DEPART EN NAVETTE PRIVÉE VERS L’AEROPORT INTERNATIONAL D’ISTANBUL"
+      },
+      {
+        "time": "10H15",
+        "description": "ARRIVÉE À L’AEROPORT"
+      },
+      {
+        "time": "13H05",
+        "description": "DÉPART SUR LE NOUVELAIR VOL BJ641 À DESTINATION DE TUNIS"
+      },
+      {
+        "time": "14H05",
+        "description": "ARRIVÉE À TUNIS",
+        "details": "FIN DU PROGRAMME 2026 ☺"
+      }
+    ]
+  }
+]
