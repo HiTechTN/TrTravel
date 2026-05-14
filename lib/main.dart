@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'core/theme_constants.dart';
 import 'services/itinerary_service.dart';
 import 'services/itinerary_generator_service.dart';
 import 'services/currency_service.dart';
@@ -18,42 +19,73 @@ import 'screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  final pushNotificationService = PushNotificationService();
-  await pushNotificationService.initialize();
-  
-  final offlineService = OfflineService();
-  await offlineService.init();
-  
-  final itineraryService = ItineraryService();
-  await itineraryService.init();
 
-  final currencyService = CurrencyService();
-  await currencyService.init();
-
-  final shoppingService = ShoppingService();
-  shoppingService.init();
-
-  final appUpdateService = AppUpdateService();
+  final services = await _initializeServices();
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: itineraryService),
+        ChangeNotifierProvider.value(value: services.itinerary),
         ChangeNotifierProvider(create: (_) => ItineraryGeneratorService()),
-        ChangeNotifierProvider.value(value: currencyService),
+        ChangeNotifierProvider.value(value: services.currency),
         ChangeNotifierProvider(create: (_) => ExchangeOfficeService()),
-        ChangeNotifierProvider.value(value: offlineService),
+        ChangeNotifierProvider.value(value: services.offline),
         ChangeNotifierProvider(create: (_) => TranslationService()),
         ChangeNotifierProvider(create: (_) => JournalService()),
         ChangeNotifierProvider(create: (_) => TravelAssistant()),
-        ChangeNotifierProvider.value(value: shoppingService),
-        ChangeNotifierProvider.value(value: appUpdateService),
-        ChangeNotifierProvider.value(value: pushNotificationService),
+        ChangeNotifierProvider.value(value: services.shopping),
+        ChangeNotifierProvider.value(value: services.appUpdate),
+        ChangeNotifierProvider.value(value: services.pushNotification),
       ],
       child: const TrTravelApp(),
     ),
   );
+}
+
+Future<_InitializedServices> _initializeServices() async {
+  final pushNotification = PushNotificationService();
+  await pushNotification.initialize();
+
+  final offline = OfflineService();
+  await offline.init();
+
+  final itinerary = ItineraryService();
+  await itinerary.init();
+
+  final currency = CurrencyService();
+  await currency.init();
+
+  final shopping = ShoppingService();
+  shopping.init();
+
+  final appUpdate = AppUpdateService();
+
+  return _InitializedServices(
+    offline: offline,
+    itinerary: itinerary,
+    currency: currency,
+    shopping: shopping,
+    appUpdate: appUpdate,
+    pushNotification: pushNotification,
+  );
+}
+
+class _InitializedServices {
+  final OfflineService offline;
+  final ItineraryService itinerary;
+  final CurrencyService currency;
+  final ShoppingService shopping;
+  final AppUpdateService appUpdate;
+  final PushNotificationService pushNotification;
+
+  const _InitializedServices({
+    required this.offline,
+    required this.itinerary,
+    required this.currency,
+    required this.shopping,
+    required this.appUpdate,
+    required this.pushNotification,
+  });
 }
 
 class TrTravelApp extends StatelessWidget {
@@ -83,21 +115,21 @@ class TrTravelApp extends StatelessWidget {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      primaryColor: const Color(0xFFE30A17),
-      scaffoldBackgroundColor: const Color(0xFFF5F7FA),
+      primaryColor: AppColors.primary,
+      scaffoldBackgroundColor: AppColors.background,
       colorScheme: const ColorScheme.light(
-        primary: Color(0xFFE30A17),
-        secondary: Color(0xFF003B66),
-        surface: Colors.white,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onSurface: Color(0xFF1A1A2E),
+        primary: AppColors.primary,
+        secondary: AppColors.secondary,
+        surface: AppColors.surface,
+        onPrimary: AppColors.onPrimary,
+        onSecondary: AppColors.onSecondary,
+        onSurface: AppColors.onSurface,
       ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: Color(0xFFE30A17),
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.onPrimary,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
@@ -105,7 +137,7 @@ class TrTravelApp extends StatelessWidget {
         titleTextStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: Colors.white,
+          color: AppColors.onPrimary,
           letterSpacing: 0.5,
         ),
       ),
@@ -113,16 +145,18 @@ class TrTravelApp extends StatelessWidget {
         elevation: 2,
         shadowColor: Colors.black.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.large),
         ),
-        color: Colors.white,
+        color: AppColors.surface,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.onPrimary,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.medium),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -135,9 +169,9 @@ class TrTravelApp extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.medium),
           ),
-          side: const BorderSide(color: Color(0xFFE30A17), width: 1.5),
+          side: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -151,37 +185,37 @@ class TrTravelApp extends StatelessWidget {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF5F7FA),
+        fillColor: AppColors.background,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE30A17), width: 2),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
         hintStyle: TextStyle(color: Colors.grey[500]),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         elevation: 8,
         shadowColor: Colors.black.withValues(alpha: 0.1),
-        indicatorColor: const Color(0xFFE30A17).withValues(alpha: 0.1),
+        indicatorColor: AppColors.primary.withValues(alpha: 0.1),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFFE30A17),
+              color: AppColors.primary,
             );
           }
           return TextStyle(
@@ -193,7 +227,7 @@ class TrTravelApp extends StatelessWidget {
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(
-              color: Color(0xFFE30A17),
+              color: AppColors.primary,
               size: 24,
             );
           }
@@ -204,27 +238,27 @@ class TrTravelApp extends StatelessWidget {
         }),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Color(0xFFE30A17),
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.onPrimary,
         elevation: 4,
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: const Color(0xFF1A1A2E),
-        contentTextStyle: const TextStyle(color: Colors.white),
+        backgroundColor: AppColors.onSurface,
+        contentTextStyle: const TextStyle(color: AppColors.onPrimary),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
         ),
         behavior: SnackBarBehavior.floating,
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: const Color(0xFFF5F7FA),
-        selectedColor: const Color(0xFFE30A17).withValues(alpha: 0.15),
+        backgroundColor: AppColors.background,
+        selectedColor: AppColors.primary.withValues(alpha: 0.15),
         labelStyle: const TextStyle(fontWeight: FontWeight.w500),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(
@@ -232,7 +266,7 @@ class TrTravelApp extends StatelessWidget {
         ),
       ),
       dividerTheme: const DividerThemeData(
-        color: Color(0xFFE8EAF0),
+        color: AppColors.divider,
         thickness: 1,
         space: 1,
       ),

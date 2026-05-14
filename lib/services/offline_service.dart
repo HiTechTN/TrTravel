@@ -270,7 +270,5 @@ class OfflineService extends ChangeNotifier {
 
   DateTime? get lastSync => _lastSync;
 
-  double get downloadProgress2 => _downloadProgress;
-  String get currentDownload2 => _currentDownload;
-  bool get isDownloading2 => _isDownloading;
+
 }

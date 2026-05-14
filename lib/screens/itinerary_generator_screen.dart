@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import '../services/itinerary_generator_service.dart';
+import '../models/place.dart';
+import '../models/generated_itinerary.dart';
 
 class ItineraryGeneratorScreen extends StatefulWidget {
   const ItineraryGeneratorScreen({super.key});

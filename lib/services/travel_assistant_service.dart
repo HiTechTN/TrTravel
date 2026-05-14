@@ -1,6 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+export '../models/trip_suggestion.dart';
+export '../models/trip_day.dart';
+export '../models/trip_activity.dart';
+import '../models/trip_suggestion.dart';
+import '../models/trip_day.dart';
+import '../models/trip_activity.dart';
 
 class TravelAssistant extends ChangeNotifier {
   String _currentLanguage = 'fr';
@@ -240,102 +246,3 @@ class TravelAssistant extends ChangeNotifier {
   }
 }
 
-class TripSuggestion {
-  final String id;
-  final String title;
-  final String description;
-  final String city;
-  final String category;
-  final int priority;
-  final String icon;
-  final String duration;
-  final String estimatedCost;
-
-  TripSuggestion({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.city,
-    required this.category,
-    required this.priority,
-    required this.icon,
-    required this.duration,
-    required this.estimatedCost,
-  });
-}
-
-class TripDay {
-  final String id;
-  final int dayNumber;
-  final String city;
-  final String theme;
-  final List<TripActivity> activities;
-  final double estimatedCost;
-  final List<String> tips;
-  final DateTime? date;
-
-  TripDay({
-    required this.id,
-    required this.dayNumber,
-    required this.city,
-    required this.theme,
-    required this.activities,
-    required this.estimatedCost,
-    required this.tips,
-    this.date,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'id': id, 'dayNumber': dayNumber, 'city': city, 'theme': theme,
-    'activities': activities.map((a) => a.toJson()).toList(),
-    'estimatedCost': estimatedCost, 'tips': tips, 'date': date?.toIso8601String(),
-  };
-
-  factory TripDay.fromJson(Map<String, dynamic> json) => TripDay(
-    id: json['id'],
-    dayNumber: json['dayNumber'],
-    city: json['city'],
-    theme: json['theme'],
-    activities: (json['activities'] as List).map((a) => TripActivity.fromJson(a)).toList(),
-    estimatedCost: (json['estimatedCost'] ?? 0.0).toDouble(),
-    tips: List<String>.from(json['tips'] ?? []),
-    date: json['date'] != null ? DateTime.parse(json['date']) : null,
-  );
-}
-
-class TripActivity {
-  final String id;
-  final String name;
-  final String category;
-  final String suggestedTime;
-  final int duration;
-  final double cost;
-  final String description;
-  final String tips;
-
-  TripActivity({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.suggestedTime,
-    required this.duration,
-    required this.cost,
-    required this.description,
-    required this.tips,
-  });
-
-  double? get estimatedCost => cost;
-
-  Map<String, dynamic> toJson() => {
-    'id': id, 'name': name, 'category': category,
-    'suggestedTime': suggestedTime, 'duration': duration,
-    'cost': cost, 'description': description, 'tips': tips,
-  };
-
-  factory TripActivity.fromJson(Map<String, dynamic> json) => TripActivity(
-    id: json['id'], name: json['name'], category: json['category'],
-    suggestedTime: json['suggestedTime'], duration: json['duration'],
-    cost: (json['cost'] ?? 0.0).toDouble(),
-    description: json['description'] ?? '', tips: json['tips'] ?? '',
-  );
-}
