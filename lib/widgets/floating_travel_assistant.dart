@@ -4,17 +4,18 @@ import 'package:provider/provider.dart';
 import '../services/travel_assistant_service.dart';
 
 class FloatingTravelAssistant extends StatefulWidget {
-  const FloatingTravelAssistant({super.key});
+  final VoidCallback onQuickActions;
+
+  const FloatingTravelAssistant({super.key, required this.onQuickActions});
 
   @override
   State<FloatingTravelAssistant> createState() => _FloatingTravelAssistantState();
 }
 
-class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with SingleTickerProviderStateMixin {
+class _FloatingTravelAssistantState extends State<FloatingTravelAssistant>
+    with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   bool _isChatMode = false;
-  double _positionX = 20;
-  double _positionY = 100;
   final TextEditingController _chatController = TextEditingController();
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -30,6 +31,7 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+    _animationController.forward();
   }
 
   @override
@@ -49,52 +51,23 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
   @override
   Widget build(BuildContext context) {
     final assistant = context.watch<TravelAssistant>();
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    
-    return Positioned(
-      left: _positionX.clamp(10, screenWidth - 70),
-      top: _positionY.clamp(100, screenHeight - 70),
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          setState(() {
-            _positionX += details.delta.dx;
-            _positionY += details.delta.dy;
-          });
-        },
-        child: AnimatedSize(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (_isExpanded) 
-                Container(
-                  width: screenWidth - 40,
-                  constraints: BoxConstraints(
-                    maxHeight: screenHeight * 0.6,
-                  ),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: _buildExpandedPanel(assistant),
-                  ),
-                ),
-              _buildFloatingButton(),
-            ],
-          ),
+
+    return GestureDetector(
+      onLongPress: () {
+        HapticFeedback.mediumImpact();
+        _showQuickMenu();
+      },
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (_isExpanded)
+              _buildExpandedPanel(assistant),
+            _buildFloatingButton(),
+          ],
         ),
       ),
     );
@@ -102,10 +75,8 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
 
   Widget _buildFloatingButton() {
     return GestureDetector(
-      onTap: _toggleExpanded,
-      onLongPress: () {
-        HapticFeedback.mediumImpact();
-        _showQuickMenu();
+      onTap: () {
+        widget.onQuickActions();
       },
       child: Container(
         width: 60,
@@ -139,21 +110,42 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
   }
 
   Widget _buildExpandedPanel(TravelAssistant assistant) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildHeader(),
-        Container(
-          height: _isChatMode ? 280 : 260,
-          constraints: const BoxConstraints(maxHeight: 300),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: _isChatMode 
-                ? _buildChatView(assistant)
-                : _buildMainFeatures(assistant),
+    return Container(
+      width: MediaQuery.of(context).size.width - 40,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildHeader(),
+            Container(
+              height: _isChatMode ? 280 : 260,
+              constraints: const BoxConstraints(maxHeight: 300),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(12),
+                child: _isChatMode
+                    ? _buildChatView(assistant)
+                    : _buildMainFeatures(assistant),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -211,13 +203,15 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Actions rapides', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const Text('Actions rapides',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
-            _actionChip('💬 Chat', () => setState(() => _isChatMode = true)),
+            _actionChip('💬 Chat',
+                () => setState(() => _isChatMode = true)),
             _actionChip('📍 Lieux', () => _showPlacesInfo(assistant)),
             _actionChip('🍽️ Restaurant', () => _showRestaurantInfo(assistant)),
             _actionChip('🚕 Transport', () => _showTransportInfo(assistant)),
@@ -240,7 +234,9 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
           color: const Color(0xFFE30A17).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+        child: Text(label,
+            style: const TextStyle(
+                fontSize: 12, fontWeight: FontWeight.w500)),
       ),
     );
   }
@@ -249,19 +245,22 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Ville', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const Text('Ville',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
-              child: _cityButton('Istanbul', '🏛️', assistant.currentCity == 'Istanbul', () {
+              child: _cityButton('Istanbul', '🏛️',
+                  assistant.currentCity == 'Istanbul', () {
                 assistant.setCity('Istanbul');
                 HapticFeedback.selectionClick();
               }),
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: _cityButton('Antalya', '🏖️', assistant.currentCity == 'Antalya', () {
+              child: _cityButton('Antalya', '🏖️',
+                  assistant.currentCity == 'Antalya', () {
                 assistant.setCity('Antalya');
                 HapticFeedback.selectionClick();
               }),
@@ -272,7 +271,8 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
     );
   }
 
-  Widget _cityButton(String city, String emoji, bool isSelected, VoidCallback onTap) {
+  Widget _cityButton(String city, String emoji, bool isSelected,
+      VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -286,14 +286,12 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
           children: [
             Text(emoji),
             const SizedBox(width: 4),
-            Text(
-              city,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.grey[700],
-                fontSize: 13,
-              ),
-            ),
+            Text(city,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? Colors.white : Colors.grey[700],
+                  fontSize: 13,
+                )),
           ],
         ),
       ),
@@ -301,32 +299,31 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
   }
 
   Widget _buildQuickQuestions() {
-    final questions = [
-      'Que voir?',
-      'Restaurants?',
-      'Transport?',
-      'Shopping?',
-    ];
-    
+    final questions = ['Que voir?', 'Restaurants?', 'Transport?', 'Shopping?'];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Questions rapides', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const Text('Questions rapides',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: questions.map((q) => GestureDetector(
-            onTap: () => _answerQuestion(q),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(q, style: const TextStyle(fontSize: 12)),
-            ),
-          )).toList(),
+          children: questions
+              .map((q) => GestureDetector(
+                    onTap: () => _answerQuestion(q),
+                    child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(q, style: const TextStyle(fontSize: 12)),
+                    ),
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -335,24 +332,24 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
   void _answerQuestion(String question) {
     final assistant = context.read<TravelAssistant>();
     final city = assistant.currentCity;
-    
+
     String answer = '';
     if (question.contains('voir')) {
-      answer = city == 'Istanbul' 
-        ? '🏛️ Sainte-Sophie, Mosquée Bleue, Palais Topkapi, Grand Bazar, Tour de Galata'
-        : '🏖️ Kaleici, Plage de Lara, Cascade de Düden, Aspendos, Musée d\'Antalya';
+      answer = city == 'Istanbul'
+          ? '🏛️ Sainte-Sophie, Mosquée Bleue, Palais Topkapi, Grand Bazar, Tour de Galata'
+          : '🏖️ Kaleici, Plage de Lara, Cascade de Düden, Aspendos, Musée d\'Antalya';
     } else if (question.contains('Restaurant')) {
       answer = city == 'Istanbul'
-        ? '🍽️ Karaköy Lokantasi, Çiya Sofrasi, Balık Pazarı, Karadeniz Pidecisi'
-        : '🍽️ Meyo, Lara Köfte, Ser上一, Dondurma';
+          ? '🍽️ Karaköy Lokantasi, Çiya Sofrasi, Balık Pazarı, Karadeniz Pidecisi'
+          : '🍽️ Meyo, Lara Köfte, Ser上一, Dondurma';
     } else if (question.contains('Transport')) {
       answer = '🚋 Métro, Bateau (Vapur), Taxi, Dolmuş, Walk';
     } else if (question.contains('Shopping')) {
       answer = city == 'Istanbul'
-        ? '🛍️ Grand Bazar, Istinye Park, Arasta Bazaar, Nisantasi'
-        : '🛍️ Mall of Antalya, Lara AVM, Kaleici bazar';
+          ? '🛍️ Grand Bazar, Istinye Park, Arasta Bazaar, Nisantasi'
+          : '🛍️ Mall of Antalya, Lara AVM, Kaleici bazar';
     }
-    
+
     _showAnswerDialog(answer);
   }
 
@@ -385,9 +382,15 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
           child: ListView(
             padding: const EdgeInsets.all(12),
             children: [
-              _buildChatBubble('Bonjour! Comment puis-je vous aider?', isUser: false),
-              _buildChatBubble('Je veux découvrir les lieux touristiques', isUser: true),
-              _buildChatBubble('Parfait! Ville: ${assistant.currentCity}. Types: Histoire, Gastronomie, Shopping, Nature?', isUser: false),
+              _buildChatBubble(
+                  'Bonjour! Comment puis-je vous aider?',
+                  isUser: false),
+              _buildChatBubble(
+                  'Je veux découvrir les lieux touristiques',
+                  isUser: true),
+              _buildChatBubble(
+                  'Parfait! Ville: ${assistant.currentCity}. Types: Histoire, Gastronomie, Shopping, Nature?',
+                  isUser: false),
             ],
           ),
         ),
@@ -404,13 +407,15 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
                   decoration: InputDecoration(
                     hintText: 'Tapez votre message...',
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12),
                   ),
                   onSubmitted: (_) => _sendMessage(assistant),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.send, color: Color(0xFFE30A17)),
+                icon:
+                    const Icon(Icons.send, color: Color(0xFFE30A17)),
                 onPressed: () => _sendMessage(assistant),
               ),
             ],
@@ -425,7 +430,8 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isUser ? const Color(0xFFE30A17) : const Color(0xFFF5F7FA),
           borderRadius: BorderRadius.circular(16),
@@ -443,13 +449,17 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
 
   void _sendMessage(TravelAssistant assistant) {
     if (_chatController.text.isEmpty) return;
-    
+
     final message = _chatController.text;
     _chatController.clear();
-    
-    _answerQuestion(message.contains('voir') ? 'Que voir?' : 
-                   message.contains('restaurant') ? 'Restaurant?' :
-                   message.contains('transport') ? 'Transport?' : 'Que voir?');
+
+    _answerQuestion(message.contains('voir')
+        ? 'Que voir?'
+        : message.contains('restaurant')
+            ? 'Restaurant?'
+            : message.contains('transport')
+                ? 'Transport?'
+                : 'Que voir?');
   }
 
   void _showQuickMenu() {
@@ -461,7 +471,8 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.chat, color: Color(0xFFE30A17)),
+              leading:
+                  const Icon(Icons.chat, color: Color(0xFFE30A17)),
               title: const Text('Ouvrir le chat'),
               onTap: () {
                 Navigator.pop(context);
@@ -472,14 +483,16 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
               },
             ),
             ListTile(
-              leading: const Icon(Icons.location_city, color: Color(0xFFE30A17)),
+              leading: const Icon(Icons.location_city,
+                  color: Color(0xFFE30A17)),
               title: const Text('Changer de ville'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.info_outline, color: Color(0xFFE30A17)),
+              leading:
+                  const Icon(Icons.info_outline, color: Color(0xFFE30A17)),
               title: const Text('À propos'),
               onTap: () => Navigator.pop(context),
             ),
@@ -492,32 +505,32 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant> with 
   void _showPlacesInfo(TravelAssistant assistant) {
     final city = assistant.currentCity;
     String info = city == 'Istanbul'
-      ? '🏛️ Sainte-Sophie, Mosquée Bleue (Sultan Ahmed), Palais Topkapi, Grand Bazar, Basilique Cistern, Tour de Galata, Palais Dolmabahçe'
-      : '🏛️ Kaleici (vieux ville), Hadrien\'s Gate, Clock Tower, Musée d\'Antalya, Plage de Konyaaltı, Plage de Lara';
+        ? '🏛️ Sainte-Sophie, Mosquée Bleue (Sultan Ahmed), Palais Topkapi, Grand Bazar, Basilique Cistern, Tour de Galata, Palais Dolmabahçe'
+        : '🏛️ Kaleici (vieux ville), Hadrien\'s Gate, Clock Tower, Musée d\'Antalya, Plage de Konyaaltı, Plage de Lara';
     _showAnswerDialog(info);
   }
 
   void _showRestaurantInfo(TravelAssistant assistant) {
     final city = assistant.currentCity;
     String info = city == 'Istanbul'
-      ? '🍽️ Karaköy Lokantasi (cuisine ottomane), Çiya Sofrasi (cuisine locale), Balık Pazarı (poisson), Karadeniz Pidecisi (pide), Mikla ( rooftop)'
-      : '🍽️ Meyo (grillades), Lara Köfte (köfte), Ser上一 (poisson), The Shed (moderne), Dondurma (glace turque)';
+        ? '🍽️ Karaköy Lokantasi (cuisine ottomane), Çiya Sofrasi (cuisine locale), Balık Pazarı (poisson), Karadeniz Pidecisi (pide), Mikla ( rooftop)'
+        : '🍽️ Meyo (grillades), Lara Köfte (köfte), Ser上一 (poisson), The Shed (moderne), Dondurma (glace turque)';
     _showAnswerDialog(info);
   }
 
   void _showTransportInfo(TravelAssistant assistant) {
     final city = assistant.currentCity;
     String info = city == 'Istanbul'
-      ? '🚋 Métro + Tramway (Istanbulkart), Bateau (Vapur) pour Bosphore, Taxi (Bitaksi), Dolmuş (minibus), Walk pour les quartiers'
-      : '🚋 Métro à Antalya, Bus (Aktur), Taxi, Dolmuş, Location de voiture';
+        ? '🚋 Métro + Tramway (Istanbulkart), Bateau (Vapur) pour Bosphore, Taxi (Bitaksi), Dolmuş (minibus), Walk pour les quartiers'
+        : '🚋 Métro à Antalya, Bus (Aktur), Taxi, Dolmuş, Location de voiture';
     _showAnswerDialog(info);
   }
 
   void _showShoppingInfo(TravelAssistant assistant) {
     final city = assistant.currentCity;
     String info = city == 'Istanbul'
-      ? '🛍️ Grand Bazar (traditionnel), Istinye Park (moderne), Arasta Bazaar (artisanat), Nisantasi (mode), Mall of Istanbul'
-      : '🛍️ Mall of Antalya, Lara AVM, Kaleici (artisanat), Mark Antalya (centre-ville)';
+        ? '🛍️ Grand Bazar (traditionnel), Istinye Park (moderne), Arasta Bazaar (artisanat), Nisantasi (mode), Mall of Istanbul'
+        : '🛍️ Mall of Antalya, Lara AVM, Kaleici (artisanat), Mark Antalya (centre-ville)';
     _showAnswerDialog(info);
   }
 }
