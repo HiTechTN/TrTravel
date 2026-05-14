@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'core/theme_constants.dart';
 import 'services/itinerary_service.dart';
 import 'services/itinerary_generator_service.dart';
@@ -19,6 +20,7 @@ import 'screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   try {
     final services = await _initializeServices();
