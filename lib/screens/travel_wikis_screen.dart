@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TravelWikisScreen extends StatefulWidget {
   const TravelWikisScreen({super.key});
@@ -213,27 +214,97 @@ class _TravelWikisScreenState extends State<TravelWikisScreen> {
             bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
           ),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.icon, style: const TextStyle(fontSize: 24)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              children: [
+                Text(item.icon, style: const TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.subtitle,
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (item.price != null || item.hours != null) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
                 children: [
-                  Text(
-                    item.title,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    item.subtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
+                  if (item.price != null)
+                    _wikiTag(Icons.monetization_on, item.price!, color),
+                  if (item.hours != null)
+                    _wikiTag(Icons.access_time, item.hours!, color),
+                  if (item.phone != null)
+                    _wikiTag(Icons.phone, item.phone!, color),
                 ],
               ),
-            ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+            ],
+            if (item.bookingUrl != null || item.website != null) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                children: [
+                  if (item.bookingUrl != null)
+                    _wikiActionButton('R\u00E9server', Icons.confirmation_number, color, item.bookingUrl!),
+                  if (item.website != null)
+                    _wikiActionButton('Site web', Icons.language, color, item.website!),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _wikiTag(IconData icon, String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: color),
+          const SizedBox(width: 4),
+          Text(label, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+
+  Widget _wikiActionButton(String label, IconData icon, Color color, String url) {
+    return GestureDetector(
+      onTap: () => _openUrl(url),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: Colors.white),
+            const SizedBox(width: 4),
+            Text(label, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -546,14 +617,17 @@ De nombreuses caves proposent des dégustations. La route des vins d'Antalya est
           icon: '🕌',
           title: 'Mosquée Bleue',
           subtitle: 'Chef-d\'œuvre ottoman',
+          price: 'Gratuit',
+          hours: '08:00 - 18:00 (fermé pendant les prières)',
+          address: 'Sultan Ahmet Mahallesi, Istanbul',
           content: '''
-# Mosquée Bleue (Süleymaniye Camii)
+# Mosquée Bleue (Sultan Ahmet Camii)
 
 ## Présentation
-Construite par le sultan Ahmed Ier entre 1609 et 1616, la Mosquée Bleue est connue pour ses 20 000 céramique bleu turquoise décorant ses murs intérieurs.
+Construite par le sultan Ahmed Ier entre 1609 et 1616, la Mosquée Bleue est connue pour ses 20 000 céramiques bleu turquoise décorant ses murs intérieurs.
 
 ## Caractéristiques
-- 6 minarets ( unique among mosques)
+- 6 minarets (unique au monde)
 - Grande coupole de 43m de diamètre
 - Entrée gratuite (hors heures de prière)
 
@@ -561,13 +635,19 @@ Construite par le sultan Ahmed Ier entre 1609 et 1616, la Mosquée Bleue est con
 - Éviter les heures de prière (prière du vendredi)
 - S'habiller modestement
 - Retirer ses chaussures
-- Femmess doivent se couvrir les cheveux
+- Femmes doivent se couvrir les cheveux
           ''',
         ),
         WikiItem(
           icon: '🏛️',
           title: 'Palais Topkapi',
           subtitle: 'Centre du pouvoir ottoman',
+          price: '750 TL adulte (2025)',
+          hours: '09:00 - 17:00 (fermé mardi)',
+          bookingUrl: 'https://www.muze.gov.tr/en/muze/step',
+          website: 'https://topkapisarayi.gov.tr',
+          phone: '+90 212 512 04 80',
+          address: 'Cankurtaran Mahallesi, Istanbul',
           content: '''
 # Palais Topkapi (Topkapı Sarayı)
 
@@ -581,20 +661,25 @@ Résidence des sultans ottomans pendant près de 400 ans (1465-1856). C'était l
 - **Quatrième Cour**: Pavillons, jardins, vue sur le Bosphore
 
 ## Bijoux du Trésor
-- épée du prophète
+- Épée du prophète
 - Casque d'or de Napoléon
-- Diamant Spoonmaker
+- Diamant Spoonmaker (86 carats)
 
 ## Conseils
 - Arriver tôt pour éviter les foules
-- Prendre l_audio guide
+- Prendre l'audio guide (disponible en français)
 - Prévoir 3-4 heures de visite
+- Réserver en ligne sur le site officiel de Muze
           ''',
         ),
         WikiItem(
           icon: '🛍️',
           title: 'Grand Bazar',
           subtitle: 'Plus grand marché couvert du monde',
+          hours: '08:30 - 19:00 (fermé dimanche)',
+          price: 'Gratuit (entrée)',
+          website: 'https://www.kapalicarsi.com.tr',
+          address: 'Beyazıt Mahallesi, Istanbul',
           content: '''
 # Grand Bazar (Kapalı Çarşı)
 
@@ -1106,13 +1191,32 @@ class WikiItem {
   final String title;
   final String subtitle;
   final String content;
+  final String? price;
+  final String? hours;
+  final String? bookingUrl;
+  final String? website;
+  final String? phone;
+  final String? address;
 
   WikiItem({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.content,
+    this.price,
+    this.hours,
+    this.bookingUrl,
+    this.website,
+    this.phone,
+    this.address,
   });
+}
+
+void _openUrl(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
 }
 
 class WikiDetailScreen extends StatelessWidget {
@@ -1178,6 +1282,65 @@ class WikiDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  if (item.price != null || item.hours != null || item.phone != null || item.address != null)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: color.withValues(alpha: 0.15)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (item.price != null)
+                            _detailInfoRow(Icons.monetization_on, 'Prix', item.price!),
+                          if (item.hours != null)
+                            _detailInfoRow(Icons.access_time, 'Horaires', item.hours!),
+                          if (item.phone != null)
+                            _detailInfoRow(Icons.phone, 'T\u00E9l\u00E9phone', item.phone!),
+                          if (item.address != null)
+                            _detailInfoRow(Icons.location_on, 'Adresse', item.address!),
+                          if (item.bookingUrl != null || item.website != null) ...[
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                if (item.bookingUrl != null)
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () => _openUrl(item.bookingUrl!),
+                                      icon: const Icon(Icons.confirmation_number, size: 18),
+                                      label: const Text('R\u00E9server', style: TextStyle(fontSize: 13)),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: color,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                    ),
+                                  ),
+                                if (item.bookingUrl != null && item.website != null)
+                                  const SizedBox(width: 8),
+                                if (item.website != null)
+                                  Expanded(
+                                    child: OutlinedButton.icon(
+                                      onPressed: () => _openUrl(item.website!),
+                                      icon: const Icon(Icons.language, size: 18),
+                                      label: const Text('Site web', style: TextStyle(fontSize: 13)),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: color,
+                                        side: BorderSide(color: color),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 20),
                   const Divider(),
                   const SizedBox(height: 20),
                   Text(
@@ -1192,6 +1355,20 @@ class WikiDetailScreen extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.grey[600]),
+          const SizedBox(width: 8),
+          Text('$label: ', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[700], fontSize: 13)),
+          Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
         ],
       ),
     );

@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import '../models/route_info.dart';
@@ -12,164 +14,151 @@ class RoutingService {
     'transit': 'driving',
   };
 
-  Future<RouteInfo?> getRoute(
-      {required LatLng origin,
-      required LatLng destination,
-      String mode = 'walking'}) async {
+  Future<RouteInfo?> getRoute({
+    required LatLng origin,
+    required LatLng destination,
+    String mode = 'walking',
+  }) async {
     final profile = _profiles[mode] ?? 'foot';
 
-    try {
-      final url =
-          '$_osrmBase/$profile/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}'
-          '?steps=true&geometries=geojson&overview=full&language=fr&annotations=true';
+    for (int attempt = 0; attempt < 2; attempt++) {
+      try {
+        final url =
+            '$_osrmBase/$profile/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}'
+            '?steps=true&geometries=geojson&overview=full&language=fr';
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {'Accept': 'application/json'},
-      ).timeout(const Duration(seconds: 15));
+        final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'TrTravel/1.0 (travel app for Turkey)',
+          },
+        ).timeout(const Duration(seconds: 30));
 
-      if (response.statusCode != 200) return null;
+        if (response.statusCode != 200) continue;
 
-      final data = jsonDecode(response.body);
-      if (data['code'] != 'Ok' || data['routes'] == null || data['routes'].isEmpty) {
-        return null;
-      }
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        if (data['code'] != 'Ok') continue;
 
-      final route = data['routes'][0];
-      final geometry = route['geometry'];
-      final coordinates = geometry['coordinates'] as List;
-      final points = coordinates
-          .map((c) => LatLng(c[1].toDouble(), c[0].toDouble()))
-          .toList();
+        final routes = data['routes'] as List?;
+        if (routes == null || routes.isEmpty) continue;
 
-      final legs = route['legs']?[0];
-      final distance = (legs?['distance'] ?? 0) / 1000.0;
-      final duration = (legs?['duration'] ?? 0) / 60.0;
+        final route = routes[0] as Map<String, dynamic>;
+        final geometry = route['geometry'] as Map<String, dynamic>?;
+        if (geometry == null) continue;
 
-      final steps = <RouteStep>[];
-      final rawSteps = legs?['steps'] as List? ?? [];
+        final coordinates = geometry['coordinates'] as List?;
+        if (coordinates == null || coordinates.length < 2) continue;
 
-      for (final s in rawSteps) {
-        final maneuver = s['maneuver'] ?? {};
-        final loc = maneuver['location'] ?? [0, 0];
-        steps.add(RouteStep(
-          instruction: s['instruction'] ?? s['name'] ?? '',
-          distance: (s['distance'] ?? 0).toDouble(),
-          duration: (s['duration'] ?? 0).toDouble(),
-          point: LatLng(loc[1].toDouble(), loc[0].toDouble()),
-          maneuverType: maneuver['type'] ?? 'unknown',
-          maneuverModifier: maneuver['modifier'],
-          streetName: s['name'],
-        ));
-      }
+        final points = coordinates
+            .map((c) => LatLng(
+                  (c[1] as num).toDouble(),
+                  (c[0] as num).toDouble(),
+                ))
+            .toList();
 
-      if (mode == 'transit' && steps.isNotEmpty) {
-        return _decorateTransitRoute(
-          RouteInfo(
-            points: points,
-            distance: distance,
-            duration: duration,
-            steps: steps,
-            transportMode: mode,
-          ),
+        final legs = route['legs'] as List?;
+        final leg = (legs != null && legs.isNotEmpty) ? legs[0] as Map<String, dynamic> : null;
+        final distance = ((leg?['distance'] ?? route['distance']) as num?)?.toDouble() ?? 0;
+        final duration = ((leg?['duration'] ?? route['duration']) as num?)?.toDouble() ?? 0;
+
+        final steps = <RouteStep>[];
+        final rawSteps = leg?['steps'] as List? ?? [];
+
+        for (final s in rawSteps) {
+          final step = s as Map<String, dynamic>;
+          final maneuver = step['maneuver'] as Map<String, dynamic>? ?? {};
+          final loc = maneuver['location'] as List? ?? [0, 0];
+
+          String instruction = step['instruction'] as String? ?? '';
+          final name = step['name'] as String? ?? '';
+          if (instruction.isEmpty && name.isNotEmpty) {
+            final mod = maneuver['modifier'] as String?;
+            instruction = mod != null ? '$mod sur $name' : 'Continuer sur $name';
+          }
+
+          steps.add(RouteStep(
+            instruction: instruction,
+            distance: (step['distance'] as num?)?.toDouble() ?? 0,
+            duration: (step['duration'] as num?)?.toDouble() ?? 0,
+            point: LatLng(
+              (loc[1] as num).toDouble(),
+              (loc[0] as num).toDouble(),
+            ),
+            maneuverType: maneuver['type'] as String? ?? 'unknown',
+            maneuverModifier: maneuver['modifier'] as String?,
+            streetName: name,
+          ));
+        }
+
+        if (mode == 'transit' && steps.isNotEmpty) {
+          return _decorateTransitRoute(
+            RouteInfo(
+              points: points,
+              distance: distance / 1000,
+              duration: duration / 60,
+              steps: steps,
+              transportMode: mode,
+            ),
+          );
+        }
+
+        return RouteInfo(
+          points: points,
+          distance: distance / 1000,
+          duration: duration / 60,
+          steps: steps,
+          transportMode: mode,
         );
+      } catch (e) {
+        debugPrint('OSRM attempt $attempt failed: $e');
       }
-
-      return RouteInfo(
-        points: points,
-        distance: distance,
-        duration: duration,
-        steps: steps,
-        transportMode: mode,
-      );
-    } catch (e) {
-      return null;
     }
+    return null;
   }
 
   RouteInfo _decorateTransitRoute(RouteInfo osrmRoute) {
-    final transitSteps = <RouteStep>[];
-    double walkDistance = 0;
-    double rideDistance = 0;
-    double rideDuration = 0;
-    double walkDuration = 0;
-
-    transitSteps.add(RouteStep(
-      instruction: '🚶 Rendez-vous à l\'arrêt de transport en commun le plus proche',
-      distance: 300,
-      duration: 240,
-      point: osrmRoute.points.isNotEmpty ? osrmRoute.points.first : const LatLng(0, 0),
-      maneuverType: 'depart',
-      streetName: 'Marche',
-    ));
-
-    double segmentDistance = 0;
-    double segmentDuration = 0;
-    final ridePoints = <LatLng>[];
-    bool inTransit = false;
-
-    for (int i = 0; i < osrmRoute.steps.length; i++) {
-      final step = osrmRoute.steps[i];
-      segmentDistance += step.distance;
-      segmentDuration += step.duration;
-      ridePoints.add(step.point);
-
-      if (step.distance > 200 && !inTransit) {
-        inTransit = true;
-        final distKm = segmentDistance / 1000;
-        final durMin = segmentDuration / 60;
-        transitSteps.add(RouteStep(
-          instruction: '🚌 Montez dans le transport public (ligne recommandée)',
-          distance: segmentDistance,
-          duration: segmentDuration,
-          point: step.point,
-          maneuverType: 'transit',
-          streetName: 'Bus/Métro',
-        ));
-        rideDistance += segmentDistance;
-        rideDuration += segmentDuration;
-        segmentDistance = 0;
-        segmentDuration = 0;
-      }
-    }
-
-    if (segmentDistance > 0) {
-      rideDistance += segmentDistance;
-      rideDuration += segmentDuration;
-      transitSteps.add(RouteStep(
-        instruction: '🚌 Continuez en transport public',
-        distance: segmentDistance,
-        duration: segmentDuration,
-        point: osrmRoute.steps.last.point,
+    final steps = <RouteStep>[
+      RouteStep(
+        instruction: '🚶 Marchez jusqu\'à l\'arrêt de bus/métro le plus proche',
+        distance: 300,
+        duration: 240,
+        point: osrmRoute.points.isNotEmpty ? osrmRoute.points.first : const LatLng(0, 0),
+        maneuverType: 'depart',
+        streetName: 'Marche',
+      ),
+      RouteStep(
+        instruction: '🚌 Montez dans le transport en commun',
+        distance: osrmRoute.distance * 500,
+        duration: osrmRoute.duration * 30,
+        point: osrmRoute.points.length > 3
+            ? osrmRoute.points[osrmRoute.points.length ~/ 2]
+            : osrmRoute.points.last,
         maneuverType: 'transit',
         streetName: 'Bus/Métro',
-      ));
-    }
-
-    transitSteps.add(RouteStep(
-      instruction: '🚶 Marchez jusqu\'à votre destination',
-      distance: 200,
-      duration: 180,
-      point: osrmRoute.steps.last.point,
-      maneuverType: 'transit',
-      streetName: 'Marche',
-    ));
-    walkDistance += 200;
-    walkDuration += 180;
-
-    transitSteps.add(RouteStep(
-      instruction: '✅ Vous êtes arrivé à destination',
-      distance: 0,
-      duration: 0,
-      point: osrmRoute.points.isNotEmpty ? osrmRoute.points.last : const LatLng(0, 0),
-      maneuverType: 'arrive',
-    ));
+      ),
+      RouteStep(
+        instruction: '🚶 Marchez jusqu\'à votre destination',
+        distance: 200,
+        duration: 180,
+        point: osrmRoute.points.isNotEmpty ? osrmRoute.points.last : const LatLng(0, 0),
+        maneuverType: 'transit',
+        streetName: 'Marche',
+      ),
+      RouteStep(
+        instruction: '✅ Vous êtes arrivé à destination',
+        distance: 0,
+        duration: 0,
+        point: osrmRoute.points.isNotEmpty ? osrmRoute.points.last : const LatLng(0, 0),
+        maneuverType: 'arrive',
+      ),
+    ];
 
     return RouteInfo(
       points: osrmRoute.points,
-      distance: (rideDistance + walkDistance) / 1000,
-      duration: (rideDuration + walkDuration) / 60,
-      steps: transitSteps,
+      distance: osrmRoute.distance,
+      duration: osrmRoute.duration * 1.5,
+      steps: steps,
       transportMode: 'transit',
     );
   }
@@ -181,66 +170,60 @@ class RoutingService {
   }) async {
     final route = await getRoute(origin: origin, destination: destination, mode: mode);
     if (route != null) return route;
-
-    final fallback = _generateFallbackRoute(origin, destination, mode);
-    return fallback;
+    return _generateCurvedFallback(origin, destination, mode);
   }
 
-  RouteInfo _generateFallbackRoute(LatLng origin, LatLng destination, String mode) {
-    final steps = <RouteStep>[];
-    final points = <LatLng>[origin];
-
+  RouteInfo _generateCurvedFallback(LatLng origin, LatLng destination, String mode) {
+    final points = <LatLng>[];
+    final rand = Random(origin.latitude.toInt() + destination.longitude.toInt());
+    const numPoints = 40;
+    final midLat = (origin.latitude + destination.latitude) / 2;
+    final midLon = (origin.longitude + destination.longitude) / 2;
     final dLat = destination.latitude - origin.latitude;
     final dLon = destination.longitude - origin.longitude;
-    const segments = 20;
+    final dist = dLat.abs() + dLon.abs();
+    final offset = dist * 0.02;
 
-    for (int i = 1; i <= segments; i++) {
-      final t = i / segments;
-      points.add(LatLng(
-        origin.latitude + dLat * t,
-        origin.longitude + dLon * t,
-      ));
+    for (int i = 0; i <= numPoints; i++) {
+      final t = i / numPoints;
+      final lat = origin.latitude + dLat * t;
+      final lon = origin.longitude + dLon * t;
+      final perpendicular = sin(t * pi) * offset * (rand.nextDouble() * 2 - 1);
+      final perpLat = -dLon / dist * perpendicular;
+      final perpLon = dLat / dist * perpendicular;
+      points.add(LatLng(lat + perpLat, lon + perpLon));
     }
 
-    final latAvg = (origin.latitude + destination.latitude) / 2;
-    final lonAvg = (origin.longitude + destination.longitude) / 2;
-    points.insert(points.length ~/ 2, LatLng(latAvg + 0.005, lonAvg + 0.005));
-
     final distance = _haversineDistance(origin, destination);
-    final speed = mode == 'walking'
-        ? 5.0
-        : mode == 'transit'
-            ? 30.0
-            : 40.0;
-    final duration = (distance / speed) * 60;
+    final speeds = {'walking': 5.0, 'taxi': 40.0, 'transit': 30.0};
+    final duration = (distance / (speeds[mode] ?? 5.0)) * 60;
 
-    final midIdx = points.length ~/ 2;
-    steps.add(RouteStep(
-      instruction: mode == 'walking' ? '🚶 Départ vers votre destination' : 'Départ',
-      distance: distance * 1000 * 0.5,
-      duration: duration * 0.5,
-      point: points[0],
-      maneuverType: 'depart',
-      streetName: mode == 'walking' ? 'Chemin piéton' : 'Route',
-    ));
-    steps.add(RouteStep(
-      instruction: mode == 'walking'
-          ? '🚶 Continuez tout droit'
-          : mode == 'taxi'
-              ? '🚕 Continuez en taxi'
-              : '🚌 Continuez en transport en commun',
-      distance: distance * 1000 * 0.5,
-      duration: duration * 0.5,
-      point: points[midIdx],
-      maneuverType: 'continue',
-    ));
-    steps.add(RouteStep(
-      instruction: '✅ Arrivée à destination',
-      distance: 0,
-      duration: 0,
-      point: points.last,
-      maneuverType: 'arrive',
-    ));
+    final midPoint = points[points.length ~/ 2];
+    final steps = <RouteStep>[
+      RouteStep(
+        instruction: mode == 'walking' ? '🚶 Départ' : mode == 'taxi' ? '🚕 Prenez un taxi' : '🚌 Départ en transport',
+        distance: distance * 500,
+        duration: duration * 0.4,
+        point: points.first,
+        maneuverType: 'depart',
+        streetName: mode == 'walking' ? 'Chemin piéton' : mode == 'taxi' ? 'Route' : 'Bus/Métro',
+      ),
+      RouteStep(
+        instruction: mode == 'walking' ? '🚶 Continuez' : mode == 'taxi' ? '🚕 Continuez en taxi' : '🚌 Restez dans le bus/métro',
+        distance: distance * 500,
+        duration: duration * 0.5,
+        point: midPoint,
+        maneuverType: 'continue',
+        streetName: mode == 'taxi' ? 'Départementale' : 'Voirie',
+      ),
+      RouteStep(
+        instruction: '✅ Vous êtes arrivé',
+        distance: 0,
+        duration: 0,
+        point: points.last,
+        maneuverType: 'arrive',
+      ),
+    ];
 
     return RouteInfo(
       points: points,
@@ -255,39 +238,10 @@ class RoutingService {
     const R = 6371.0;
     final dLat = _toRad(p2.latitude - p1.latitude);
     final dLon = _toRad(p2.longitude - p1.longitude);
-    final a = (1 - _cos(dLat)) / 2 +
-        _cos(p1.latitude) * _cos(p2.latitude) * (1 - _cos(dLon)) / 2;
-    return 2 * R * _asin(_sqrt(a));
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_toRad(p1.latitude)) * cos(_toRad(p2.latitude)) * sin(dLon / 2) * sin(dLon / 2);
+    return 2 * R * atan2(sqrt(a), sqrt(1 - a));
   }
 
-  double _toRad(double deg) => deg * 3.14159265359 / 180;
-  double _cos(double x) => x.isNaN ? 0 : _cosApprox(x);
-  double _asin(double x) => x.isNaN ? 0 : _asinApprox(x);
-  double _sqrt(double x) => x.isNaN ? 0 : _sqrtApprox(x);
-
-  double _cosApprox(double x) {
-    x = x % (2 * 3.14159265359);
-    double result = 1.0;
-    double term = 1.0;
-    for (int i = 1; i <= 10; i++) {
-      term *= -x * x / ((2 * i - 1) * (2 * i));
-      result += term;
-    }
-    return result;
-  }
-
-  double _asinApprox(double x) {
-    if (x >= 1) return 3.14159265359 / 2;
-    if (x <= -1) return -3.14159265359 / 2;
-    return x + (x * x * x) / 6;
-  }
-
-  double _sqrtApprox(double x) {
-    if (x <= 0) return 0;
-    double guess = x / 2;
-    for (int i = 0; i < 10; i++) {
-      guess = (guess + x / guess) / 2;
-    }
-    return guess;
-  }
+  double _toRad(double deg) => deg * pi / 180;
 }
