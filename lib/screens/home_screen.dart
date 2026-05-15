@@ -1,11 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/itinerary_service.dart';
 import '../models/itinerary.dart';
 import 'itinerary_screen.dart';
 import 'itinerary_edit_screen.dart';
+import 'weather_screen.dart';
+import 'prayer_times_screen.dart';
+import 'emergency_screen.dart';
+import 'packing_checklist_screen.dart';
+import 'budget_tracker_screen.dart';
+import '../widgets/floating_travel_assistant.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -162,32 +170,39 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<ItineraryItem>>(
-              future: _itineraryFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: Color(0xFFE30A17)),
-                  );
-                } else if (snapshot.hasError) {
-                  return _buildEmptyState('Erreur: ${snapshot.error}', Icons.error_outline);
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return _buildEmptyState(
-                    'Aucun itinéraire disponible\nAppuyez sur + pour ajouter un jour',
-                    Icons.calendar_today,
-                  );
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final itinerary = snapshot.data![index];
-                    final isFirst = index == 0;
-                    final isLast = index == snapshot.data!.length - 1;
-                    return _buildDayCard(itinerary, index, isFirst, isLast);
-                  },
-                );
-              },
+            child: Column(
+              children: [
+                _buildDashboardCards(),
+                Expanded(
+                  child: FutureBuilder<List<ItineraryItem>>(
+                    future: _itineraryFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(color: Color(0xFFE30A17)),
+                        );
+                      } else if (snapshot.hasError) {
+                        return _buildEmptyState('Erreur: ${snapshot.error}', Icons.error_outline);
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return _buildEmptyState(
+                          'Aucun itinéraire disponible\nAppuyez sur + pour ajouter un jour',
+                          Icons.calendar_today,
+                        );
+                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final itinerary = snapshot.data![index];
+                          final isFirst = index == 0;
+                          final isLast = index == snapshot.data!.length - 1;
+                          return _buildDayCard(itinerary, index, isFirst, isLast);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -220,6 +235,91 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w600),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDashboardCards() {
+    return Container(
+      height: 100,
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          _dashboardCard(
+            'M\u00E9t\u00E9o',
+            Icons.wb_sunny,
+            const Color(0xFF003B66),
+            'Pr\u00E9visions',
+            () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WeatherScreen())),
+          ),
+          _dashboardCard(
+            'Pri\u00E8re',
+            Icons.mosque,
+            const Color(0xFF1B5E20),
+            'Horaires',
+            () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerTimesScreen())),
+          ),
+          _dashboardCard(
+            'Urgences',
+            Icons.emergency,
+            Colors.red.shade700,
+            'Appels',
+            () => Navigator.push(context, MaterialPageRoute(builder: (_) => const EmergencyScreen())),
+          ),
+          _dashboardCard(
+            'Bagages',
+            Icons.checklist,
+            const Color(0xFF6A1B9A),
+            'Checklist',
+            () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PackingChecklistScreen())),
+          ),
+          _dashboardCard(
+            'Budget',
+            Icons.account_balance_wallet,
+            const Color(0xFFE65100),
+            'D\u00E9penses',
+            () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetTrackerScreen())),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dashboardCard(String title, IconData icon, Color color, String subtitle, VoidCallback onTap) {
+    return Container(
+      width: 110,
+      margin: const EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6)],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 36, height: 36,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: color, size: 20),
+                ),
+                const SizedBox(height: 6),
+                Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey[800])),
+                Text(subtitle, style: TextStyle(fontSize: 10, color: Colors.grey[500])),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

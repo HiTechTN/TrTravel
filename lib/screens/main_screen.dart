@@ -11,6 +11,11 @@ import 'camera_translation_screen.dart';
 import 'exchange_offices_screen.dart';
 import 'travel_assistant_screen.dart';
 import 'travel_wikis_screen.dart';
+import 'weather_screen.dart';
+import 'prayer_times_screen.dart';
+import 'emergency_screen.dart';
+import 'packing_checklist_screen.dart';
+import 'budget_tracker_screen.dart';
 import '../widgets/floating_travel_assistant.dart';
 
 class MainScreen extends StatefulWidget {
@@ -155,10 +160,65 @@ class _MainScreenState extends State<MainScreen>
             icon: Icons.offline_bolt,
             iconColor: const Color(0xFF546E7A),
             title: 'Mode hors-ligne',
-            subtitle: 'Gérez vos données offline',
+            subtitle: 'G\u00E9rez vos donn\u00E9es offline',
             onTap: () {
               Navigator.pop(context);
               setState(() => _selectedIndex = 8);
+            },
+          ),
+          const Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+            child: Text('OUTILS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.grey[500], letterSpacing: 1)),
+          ),
+          _buildActionTile(
+            icon: Icons.wb_sunny,
+            iconColor: const Color(0xFF003B66),
+            title: 'M\u00E9t\u00E9o',
+            subtitle: 'Pr\u00E9visions sur 7 jours',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const WeatherScreen()));
+            },
+          ),
+          _buildActionTile(
+            icon: Icons.mosque,
+            iconColor: const Color(0xFF1B5E20),
+            title: 'Horaires de pri\u00E8re',
+            subtitle: 'Toutes les villes turques',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerTimesScreen()));
+            },
+          ),
+          _buildActionTile(
+            icon: Icons.emergency,
+            iconColor: Colors.red.shade700,
+            title: 'Urgences',
+            subtitle: 'Num\u00E9ros, h\u00F4pitaux, ambassades',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const EmergencyScreen()));
+            },
+          ),
+          _buildActionTile(
+            icon: Icons.checklist,
+            iconColor: const Color(0xFF6A1B9A),
+            title: 'Checklist bagages',
+            subtitle: 'Pr\u00E9parez vos valises',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const PackingChecklistScreen()));
+            },
+          ),
+          _buildActionTile(
+            icon: Icons.account_balance_wallet,
+            iconColor: const Color(0xFFE65100),
+            title: 'Budget',
+            subtitle: 'Suivez vos d\u00E9penses',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetTrackerScreen()));
             },
           ),
           const SizedBox(height: 24),

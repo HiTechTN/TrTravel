@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 
 class TravelWikisScreen extends StatefulWidget {
   const TravelWikisScreen({super.key});
@@ -1641,18 +1642,11 @@ class WikiItem {
 
 void _openUrl(String url) async {
   final uri = Uri.parse(url);
-  debugPrint('Trying to open URL: $url');
-  if (await canLaunchUrl(uri)) {
-    debugPrint('URL can be launched');
-    try {
+  try {
+    if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-      debugPrint('Launched URL successfully');
-    } catch (e) {
-      debugPrint('Error launching URL: $e');
     }
-  } else {
-    debugPrint('Cannot launch URL: $url');
-  }
+  } catch (_) {}
 }
 
 class WikiDetailScreen extends StatelessWidget {
@@ -1779,12 +1773,17 @@ class WikiDetailScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Divider(),
                   const SizedBox(height: 20),
-                  Text(
-                    item.content,
+                  SelectableLinkify(
+                    text: item.content,
                     style: const TextStyle(
                       fontSize: 15,
                       height: 1.6,
                     ),
+                    linkStyle: TextStyle(
+                      color: color,
+                      decoration: TextDecoration.underline,
+                    ),
+                    onOpen: (link) => _openUrl(link.url),
                   ),
                   const SizedBox(height: 40),
                 ],
