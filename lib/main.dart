@@ -15,6 +15,8 @@ import 'services/travel_assistant_service.dart';
 import 'services/shopping_service.dart';
 import 'services/app_update_service.dart';
 import 'services/push_notification_service.dart';
+import 'services/favorites_service.dart';
+import 'services/offline_map_manager.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_screen.dart';
 
@@ -39,6 +41,8 @@ void main() async {
           ChangeNotifierProvider.value(value: services.shopping),
           ChangeNotifierProvider.value(value: services.appUpdate),
           ChangeNotifierProvider.value(value: services.pushNotification),
+          ChangeNotifierProvider(create: (_) => FavoritesService()),
+          ChangeNotifierProvider(create: (_) => OfflineMapManager()..initialize()),
         ],
         child: const TrTravelApp(),
       ),
