@@ -1641,8 +1641,17 @@ class WikiItem {
 
 void _openUrl(String url) async {
   final uri = Uri.parse(url);
+  debugPrint('Trying to open URL: $url');
   if (await canLaunchUrl(uri)) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    debugPrint('URL can be launched');
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      debugPrint('Launched URL successfully');
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+    }
+  } else {
+    debugPrint('Cannot launch URL: $url');
   }
 }
 
