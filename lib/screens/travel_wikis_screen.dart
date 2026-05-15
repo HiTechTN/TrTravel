@@ -506,25 +506,57 @@ Le thé est souvent accompagné de:
           icon: '🥘',
           title: 'Mekanlar: Les Restaurants Locaux',
           subtitle: 'Où manger comme un local',
+          price: 'Lokanta: 100-200 TL; Meyhane: 200-500 TL',
+          hours: 'Restaurants: 11:00 - 23:00 (selon établissement)',
+          bookingUrl: 'https://www.tripadvisor.fr/Restaurants-g293974-Istanbul.html',
           content: '''
-# Mekan: Lieux de Restauration
+# Mekan: Les Meilleurs Restaurants d\'Istanbul
+
+## Restaurants Recommandés
+
+### Hamdi Restaurant (Eminönü)
+Spécialités de kebabs avec vue sur la Corne d\'Or.
+📍 Rıhtım Cd., Eminönü | 🕐 11:00 - 23:00
+📞 +90 212 528 03 90
+Lien: https://www.hamdirestaurant.com
+
+### Çiya Sofrası (Kadıköy)
+Cuisine anatolienne authentique. L\'un des meilleurs restaurants d\'Istanbul.
+📍 Caferağa Mh., Kadıköy | 🕐 11:00 - 22:00
+📞 +90 216 418 51 51
+Lien: https://www.ciya.com.tr
+
+### Karaköy Lokantası (Karaköy)
+Cuisine turque moderne dans un cadre branché.
+📍 Kemankeş Cd., Karaköy | 🕐 12:00 - 23:00
+📞 +90 212 243 52 22
+Lien: https://www.karakoylokantasi.com
+
+### Pandeli (Éminönü - Marché aux Épices)
+Cuisine turque classique dans un cadre historique (depuis 1901).
+📍 Mısır Çarşısı, Eminönü | 🕐 12:00 - 17:00
+📞 +90 212 522 55 34
+
+### Balıkçı Sabahattin (Sultanahmet)
+Poisson et fruits de mer de première qualité.
+📍 Seyit Hasan Koyu Sk., Sultanahmet | 🕐 12:00 - 23:00
+📞 +90 212 458 18 24
 
 ## Types de Restaurants
 
 ### Lokanta
-Restaurants familiaux servant des plats traditionnels. Prix démocratiques.
+Restaurants familiaux servant des plats traditionnels. Prix démocratiques (100-200 TL).
 
 ### Meyhane
-Restaurant offrant également des animations (musique, danse). Idéal pour le rakı.
+Restaurant offrant également des animations (musique, danse). Idéal pour le rakı (200-500 TL).
 
 ### Kebapçı
-Spécialisé dans les kebabs. Le durum ( wrap) est très populaire.
+Spécialisé dans les kebabs. Le durum (wrap) est très populaire (80-150 TL).
 
-## Quartiers Gourmet
-- **Kadırga**: Bons restaurants bon marché
-- **Kumkapı**: Poisson et fruits de mer
-- **Balat**: Cuisine traditionnelle
-- **Karaköy**: Restaurants branchés
+## Réservation
+- Recommandé pour les restaurants populaires
+- Utiliser les sites web des restaurants
+- Ou via votre hôtel
           ''',
         ),
       ];
@@ -704,6 +736,161 @@ Plus ancien et plus grand marché couvert du monde avec 61 ruelles et plus de 30
 - Bazar des bijoutiers (Zincirlikuyu)
           ''',
         ),
+        WikiItem(
+          icon: '⛲',
+          title: 'Sainte-Sophie (Ayasofya)',
+          subtitle: 'Chef-d\'œuvre byzantin et ottoman',
+          price: 'Gratuit (mosquée ouverte)',
+          hours: '09:00 - 19:00 (fermé pendant les prières)',
+          website: 'https://muze.gen.tr/muze-detay/ayasofya',
+          address: 'Sultanahmet Meydanı, Istanbul',
+          content: '''
+# Sainte-Sophie (Ayasofya-i Kebir)
+
+## Histoire
+Construite en 537 par l\'empereur byzantin Justinien, Sainte-Sophie fut la plus grande cathédrale du monde pendant près de 1000 ans. Convertie en mosquée en 1453, puis en musée en 1935, elle est redevenue mosquée en 2020.
+
+## Architecture
+- Dôme de 31m de diamètre, 56m de hauteur
+- 40 fenêtres autour de la coupole
+- Mosaïques byzantines du IXe siècle
+- Marbres rares de l\'Empire romain
+
+## À voir absolument
+- La porte impériale en bois (VIe siècle)
+- Les médaillons calligraphiques géants
+- La galerie des impératrices
+- La colonne des souhaits (colonne de Saint Grégoire)
+          ''',
+        ),
+        WikiItem(
+          icon: '💧',
+          title: 'Citerne Basilique (Yerebatan)',
+          subtitle: 'Palais souterrain byzantin',
+          price: '450 TL adulte (2025)',
+          hours: '09:00 - 18:30',
+          bookingUrl: 'https://www.muze.gov.tr/en/muze/step',
+          website: 'https://yerebatan.com',
+          phone: '+90 212 512 15 70',
+          address: 'Yerebatan Cd. 1/3, Sultanahmet, Istanbul',
+          content: '''
+# Citerne Basilique (Yerebatan Sarnıcı)
+
+## Présentation
+Construite en 532 par l\'empereur Justinien, la Citerne Basilique est la plus grande citerne souterraine d\'Istanbul, avec 336 colonnes de marbre.
+
+## Caractéristiques
+- Capacité initiale: 80 000 m³ d\'eau
+- 336 colonnes hautes de 9m
+- Deux colonnes avec tête de Méduse
+- Colonne des larmes (colonne dédiée aux esclaves)
+
+## Ambiance
+Éclairage tamisé, eau calme, musique classique en fond. Une des expériences les plus magiques d\'Istanbul.
+
+## Conseils
+- Peu de monde en semaine à l\'ouverture
+- Prévoir 30-45 minutes de visite
+- Photos possibles sans flash
+          ''',
+        ),
+        WikiItem(
+          icon: '🗼',
+          title: 'Tour de Galata',
+          subtitle: 'Vue panoramique sur Istanbul',
+          price: '350 TL adulte (2025)',
+          hours: '08:30 - 22:00',
+          website: 'https://muze.gov.tr/muze-detay?SectionId=GAL01&CityId=34',
+          phone: '+90 212 249 03 44',
+          address: 'Bereketzade Mh., Beyoğlu, Istanbul',
+          content: '''
+# Tour de Galata (Galata Kulesi)
+
+## Histoire
+Construite en 1348 par les Génois, la tour de Galata servait de fortification et d\'observatoire. Elle offre une vue à 360° sur la Corne d\'Or, le Bosphore et la vieille ville.
+
+## Caractéristiques
+- Hauteur: 66,90m
+- 9 étages accessibles par ascenseur
+- Plateforme d\'observation au sommet
+- Restaurant panoramique au 8e étage
+
+## Conseils
+- Meilleur moment: coucher du soleil
+- Arriver 30 min avant pour éviter la queue
+- Le vent peut être fort au sommet
+
+## Alentours
+- Rue Istiklal (shopping et animations)
+- Tunnel de Galata (2e plus vieux métro du monde)
+- Quartier de Karaköy (restaurants branchés)
+          ''',
+        ),
+        WikiItem(
+          icon: '🏛️',
+          title: 'Palais de Dolmabahçe',
+          subtitle: 'Splendeur ottomane du XIXe siècle',
+          price: '900 TL adulte (2025)',
+          hours: '09:00 - 16:00 (fermé lundi)',
+          bookingUrl: 'https://www.muze.gov.tr/en/muze/step',
+          website: 'https://www.dolmabahcepalace.com',
+          phone: '+90 212 327 26 26',
+          address: 'Vişnezade Mh., Beşiktaş, Istanbul',
+          content: '''
+# Palais de Dolmabahçe (Dolmabahçe Sarayı)
+
+## Histoire
+Construit entre 1843 et 1856 par le sultan Abdülmecid Ier, ce palais de style baroque-ottoman fut la résidence principale des sultans après Topkapi.
+
+## Points forts
+- Grand lustre de cristal de 4,5 tonnes (offert par la reine Victoria)
+- 285 chambres et 44 salles de réception
+- Escalier de cristal en forme de fer à cheval
+- Salle du Trône (Muayede Salonu)
+
+## Jardins
+- Parcs magnifiques en bord de Bosphore
+- Horloge monumentale de la tour de l\'horloge
+- Palais des princes héritiers
+
+## Attention
+- Visite guidée obligatoire (incluse dans le billet)
+- Photos interdites à l\'intérieur
+- Prévoir 2 heures de visite
+          ''',
+        ),
+        WikiItem(
+          icon: '🕌',
+          title: 'Mosquée Süleymaniye',
+          subtitle: 'Chef-d\'œuvre de l\'architecte Sinan',
+          price: 'Gratuit (mosquée ouverte)',
+          hours: '09:00 - 18:00 (fermé pendant les prières)',
+          website: 'https://www.suleymaniyecamii.org',
+          address: 'Süleymaniye Mh., Fatih, Istanbul',
+          content: '''
+# Mosquée Süleymaniye (Süleymaniye Camii)
+
+## Histoire
+Construite entre 1550 et 1557 par l\'architecte ottoman Sinan pour le sultan Soliman le Magnifique. C\'est l\'une des plus grandes mosquées d\'Istanbul.
+
+## Architecture
+- 4 minarets (symbolisant Soliman comme 4e sultan après la conquête)
+- Coupole de 26,5m de diamètre, 53m de hauteur
+- Vue panoramique sur la Corne d\'Or
+- Jardin avec les tombeaux de Soliman et Roxelane
+
+## Complexe
+- Médersa (école coranique)
+- Bibliothèque
+- Hammam (bain turc)
+- Marché aux épices souterrain
+
+## Conseils
+- Moins touristique que la Mosquée Bleue
+- Vue magnifique depuis la cour arrière
+- Visiter aussi le tombeau de Sinan à côté
+          ''',
+        ),
       ];
     } else {
       return [
@@ -711,6 +898,11 @@ Plus ancien et plus grand marché couvert du monde avec 61 ruelles et plus de 30
           icon: '🏰',
           title: 'Kaleici',
           subtitle: 'Le vieux ville d\'Antalya',
+          price: 'Gratuit (quartier historique)',
+          hours: 'Accessible 24h/24',
+          website: 'https://www.antalyakaleici.com',
+          phone: '+90 242 249 50 00',
+          address: 'Kaleiçi Mh., Muratpaşa, Antalya',
           content: '''
 # Kaleici: Vieille Ville d'Antalya**
 
@@ -738,6 +930,10 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
           icon: '🏖️',
           title: 'Plages d\'Antalya',
           subtitle: 'Les plus belles plages',
+          price: 'Gratuit (plages publiques)',
+          hours: 'Plages ouvertes 24h/24, sauveteurs 09:00 - 19:00',
+          website: 'https://www.antalyakulturturizm.gov.tr',
+          address: 'Littoral d\'Antalya (Konyaaltı, Lara)',
           content: '''
 # Plages d'Antalya
 
@@ -765,7 +961,11 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
         WikiItem(
           icon: '💧',
           title: 'Cascades de la Région',
-          subtitle: ' beaut的自然lles naturelles',
+          subtitle: ' beautés naturelles d\'Antalya',
+          price: 'Düden: Gratuit (parc), Kurşunlu: 75 TL',
+          hours: 'Parc Düden: 08:00 - 21:00; Kurşunlu: 08:00 - 19:00',
+          website: 'https://www.antalyakulturturizm.gov.tr',
+          address: 'Düden: Lara, Antalya / Kurşunlu: Aksu, Antalya',
           content: '''
 # Cascades d'Antalya
 
@@ -790,6 +990,167 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
 - Accessible en taxi
           ''',
         ),
+        WikiItem(
+          icon: '🏛️',
+          title: 'Musée d\'Antalya',
+          subtitle: 'Un des plus grands musées de Turquie',
+          price: '450 TL adulte (2025)',
+          hours: '08:30 - 17:30 (fermé lundi)',
+          website: 'https://www.antalyamuzesi.gov.tr',
+          phone: '+90 242 238 56 88',
+          address: 'Konyaaltı Cd. 88, Muratpaşa, Antalya',
+          content: '''
+# Musée d\'Antalya (Antalya Müzesi)
+
+## Présentation
+Un des plus importants musées de Turquie avec 14 salles d\'exposition sur 30 000 m². Collections allant du Paléolithique à l\'époque ottomane.
+
+## Salles à ne pas manquer
+- Salle des statues (Perge, Side, Aphrodisias)
+- Salle des mosaïques (exceptionnelles)
+- Salle des sarcophages (dont le sarcophage d\'Héraclès)
+- Salle des icônes et monnaies
+
+## Points forts
+- Statue d\'Hercule (IIe siècle)
+- Sarcophage de Domitien
+- Collection de bijoux antiques
+- Maquettes des cités antiques de la région
+
+## Conseils
+- Prévoir 2-3 heures de visite
+- Audio guide disponible en français
+- Combiné avec Porte d\'Hadrien (20 min à pied)
+          ''',
+        ),
+        WikiItem(
+          icon: '🏗️',
+          title: 'Porte d\'Hadrien',
+          subtitle: 'Arc de triomphe romain du IIe siècle',
+          price: 'Gratuit (monument en plein air)',
+          hours: 'Accessible 24h/24',
+          address: 'Kaleiçi, Antalya (entrée de la vieille ville)',
+          content: '''
+# Porte d\'Hadrien (Hadrian Kapısı)
+
+## Histoire
+Arc de triomphe romain construit en 130 apr. J.-C. en l\'honneur de l\'empereur Hadrien. Restauré, c\'est aujourd\'hui l\'entrée principale de Kaleiçi.
+
+## Architecture
+- 3 arches en marbre blanc
+- Colonnes corinthiennes
+- Frises décoratives représentant des fleurs et motifs géométriques
+- Tour nord et tour sud bien conservées
+
+## Informations
+- Accès libre, passage piéton
+- Belle lumière pour les photos au coucher du soleil
+- Point de départ idéal pour explorer Kaleiçi
+          ''',
+        ),
+        WikiItem(
+          icon: '🎭',
+          title: 'Aspendos (Théâtre Antique)',
+          subtitle: 'Théâtre romain le mieux conservé du monde',
+          price: '500 TL adulte (2025)',
+          hours: '08:00 - 19:00 (avril-octobre), 08:00 - 17:00 (novembre-mars)',
+          website: 'https://www.muze.gov.tr/en/muze/step',
+          phone: '+90 242 243 38 30',
+          address: 'Serik Mahallesi, Belkıs, Antalya (45km à l\'est)',
+          content: '''
+# Aspendos (Aspendos Antik Kenti)
+
+## Présentation
+Le théâtre romain d\'Aspendos est le mieux conservé du monde antique. Construit au IIe siècle par l\'architecte romain Zénon, il peut accueillir 15 000 spectateurs.
+
+## Caractéristiques
+- Scène de 96m de large, parfaitement conservée
+- Acoustique exceptionnelle
+- Toujours utilisé pour des festivals et concerts
+- Galeries voûtées pour l\'entrée/sortie
+
+## Festival
+Festival international d\'opéra et de ballet d\'Aspendos (juin-juillet)
+Programmation: https://aspendosfestival.gov.tr
+
+## À voir aussi sur le site
+- Aqueduc romain
+- Nymphée (fontaine monumentale)
+- Bouleutérion (salle du conseil)
+- Stade antique
+
+## Conseils
+- Meilleure visite en fin d\'après-midi (lumière dorée)
+- Site peu ombragé, prévoir eau et chapeau
+- Combiner avec la visite de Side (30 min)
+          ''',
+        ),
+        WikiItem(
+          icon: '🚡',
+          title: 'Téléphérique Olympos',
+          subtitle: 'Sommet du mont Tahtalı à 2365m',
+          price: '1200 TL adulte aller-retour (2025)',
+          hours: '09:00 - 18:00 (juin-septembre), 09:00 - 17:00 (octobre-mai)',
+          bookingUrl: 'https://www.olymposteleferik.com',
+          website: 'https://www.olymposteleferik.com',
+          phone: '+90 242 242 00 00',
+          address: 'Çıralı Mh., Kemer, Antalya',
+          content: '''
+# Téléphérique Olympos (Olympos Teleferik)
+
+## Présentation
+Téléphérique panoramique du mont Tahtalı (Olympos). La cabine monte de 726m à 2365m en 10 minutes, offrant une vue à 360° sur la côte lycienne.
+
+## Expérience
+- Vue sur le golfe d\'Antalya, Kemer, Phasélis
+- Restaurant panoramique au sommet
+- Parapente au départ du sommet
+- Coucher de soleil magique
+
+## À savoir
+- Cabine: 80 personnes, départ toutes les 15 min
+- Prévoir vêtements chauds (10-15°C de moins qu\'en bas)
+- Meilleur moment: fin d\'après-midi pour le coucher du soleil
+
+## Combiné possible
+- Plage d\'Olympos (antique cité lycienne)
+- Çıralı (plage des tortues Caretta caretta)
+- Yanartaş (flamme éternelle du mont Chimère)
+          ''',
+        ),
+        WikiItem(
+          icon: '🏛️',
+          title: 'Termessos (Cité Antique)',
+          subtitle: 'Cité lycienne perchée à 1050m',
+          price: '450 TL adulte (2025)',
+          hours: '08:00 - 19:00 (avril-octobre), 08:00 - 17:00 (novembre-mars)',
+          website: 'https://www.muze.gov.tr/en/muze/step',
+          address: 'Güllük Dağı, Antalya (35km au nord-ouest)',
+          content: '''
+# Termessos (Termessos Antik Kenti)
+
+## Présentation
+Cité antique lycienne perchée à 1050m d\'altitude dans le parc national de Güllük Dağı. Surnommée "le nid d\'aigle" pour sa position imprenable.
+
+## À voir
+- Théâtre antique avec vue panoramique époustouflante
+- Agora (place publique)
+- Nécropole monumentale avec sarcophages
+- Temple d\'Artémis
+- Murs d\'enceinte cyclopéens
+
+## Parc National
+- Randonnée dans le parc Güllük Dağı
+- Faune: bouquetins, aigles, tortues
+- Pique-nique possible dans le parc
+
+## Conseils
+- Bonnes chaussures de marche indispensables
+- Apporter eau et provisions (pas de restaurant sur place)
+- Prévoir 3-4 heures de visite
+- Meilleure saison: printemps et automne (chaud en été)
+          ''',
+        ),
       ];
     }
   }
@@ -801,13 +1162,19 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
           icon: '⛵',
           title: 'Croisière sur le Bosphore',
           subtitle: 'L\'essentiel de la ville depuis l\'eau',
+          price: 'Vapur: 20 TL; Croisière touristique: 25-40€',
+          hours: 'Vapur: 06:00 - 23:00; Croisières: départs 10:00, 14:00, 18:00',
+          bookingUrl: 'https://www.sehirhatlari.com.tr',
+          website: 'https://www.sehirhatlari.com.tr',
+          phone: '+90 212 444 18 66',
+          address: 'Eminönü İskelesi, Fatih, Istanbul',
           content: '''
 # Croisière sur le Bosphore
 
 ## Options
-- **Bateaux publics (Vapur)**: 1.5 TL, traversées fréquentes
-- **Croisières touristiques**: 15-25€, Includes guide
-- **Bateaux privès**: Réserver via votre hôtel
+- **Bateaux publics (Şehir Hatları)**: 20 TL, traversées fréquentes
+- **Croisières touristiques**: 25-40€, Includes guide multilingue
+- **Bateaux privés**: 100-200€, réserver via votre hôtel ou les agences
 
 ## Ce qu\'on voit
 - Palais de Dolmabahçe
@@ -829,7 +1196,11 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
         WikiItem(
           icon: '🛁',
           title: 'Hammam: Bain Turc',
-          subtitle: ' Tradition millénaire',
+          subtitle: 'Tradition millénaire',
+          price: 'Plusieurs hammams: 150-500+ TL selon services',
+          hours: 'Généralement 08:00 - 22:00',
+          website: 'https://www.cemberlitashamami.com.tr',
+          address: 'Çemberlitaş (Istanbul), Kaleiçi (Antalya)',
           content: '''
 # Hammam: Bain Turc
 
@@ -849,19 +1220,31 @@ Le hammam est un bain public traditionnel turc, hérité des bains romains et by
 - **Ayasofya Hürrem Sultan**: Luxe près de la Mosquée Bleue
 
 ## Prix
-- standard: 150-250 TL
-- Avec massage: 300-500 TL
-- Luxe: 500+ TL
+- Standard: 300-500 TL
+- Avec massage: 600-1000 TL
+- Luxe (Ayasofya etc.): 1000-2000 TL
+
+## Réservation
+- **Çemberlitaş Hamamı**: +90 212 520 18 50 | https://www.cemberlitashamami.com.tr
+- **Galatasaray Hamamı**: +90 212 252 42 42 | https://www.galatasarayhamami.com
+- **Ayasofya Hürrem Sultan**: +90 212 517 35 35 | https://www.ayasofyahamami.com
 
 ## À apporter
-- Maillot de bain (hommes)
-- Serviette (ou fourni)
+- Maillot de bain
+- Serviette (généralement fournie)
+- Savon (optionnel)
           ''',
         ),
         WikiItem(
           icon: '🎭',
           title: 'Spectacles Traditionnels',
           subtitle: 'Soirées culturelles',
+          price: 'Derviches: 250-500 TL; Danse ventre: 300-600 TL',
+          hours: 'Spectacles: généralement 19:00 - 21:00',
+          bookingUrl: 'https://www.hodjapasha.com',
+          website: 'https://www.hodjapasha.com',
+          phone: '+90 212 522 67 34',
+          address: 'Hodjapasha, Eminönü, Istanbul',
           content: '''
 # Spectacles à Istanbul
 
@@ -894,6 +1277,12 @@ Bars à musique dans les quartiers:
           icon: '🤿',
           title: 'Plongée à Antalya',
           subtitle: 'Explorez les profondeurs',
+          price: 'Baptême: 50-80€; Plongée: 40-60€; Open Water: 300-400€',
+          hours: 'Sessions: 09:00 - 15:00 (selon centre)',
+          bookingUrl: 'https://www.olymposdiving.com',
+          website: 'https://www.olymposdiving.com',
+          phone: '+90 242 814 37 37',
+          address: 'Kemer, Kaş, Alanya (selon centre)',
           content: '''
 # Plongée à Antalya
 
@@ -921,6 +1310,10 @@ Bars à musique dans les quartiers:
           icon: '🧗',
           title: 'Randonnée dans les Monts Taurus',
           subtitle: 'Aventure en montagne',
+          price: 'Gratuit (sentiers publics); Guide: 500-1000 TL/jour',
+          hours: 'Meilleure période: mars-juin, septembre-novembre',
+          website: 'https://www.lycianway.com',
+          address: 'Parc national Güllük Dağı, Antalya',
           content: '''
 # Randonnée dans le Taurus
 
@@ -944,8 +1337,14 @@ Bars à musique dans les quartiers:
         ),
         WikiItem(
           icon: '🛶',
-          title: 'Rafting àantalya',
+          title: 'Rafting à Antalya',
           subtitle: 'Adrénaline sur l\'Eurymédon',
+          price: 'Demi-journée: 250-400 TL; Journée complète: 500-800 TL',
+          hours: 'Mai-septembre, sessions: 09:00 - 16:00',
+          bookingUrl: 'https://www.koprulucanyonpark.com',
+          website: 'https://www.koprulucanyonpark.com',
+          phone: '+90 242 752 30 00',
+          address: 'Köprülü Canyon, Antalya',
           content: '''
 # Rafting à Antalya
 
@@ -982,21 +1381,21 @@ Bars à musique dans les quartiers:
           content: '''
 # Budget à Istanbul
 
-## Coûts Moyens (en Lira Turque)
+## Coûts Moyens (en Lira Turque - 2025)
 
-### Petit budget (< 300 TL/jour)
-- Auberge: 100-150 TL
-- Repas rapide: 30-50 TL
-- Transport public: 10-20 TL
+### Petit budget (< 1000 TL/jour)
+- Auberge: 300-500 TL
+- Repas rapide: 80-150 TL
+- Transport public: 30-50 TL
 
-### Budget moyen (300-600 TL/jour)
-- Hôtel 3*: 200-350 TL
-- Restaurant local: 60-150 TL
-- Visites: 50-150 TL
+### Budget moyen (1000-2500 TL/jour)
+- Hôtel 3*: 800-1500 TL
+- Restaurant local: 200-400 TL
+- Visites: 100-500 TL
 
-### Comfort (600+ TL/jour)
-- Hôtel 4-5*: 400-800 TL
-- Restaurant raffiné: 150-400 TL
+### Comfort (2500+ TL/jour)
+- Hôtel 4-5*: 2000-5000 TL
+- Restaurant raffiné: 500-1500 TL
 - Shopping: variable
 
 ## Économiser
@@ -1015,6 +1414,11 @@ Bars à musique dans les quartiers:
           icon: '🚇',
           title: 'Se Déplacer à Istanbul',
           subtitle: 'Transports en commun',
+          price: 'Istanbulkart: 130 TL (carte); Trajet: 20 TL',
+          hours: 'Métro: 06:00 - 00:00; Vapur: 06:00 - 23:00',
+          website: 'https://www.metro.istanbul',
+          phone: '+90 212 444 18 66',
+          address: 'Istanbul (réseau de transports)',
           content: '''
 # Transports à Istanbul
 
@@ -1047,6 +1451,7 @@ Bars à musique dans les quartiers:
           icon: '📱',
           title: 'Applications Utiles',
           subtitle: 'Outils numériques pour Istanbul',
+          website: 'https://www.istanbulkart.istanbul',
           content: '''
 # Applications pour Istanbul
 
@@ -1084,6 +1489,7 @@ Bars à musique dans les quartiers:
           icon: '🌡️',
           title: 'Quand Partir à Antalya',
           subtitle: 'Calendrier saisonnier',
+          website: 'https://www.antalyakulturturizm.gov.tr',
           content: '''
 # Quand Visiter Antalya
 
@@ -1092,17 +1498,17 @@ Bars à musique dans les quartiers:
 ### Avril-Mai
 - Température: 20-25°C
 - Avantages: Moins de monde, prix corrects
-- Inconvénient:可能会有pluie
+- Inconvénient: Pluie possible
 
 ### Juin-Septembre
 - Température: 28-35°C
-- Avantages: Ideal pour la plage
-- Inconvénient: Très touristes, cher
+- Avantages: Idéal pour la plage
+- Inconvénient: Très touristique, cher
 
-### Octubre-Novembre
+### Octobre-Novembre
 - Température: 20-28°C
 - Avantages: Meilleure période!
-- Inconvénient: некоторыеfermetures
+- Inconvénient: Certaines fermetures saisonnières
 
 ### Décembre-Mars
 - Température: 10-18°C
@@ -1110,75 +1516,96 @@ Bars à musique dans les quartiers:
 - Inconvénient: Pluie fréquente, certaines fermetures
 
 ## Festivals
-- **Février**: Carnival d'Antalya
+- **Février**: Carnaval d'Antalya
 - **Avril**: Festival de musique classique
-- **Octobre**: Festival du film
+- **Octobre**: Festival du film d'Antalya
           ''',
         ),
         WikiItem(
           icon: '🏥',
           title: 'Santé et Sécurité',
           subtitle: 'Conseils pratiques',
+          phone: 'Police: 155 | Ambulance: 112 | Pompiers: 110',
+          website: 'https://www.antalyakulturturizm.gov.tr',
           content: '''
 # Santé et Sécurité à Antalya
 
 ## Santé
-- **Hôpitaux**: Bon système médical
-- Pharmacies dans tous les quartiers
-- Attention au soleil (crème SPF 50+)
-- Eau du robinet potable
+- **Hôpitaux**: Bon système médical, plusieurs hôpitaux privés avec services en anglais
+- Pharmacies (eczane) dans tous les quartiers (ouvertes 08:00 - 24:00)
+- Attention au soleil (crème SPF 50+ obligatoire)
+- Eau du robinet potable (mais préférez l\'eau en bouteille)
 
 ## Sécurité
-- Très safe pour les touristes
-- Vols à la tirerare
-- Encas de problème: police touristique
+- Très sûr pour les touristes
+- Vols à la tire rares mais possibles dans les zones très touristiques
+- Police touristique (Turizm Polisi): +90 242 248 97 62
+- En cas de problème: contacter l\'ambassade
 
 ## Numéros d\'urgence
 - Police: 155
 - Ambulance: 112
 - Pompiers: 110
+- Gendarmerie: 156
+- Assistance routière: 159
+
+## Hôpitaux recommandés
+- **Medikal Park Antalya**: +90 242 314 14 14
+- **Memorial Antalya**: +90 242 314 44 44
 
 ## Astuces
 - Souscrire une assurance voyage
-- avoir ses médicaments
-- Protéger ses effets personnels
+- Avoir ses médicaments personnels
+- Protéger ses effets personnels à la plage
           ''',
         ),
         WikiItem(
           icon: '🎒',
           title: 'Liste de Bagages',
           subtitle: 'Ce qu\'il faut emporter',
+          website: 'https://www.antalyakulturturizm.gov.tr',
           content: '''
 # Bagages pour Antalya
 
 ## Vêtements
-- Maillot de bain obligatoire
-- Vêtements légère (coton, lin)
-- Vêtements couvre-epaule pour les mosquées
+- Maillot de bain (obligatoire!)
+- Vêtements légers (coton, lin)
+- Vêtements couvrant les épaules et genoux pour les mosquées
 - Chaussures de marche
-- Sandales
+- Sandales et tongs
+- Veste légère pour le soir (surtout hors été)
 
 ## Documents
-- Passeport (valide 6 mois)
-- Billet d'avion
-- Réservations d'hôtel
+- Passeport (valide 6 mois après le retour)
+- Billet d\'avion (version numérique et papier)
+- Réservations d\'hôtel imprimées
 - Assurance voyage
+- Permis de conduire international (si location voiture)
+- VISA électronique (e-Visa) imprimé
 
 ## Électronique
 - Chargeur téléphone
+- Banque d\'alimentation externe
 - Appareil photo
-- Adaptateur prise turque (type F)
+- Adaptateur prise turque (type F, 230V)
+- Carte SIM turque ou eSIM
 
-## Trousse
-- Crème solaire haute protection
+## Trousse de toilette
+- Crème solaire haute protection (SPF 50+)
 - Lunettes de soleil
-- Médicaments personnels
-- Premier secoursbasique
+- Médicaments personnels (avec ordonnance si nécessaire)
+- Trousse de premiers secours basique
+- Anti-moustique (surtout en été)
+- Gel hydroalcoolique
 
 ## Pour la plage
-- Serviette de plage
-- Parasol pliable
-- Snorkeling masque
+- Serviette de plage (microfibre conseillée)
+- Masque et tuba (snorkeling)
+- Sac étanche pour téléphone/portefeuille
+- Chaussures d\'eau (pour plages de galets)
+
+## Spécifique Ramadan
+- Si pendant le ramadan: prévoir collations pour la journée
           ''',
         ),
       ];
