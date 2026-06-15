@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../models/route_info.dart';
 
@@ -23,7 +24,9 @@ class VoiceGuidanceService {
       _tts.setCompletionHandler(() {
         _isSpeaking = false;
       });
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('VoiceGuidance: TTS init error: $e');
+    }
   }
 
   Future<void> toggle() async {
@@ -97,21 +100,27 @@ class VoiceGuidanceService {
     if (!_isEnabled) return;
     try {
       await _tts.speak('Vous êtes arrivé à destination. Merci d\'avoir utilisé TrTravel !');
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('VoiceGuidance: arrival announcement error: $e');
+    }
   }
 
   Future<void> speak(String text) async {
     if (!_isEnabled) return;
     try {
       await _tts.speak(text);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('VoiceGuidance: speak error: $e');
+    }
   }
 
   Future<void> stop() async {
     _isSpeaking = false;
     try {
       await _tts.stop();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('VoiceGuidance: stop error: $e');
+    }
   }
 
   void dispose() {

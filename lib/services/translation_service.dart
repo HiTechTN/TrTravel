@@ -68,7 +68,7 @@ class TranslationService extends ChangeNotifier {
       'Près': 'Yakın',
       'ICI': 'Burada',
       'Là-bas': 'Şurada',
-      '地图': 'Harita',
+      'Carte': 'Harita',
       'Rue': 'Sokak',
       'Place': 'Meydan',
       

@@ -48,8 +48,8 @@ void main() async {
       ),
     );
   } catch (e, stack) {
-    print('Fatal error during initialization: $e');
-    print('Stack trace: $stack');
+    debugPrint('Fatal error during initialization: $e');
+    debugPrint('Stack trace: $stack');
     runApp(MaterialApp(
       home: Scaffold(
         body: Center(

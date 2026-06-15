@@ -50,7 +50,9 @@ class CacheManager extends ChangeNotifier {
             return result;
           }
         }
-      } catch (_) {}
+        } catch (e) {
+          debugPrint('CacheManager: error prefetching key $key: $e');
+        }
     }
     return null;
   }
@@ -85,7 +87,9 @@ class CacheManager extends ChangeNotifier {
           final diskValue = _prefs!.getString(diskKey)!;
           final data = json.decode(diskValue);
           _memoryCache[key] = _CacheEntry(null, DateTime.now(), ttlSeconds: 86400, rawJson: data);
-        } catch (_) {}
+      } catch (e) {
+        debugPrint('CacheManager: error reading disk cache for key $key: $e');
+      }
       }
     }
   }

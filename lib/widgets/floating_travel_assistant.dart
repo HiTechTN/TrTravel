@@ -341,7 +341,7 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant>
     } else if (question.contains('Restaurant')) {
       answer = city == 'Istanbul'
           ? '🍽️ Karaköy Lokantasi, Çiya Sofrasi, Balık Pazarı, Karadeniz Pidecisi'
-          : '🍽️ Meyo, Lara Köfte, Ser上一, Dondurma';
+          : '🍽️ Meyo, Lara Köfte, Serafettin, Dondurma';
     } else if (question.contains('Transport')) {
       answer = '🚋 Métro, Bateau (Vapur), Taxi, Dolmuş, Walk';
     } else if (question.contains('Shopping')) {
@@ -514,7 +514,7 @@ class _FloatingTravelAssistantState extends State<FloatingTravelAssistant>
     final city = assistant.currentCity;
     String info = city == 'Istanbul'
         ? '🍽️ Karaköy Lokantasi (cuisine ottomane), Çiya Sofrasi (cuisine locale), Balık Pazarı (poisson), Karadeniz Pidecisi (pide), Mikla ( rooftop)'
-        : '🍽️ Meyo (grillades), Lara Köfte (köfte), Ser上一 (poisson), The Shed (moderne), Dondurma (glace turque)';
+        : '🍽️ Meyo (grillades), Lara Köfte (köfte), Serafettin (poisson), The Shed (moderne), Dondurma (glace turque)';
     _showAnswerDialog(info);
   }
 

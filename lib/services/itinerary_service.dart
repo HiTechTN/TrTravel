@@ -37,7 +37,9 @@ class ItineraryService extends ChangeNotifier {
         final List<dynamic> jsonList = json.decode(data);
         return jsonList.map((j) => ItineraryItem.fromJson(j)).toList();
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ItineraryService: error loading itinerary: $e');
+    }
     return [];
   }
 

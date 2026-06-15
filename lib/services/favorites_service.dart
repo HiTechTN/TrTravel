@@ -59,6 +59,8 @@ class FavoritesService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(_key, _favoriteNames.toList());
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('FavoritesService: error saving favorites: $e');
+    }
   }
 }

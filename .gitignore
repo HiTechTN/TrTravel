@@ -23,4 +23,7 @@ Thumbs.db
 
 # Environment
 .env
-.env.localtest/screenshots/
+.env.*
+
+# Test screenshots (not for production)
+test/screenshots/

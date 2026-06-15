@@ -706,7 +706,7 @@ class _AnswerSheet extends StatelessWidget {
         return [
           {'icon': '🏛️', 'title': 'Kaleici', 'desc': 'Vieux quartier historique d\'Antalya'},
           {'icon': '🏖️', 'title': 'Plage de Konyaalti', 'desc': 'Belle plage aux eaux turquoises'},
-          {'icon': '瀑布', 'title': 'Kursunlu', 'desc': 'Magnifique cascade naturelle'},
+          {'icon': '💧', 'title': 'Kursunlu', 'desc': 'Magnifique cascade naturelle'},
           {'icon': '🏛️', 'title': 'Musée d\'Antalya', 'desc': 'Trésors archéologiques de la région'},
           {'icon': '🗿', 'title': 'Aspendos', 'desc': ' Théâtre romain parfaitement préservé'},
         ];
@@ -723,7 +723,7 @@ class _AnswerSheet extends StatelessWidget {
       } else {
         return [
           {'icon': '🍖', 'title': 'Meyo', 'desc': 'Grillades locales avec vue mer'},
-          {'icon': '🐟', 'title': 'Ser上一', 'desc': 'Poisson frais au bord de l\'eau'},
+          {'icon': '🐟', 'title': 'Serafettin', 'desc': 'Poisson frais au bord de l\'eau'},
           {'icon': '🥙', 'title': 'Lara Köfte', 'desc': 'Köfte traditionnelle artisanale'},
           {'icon': '🍦', 'title': 'Dondurma', 'desc': 'Glace turque authentique'},
           {'icon': '🍽️', 'title': 'The Shed', 'desc': 'Cuisine internationale moderne'},

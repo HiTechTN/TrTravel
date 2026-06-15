@@ -194,7 +194,7 @@ class ShoppingDatabase {
     ),
     ShoppingCenter(
       id: 'm_ist_008',
-      name: 'K坊k Caddesi',
+      name: 'Küçük Caddesi',
       latitude: 41.0425,
       longitude: 29.0115,
       address: 'Abide-i Hürriyet Cad., Şişli',

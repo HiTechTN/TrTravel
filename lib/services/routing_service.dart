@@ -118,19 +118,27 @@ class RoutingService {
   }
 
   RouteInfo _decorateTransitRoute(RouteInfo osrmRoute) {
+    final walkDistance = osrmRoute.distance * 0.15;
+    final transitDistance = osrmRoute.distance * 0.7;
+    final finalWalkDistance = osrmRoute.distance * 0.15;
+
+    final walkDuration = osrmRoute.duration * 0.2;
+    final transitDuration = osrmRoute.duration * 1.0;
+    final finalWalkDuration = osrmRoute.duration * 0.15;
+
     final steps = <RouteStep>[
       RouteStep(
         instruction: '🚶 Marchez jusqu\'à l\'arrêt de bus/métro le plus proche',
-        distance: 300,
-        duration: 240,
+        distance: walkDistance,
+        duration: walkDuration,
         point: osrmRoute.points.isNotEmpty ? osrmRoute.points.first : const LatLng(0, 0),
         maneuverType: 'depart',
         streetName: 'Marche',
       ),
       RouteStep(
         instruction: '🚌 Montez dans le transport en commun',
-        distance: osrmRoute.distance * 500,
-        duration: osrmRoute.duration * 30,
+        distance: transitDistance,
+        duration: transitDuration,
         point: osrmRoute.points.length > 3
             ? osrmRoute.points[osrmRoute.points.length ~/ 2]
             : osrmRoute.points.last,
@@ -139,8 +147,8 @@ class RoutingService {
       ),
       RouteStep(
         instruction: '🚶 Marchez jusqu\'à votre destination',
-        distance: 200,
-        duration: 180,
+        distance: finalWalkDistance,
+        duration: finalWalkDuration,
         point: osrmRoute.points.isNotEmpty ? osrmRoute.points.last : const LatLng(0, 0),
         maneuverType: 'transit',
         streetName: 'Marche',
@@ -202,7 +210,7 @@ class RoutingService {
     final steps = <RouteStep>[
       RouteStep(
         instruction: mode == 'walking' ? '🚶 Départ' : mode == 'taxi' ? '🚕 Prenez un taxi' : '🚌 Départ en transport',
-        distance: distance * 500,
+        distance: distance * 0.3,
         duration: duration * 0.4,
         point: points.first,
         maneuverType: 'depart',
@@ -210,7 +218,7 @@ class RoutingService {
       ),
       RouteStep(
         instruction: mode == 'walking' ? '🚶 Continuez' : mode == 'taxi' ? '🚕 Continuez en taxi' : '🚌 Restez dans le bus/métro',
-        distance: distance * 500,
+        distance: distance * 0.7,
         duration: duration * 0.5,
         point: midPoint,
         maneuverType: 'continue',
