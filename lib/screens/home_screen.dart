@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../services/itinerary_service.dart';
 import '../models/itinerary.dart';
 import 'itinerary_screen.dart';
@@ -13,7 +9,6 @@ import 'prayer_times_screen.dart';
 import 'emergency_screen.dart';
 import 'packing_checklist_screen.dart';
 import 'budget_tracker_screen.dart';
-import '../widgets/floating_travel_assistant.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,13 +19,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   Future<List<ItineraryItem>>? _itineraryFuture;
+  List<ItineraryItem> _items = [];
   late AnimationController _fabAnimController;
   late Animation<double> _fabScaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _itineraryFuture = Provider.of<ItineraryService>(context, listen: false).loadItinerary();
+    _loadData();
     _fabAnimController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -39,6 +35,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       CurvedAnimation(parent: _fabAnimController, curve: Curves.elasticOut),
     );
     _fabAnimController.forward();
+  }
+
+  Future<void> _loadData() async {
+    final service = Provider.of<ItineraryService>(context, listen: false);
+    final future = service.loadItinerary();
+    setState(() => _itineraryFuture = future);
+    final items = await future;
+    if (mounted) setState(() => _items = items);
   }
 
   @override
@@ -57,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (result != null && mounted) {
       final service = context.read<ItineraryService>();
       await service.addItineraryDay(result);
-      setState(() => _itineraryFuture = service.loadItinerary());
+      await _loadData();
     }
   }
 
@@ -79,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (confirm == true && mounted) {
       final service = context.read<ItineraryService>();
       await service.deleteItineraryDay(item);
-      setState(() => _itineraryFuture = service.loadItinerary());
+      await _loadData();
     }
   }
 
@@ -93,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (result != null && mounted) {
       final service = context.read<ItineraryService>();
       await service.updateItineraryDay(item, result);
-      setState(() => _itineraryFuture = service.loadItinerary());
+      await _loadData();
     }
   }
 
@@ -159,11 +163,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    _buildStatChip(Icons.calendar_today, '11 Jours', Colors.white),
+                    _buildStatChip(Icons.calendar_today, '${_items.length} Jours', Colors.white),
                     const SizedBox(width: 12),
-                    _buildStatChip(Icons.place, '5 Étapes', Colors.white),
+                    _buildStatChip(Icons.place, '${_items.map((i) => i.location).toSet().length} Étapes', Colors.white),
                     const SizedBox(width: 12),
-                    _buildStatChip(Icons.wb_sunny, '10 Activités', Colors.white),
+                    _buildStatChip(Icons.wb_sunny, '${_items.fold<int>(0, (sum, i) => sum + i.activities.length)} Activités', Colors.white),
                   ],
                 ),
               ],
