@@ -1,7 +1,7 @@
 name: trtravel
 description: A travel application for Turkey trip with offline maps and journal.
 publish_to: 'none'
-version: 2.1.0+2
+version: 2.2.0+3
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
