@@ -244,7 +244,7 @@ class PhraseDatabase {
         Phrase(id: 'u17', textFr: 'Vol', textTr: 'Hırsızlık', textEn: 'Theft', pronunciationTr: 'hir-siz-lik'),
         Phrase(id: 'u18', textFr: 'Accident', textTr: 'Kaza', textEn: 'Accident', pronunciationTr: 'ka-za'),
         Phrase(id: 'u19', textFr: 'Aide-moi!', textTr: 'Yardım edin!', textEn: 'Help me!'),
-        Phrase(id: 'u20', textFr: 'Je suis糖尿病', textTr: 'Diyabet hastasıyım', textEn: 'I have diabetes'),
+        Phrase(id: 'u20', textFr: 'Je suis diabétique', textTr: 'Diyabet hastasıyım', textEn: 'I have diabetes'),
       ],
     ),
     PhraseCategory(

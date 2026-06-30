@@ -33,18 +33,16 @@ class PushNotificationService extends ChangeNotifier {
       sound: true,
     );
     
-    if (kDebugMode) {
-      print('Push notification permission status: ${settings.authorizationStatus}');
-    }
+    debugPrint('Push notification permission status: ${settings.authorizationStatus}');
   }
 
   Future<String?> _getToken() async {
     try {
       final token = await _firebaseMessaging.getToken();
-      if (kDebugMode) print('FCM Token: $token');
+      debugPrint('FCM Token: $token');
       return token;
     } catch (e) {
-      if (kDebugMode) print('Error getting FCM token: $e');
+      debugPrint('Error getting FCM token: $e');
       return null;
     }
   }
@@ -61,24 +59,18 @@ class PushNotificationService extends ChangeNotifier {
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
-    if (kDebugMode) {
-      print('Received foreground message: ${message.notification?.title}');
-    }
+    debugPrint('Received foreground message: ${message.notification?.title}');
     _showNotificationDialog(message);
   }
 
   void _handleMessageOpenedApp(RemoteMessage message) {
-    if (kDebugMode) {
-      print('Message opened from background: ${message.notification?.title}');
-    }
+    debugPrint('Message opened from background: ${message.notification?.title}');
     _handleMessageNavigation(message);
   }
 
   @pragma('vm:entry-point')
   Future<void> _handleBackgroundMessage(RemoteMessage message) async {
-    if (kDebugMode) {
-      print('Background message handled: ${message.notification?.title}');
-    }
+    debugPrint('Background message handled: ${message.notification?.title}');
   }
 
   void _showNotificationDialog(RemoteMessage message) {
@@ -111,9 +103,7 @@ class PushNotificationService extends ChangeNotifier {
     final data = message.data;
     final screen = data['screen'];
     
-    if (kDebugMode) {
-      print('Navigating to screen: $screen with data: $data');
-    }
+    debugPrint('Navigating to screen: $screen with data: $data');
   }
 
   Future<List<Map<String, dynamic>>> getStoredNotifications() async {
@@ -131,18 +121,18 @@ class PushNotificationService extends ChangeNotifier {
   Future<void> subscribeToTopic(String topic) async {
     try {
       await _firebaseMessaging.subscribeToTopic(topic);
-      if (kDebugMode) print('Subscribed to topic: $topic');
+      debugPrint('Subscribed to topic: $topic');
     } catch (e) {
-      if (kDebugMode) print('Error subscribing to topic: $e');
+      debugPrint('Error subscribing to topic: $e');
     }
   }
 
   Future<void> unsubscribeFromTopic(String topic) async {
     try {
       await _firebaseMessaging.unsubscribeFromTopic(topic);
-      if (kDebugMode) print('Unsubscribed from topic: $topic');
+      debugPrint('Unsubscribed from topic: $topic');
     } catch (e) {
-      if (kDebugMode) print('Error unsubscribing from topic: $e');
+      debugPrint('Error unsubscribing from topic: $e');
     }
   }
 }

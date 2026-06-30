@@ -114,7 +114,7 @@ class _OfflineSettingsScreenState extends State<OfflineSettingsScreen> {
             actions: [
               Switch(
                 value: service.isOfflineMode,
-                activeThumbColor: const Color(0xFF43A047),
+                thumbColor: WidgetStateProperty.all(const Color(0xFF43A047)),
                 onChanged: (value) => service.setOfflineMode(value),
               ),
             ],

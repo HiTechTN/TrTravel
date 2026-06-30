@@ -37,7 +37,9 @@ class ItineraryService extends ChangeNotifier {
         final List<dynamic> jsonList = json.decode(data);
         return jsonList.map((j) => ItineraryItem.fromJson(j)).toList();
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ItineraryService: error loading itinerary: $e');
+    }
     return [];
   }
 
@@ -102,6 +104,80 @@ class ItineraryService extends ChangeNotifier {
       _itineraryKey,
       json.encode(current.map((i) => i.toJson()).toList()),
     );
+    notifyListeners();
+  }
+
+  Future<void> addActivityToDay(ItineraryItem item, Activity activity) async {
+    final all = await loadItinerary();
+    final idx = all.indexWhere((i) => i.date == item.date && i.location == item.location);
+    if (idx == -1) return;
+
+    final updated = ItineraryItem(
+      date: item.date,
+      dayName: item.dayName,
+      location: item.location,
+      activities: [...item.activities, activity],
+    );
+    all[idx] = updated;
+    _cachedItems = all;
+    await _saveAll(all);
+  }
+
+  Future<void> updateActivityInDay(ItineraryItem item, int activityIndex, Activity updatedActivity) async {
+    final all = await loadItinerary();
+    final idx = all.indexWhere((i) => i.date == item.date && i.location == item.location);
+    if (idx == -1 || activityIndex >= item.activities.length) return;
+
+    final newActivities = List<Activity>.from(item.activities);
+    newActivities[activityIndex] = updatedActivity;
+
+    final updated = ItineraryItem(
+      date: item.date,
+      dayName: item.dayName,
+      location: item.location,
+      activities: newActivities,
+    );
+    all[idx] = updated;
+    _cachedItems = all;
+    await _saveAll(all);
+  }
+
+  Future<void> deleteActivityFromDay(ItineraryItem item, int activityIndex) async {
+    final all = await loadItinerary();
+    final idx = all.indexWhere((i) => i.date == item.date && i.location == item.location);
+    if (idx == -1 || activityIndex >= item.activities.length) return;
+
+    final newActivities = List<Activity>.from(item.activities);
+    newActivities.removeAt(activityIndex);
+
+    final updated = ItineraryItem(
+      date: item.date,
+      dayName: item.dayName,
+      location: item.location,
+      activities: newActivities,
+    );
+    all[idx] = updated;
+    _cachedItems = all;
+    await _saveAll(all);
+  }
+
+  Future<void> _saveAll(List<ItineraryItem> all) async {
+    final defaultJson = await rootBundle.loadString('assets/itinerary.json');
+    final List<dynamic> defaultList = json.decode(defaultJson);
+    final defaultSet = defaultList
+        .map((j) => '${j['date']}|${j['location']}')
+        .toSet();
+
+    final customItems = all.where((i) {
+      return !defaultSet.contains('${i.date}|${i.location}');
+    }).toList();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _itineraryKey,
+      json.encode(customItems.map((i) => i.toJson()).toList()),
+    );
+    notifyListeners();
   }
 
   List<ItineraryItem> getCachedItinerary() => _cachedItems;

@@ -140,7 +140,9 @@ class OfflineMapManager extends ChangeNotifier {
           region.tileCount = 1;
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('OfflineMapManager: error checking download status: $e');
+    }
   }
 
   Future<void> downloadRegion(MapRegion region) async {
@@ -224,7 +226,9 @@ class OfflineMapManager extends ChangeNotifier {
     if (s != null) {
       try {
         await s.manage.reset();
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('OfflineMapManager: error resetting store: $e');
+      }
     }
     notifyListeners();
   }

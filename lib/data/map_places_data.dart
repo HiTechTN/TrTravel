@@ -16,7 +16,7 @@ class MapPlacesData {
       descriptionTr: '4.000\'den fazla dükkanı ile dünyanın en büyük kapalı çarşılarından biri. 1461 yılında kurulmuş, dünyanın en eski alışveriş merkezlerinden biridir.',
       location: LatLng(41.0097, 28.9702), category: 'shopping', rating: 4.5, openingHours: '08:30 - 19:00', estimatedDuration: 3.0, phone: '+90 212 519 12 48', address: 'Beyazıt Mahallesi, Istanbul', entranceFee: 0.0, bestTime: 'Toute la journée', tags: ['Shopping', 'Histoire', ' tradition'], city: 'Istanbul'),
     MapPlace(
-      name: 'Palais de Topkapi', nameTr: 'Topkapı Sarayı', description: 'Résidence principale des sultans ottomans pendant 400 ans. Abrita l\'un des plus riches trésors impériaux包含了珠寶、武器和聖物。',
+      name: 'Palais de Topkapi', nameTr: 'Topkapı Sarayı', description: 'Résidence principale des sultans ottomans pendant 400 ans. Abrita l\'un des plus riches trésors impériaux avec des bijoux, des armes et des reliques.',
       descriptionTr: '400 yıl boyunca Osmanlı sultanlarının ana ikametgahı. mücevherler, silahlar ve kutsal emanetler içeren en zengin imparatorluk hazinelerinden birine ev sahipliği yaptı.',
       location: LatLng(41.0045, 28.9838), category: 'palace', rating: 4.8, openingHours: '09:00 - 17:00', estimatedDuration: 3.0, phone: '+90 212 512 04 80', website: 'https://topkapipalace.istanbul', address: 'Cankurtaran Mahallesi, Istanbul', entranceFee: 20.0, bestTime: 'Matin', tags: ['UNESCO', 'Ottoman', 'Trésors'], city: 'Istanbul'),
     MapPlace(
@@ -28,7 +28,7 @@ class MapPlacesData {
       descriptionTr: '14. yüzyılda inşa edilmiş, İstanbul ve Boğaz\'ın panoramik manzarasını sunan 67 metre yüksekliğinde ortaçağ Ceneviz kulesi.',
       location: LatLng(41.0527, 28.9745), category: 'landmark', rating: 4.7, openingHours: '08:00 - 22:00', estimatedDuration: 1.5, phone: '+90 212 293 81 80', address: 'Bereketzade Mahallesi, Istanbul', entranceFee: 10.0, bestTime: 'Coucher de soleil', tags: ['Vue panoramique', 'Moyen Âge', 'Romantique'], city: 'Istanbul'),
     MapPlace(
-      name: 'Palais Dolmabahçe', nameTr: 'Dolmabahçe Sarayı', description: 'Résidence officielle des sultans ottomans après Topkapi. Le plus grand palais de Турции avec 285 pièces et un lustre en cristal de Bohême de 4,5 tonnes.',
+      name: 'Palais Dolmabahçe', nameTr: 'Dolmabahçe Sarayı', description: 'Résidence officielle des sultans ottomans après Topkapi. Le plus grand palais de Turquie avec 285 pièces et un lustre en cristal de Bohême de 4,5 tonnes.',
       descriptionTr: 'Topkapı\'dan sonra Osmanlı sultanlarının resmi ikametgahı. 285 oda ve 4,5 tonluk Bohemya kristal avizesiyle Türkiye\'nin en büyük sarayı.',
       location: LatLng(41.0401, 29.0014), category: 'palace', rating: 4.8, openingHours: '09:00 - 16:00', estimatedDuration: 2.5, phone: '+90 212 236 90 00', address: 'Dolmabahçe Mahallesi, Istanbul', entranceFee: 30.0, bestTime: 'Matin', tags: ['Ottoman', 'Luxe', 'Architecture'], city: 'Istanbul'),
     MapPlace(

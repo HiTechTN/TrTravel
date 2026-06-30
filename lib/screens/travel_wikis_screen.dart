@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -413,7 +414,7 @@ Aujourd'hui, Antalya est l'une des destinations touristiques les plus populaires
 ## Aspendos
 - Théâtre romain parfaitement conservé (IIe siècle)
 - Capacité: 15 000 spectateurs
--仍 utilisé pour des concerts et opéras
+- Encore utilisé pour des concerts et opéras
 
 ## Perge
 - Stade grec et romain
@@ -439,7 +440,7 @@ Aujourd'hui, Antalya est l'une des destinations touristiques les plus populaires
 # Les Sulaymanides d'Antalya
 
 ## Origines
-La dynastie sulaymanide fut fondée par des chefs turkmènes au начале du XIVe siècle. Ils contrôlèrent la région d'Antalya et développèrent une culture florissante.
+La dynastie sulaymanide fut fondée par des chefs turkmènes au début du XIVe siècle. Ils contrôlèrent la région d'Antalya et développèrent une culture florissante.
 
 ## Contribution architecturale
 - Mosquées et madrasas dans Kaleici
@@ -914,7 +915,7 @@ Kaleici est le quartier historique d'Antalya, préservation les vestiges de l'é
 - **Port de Hadrien**: Entrée monumentale romaine du IIe siècle
 - **Maison de Flûteur**: Musée du patrimoine local
 - **Clock Tower (Saat Kulesi)**: Tour d'horloge du XIXe siècle
-- **Mosquée Муezzınlik**: Ancienne église byzantine convertie
+- **Mosquée Müezzınlik**: Ancienne église byzantine convertie
 
 ## Architecture
 - Maisons ottomanes à bow-windows
@@ -1331,7 +1332,7 @@ Bars à musique dans les quartiers:
 
 ## Conseils
 - Partir tôt le matin
-- Emporter足够的水
+- Emporter suffisamment d'eau
 - Chaussures de randonnée
 - Guide recommandé pour certains itinéraires
           ''',
@@ -1445,7 +1446,7 @@ Bars à musique dans les quartiers:
 ## Conseils
 - Acheter Istanbulkart (transport illimité)
 - Éviter les heures de pointe (8-9h, 17-19h)
-- Le周末, la circulation est fluide
+- Le weekend, la circulation est fluide
           ''',
         ),
         WikiItem(
@@ -1480,7 +1481,7 @@ Bars à musique dans les quartiers:
 - **Maps.me**: Hors ligne
 
 ## Astuce
-- Télécharger离线 carte de la ville
+- Télécharger la carte hors ligne de la ville
           ''',
         ),
       ];
@@ -1646,7 +1647,9 @@ void _openUrl(String url) async {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
-  } catch (_) {}
+  } catch (e) {
+    debugPrint('TravelWikis: error launching URL: $e');
+  }
 }
 
 class WikiDetailScreen extends StatelessWidget {

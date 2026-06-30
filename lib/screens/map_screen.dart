@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -81,7 +82,9 @@ class _MapScreenState extends State<MapScreen>
   Future<void> _loadFavorites() async {
     try {
       await context.read<FavoritesService>().load();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('MapScreen: error loading favorites: $e');
+    }
   }
 
   @override

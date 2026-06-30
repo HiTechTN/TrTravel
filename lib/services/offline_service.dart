@@ -221,7 +221,9 @@ class OfflineService extends ChangeNotifier {
       if (await translationDir.exists()) {
         await translationDir.delete(recursive: true);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('OfflineService: error deleting translation for $languageCode: $e');
+    }
 
     _downloadedTranslations.remove(languageCode);
     await _saveDownloadedTranslations();
@@ -250,7 +252,9 @@ class OfflineService extends ChangeNotifier {
       if (await translationsDir.exists()) {
         await translationsDir.delete(recursive: true);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('OfflineService: error clearing offline data: $e');
+    }
     
     _downloadedMaps.clear();
     _downloadedTranslations.clear();

@@ -206,7 +206,7 @@ class TravelAssistant extends ChangeNotifier {
     final tips = {
       'istanbul': [
         'Les transports en commun sont très économiques - utilisez la Istanbulkart',
-        'Les mosquées ont des horaires de prière - vérifiez avant de посещать',
+        'Les mosquées ont des horaires de prière - vérifiez avant de visiter',
         'Le ferry du Bosphore est une expérience incontournable',
         'Les taxis peuvent être chers - négociez ou utilisez l\'app BiTaksi',
         'Le thé est offert dans les boutiques - c\'est une forme de hospitality',
