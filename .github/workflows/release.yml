@@ -9,7 +9,7 @@ on:
     types: [created]
 
 env:
-  FLUTTER_VERSION: '3.29.2'
+  FLUTTER_VERSION: '3.41.9'
 
 jobs:
   build-android:
