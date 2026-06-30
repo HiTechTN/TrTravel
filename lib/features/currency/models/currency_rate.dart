@@ -15,7 +15,7 @@ class CurrencyRate {
 }
 
 class CurrencyData {
-  static const List<CurrencyRate> currencies = [
+  static List<CurrencyRate> currencies = [
     CurrencyRate(code: 'EUR', name: 'Euro', flag: '🇪🇺', rateToEur: 1.0, rateToUsd: 1.08),
     CurrencyRate(code: 'USD', name: 'US Dollar', flag: '🇺🇸', rateToEur: 0.93, rateToUsd: 1.0),
     CurrencyRate(code: 'TRY', name: 'Lire Turque', flag: '🇹🇷', rateToEur: 35.50, rateToUsd: 33.20),
