@@ -6,6 +6,8 @@ import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/budget_service.dart';
 import '../models/budget_models.dart';
+import '../widgets/expense_chart.dart';
+import '../widgets/category_card.dart';
 
 class BudgetScreen extends StatelessWidget {
   const BudgetScreen({super.key});
@@ -22,16 +24,21 @@ class BudgetScreen extends StatelessWidget {
           ),
           Expanded(
             child: Consumer<BudgetService>(
-              builder: (_, service, __) => ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildOverview(service),
-                  const SizedBox(height: 16),
-                  _buildCategoryBudgets(context, service),
-                  const SizedBox(height: 16),
-                  _buildRecentExpenses(service),
-                ],
-              ),
+              builder: (_, service, __) {
+                final report = service.generateReport();
+                return ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _buildOverview(report),
+                    const SizedBox(height: 16),
+                    ExpenseChart(report: report),
+                    const SizedBox(height: 16),
+                    _buildCategoryBudgets(context, service, report),
+                    const SizedBox(height: 16),
+                    _buildRecentExpenses(service),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -43,11 +50,10 @@ class BudgetScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOverview(BudgetService service) {
-    final totalSpent = service.getTotalSpent();
-    final totalBudget = service.getTotalBudget();
-    final remaining = service.getRemainingBudget();
-    final progress = totalBudget > 0 ? (totalSpent / totalBudget).clamp(0.0, 1.0) : 0.0;
+  Widget _buildOverview(BudgetReport report) {
+    final progress = report.totalBudget > 0
+        ? (report.totalSpent / report.totalBudget).clamp(0.0, 1.0)
+        : 0.0;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -64,23 +70,26 @@ class BudgetScreen extends StatelessWidget {
           children: [
             const Text('Budget Total', style: TextStyle(color: Colors.white70, fontSize: 14)),
             const SizedBox(height: 4),
-            Text('${totalSpent.toStringAsFixed(0)} / ${totalBudget.toStringAsFixed(0)} TL',
+            Text('${report.totalSpent.toStringAsFixed(0)} / ${report.totalBudget.toStringAsFixed(0)} TL',
                 style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text('Dépensé ${report.spendingRate.toStringAsFixed(0)}% du budget',
+                style: const TextStyle(color: Colors.white60, fontSize: 13)),
             const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: progress,
                 backgroundColor: Colors.white24,
-                color: remaining < 0 ? AppColors.error : Colors.white,
+                color: report.totalRemaining < 0 ? AppColors.error : Colors.white,
                 minHeight: 8,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Restant: ${remaining.toStringAsFixed(0)} TL',
+              'Restant: ${report.totalRemaining.toStringAsFixed(0)} TL',
               style: TextStyle(
-                color: remaining < 0 ? AppColors.error : Colors.white70,
+                color: report.totalRemaining < 0 ? AppColors.error : Colors.white70,
                 fontSize: 16,
               ),
             ),
@@ -90,7 +99,7 @@ class BudgetScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryBudgets(BuildContext context, BudgetService service) {
+  Widget _buildCategoryBudgets(BuildContext context, BudgetService service, BudgetReport report) {
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
@@ -98,40 +107,16 @@ class BudgetScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Budget par catégorie', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Budget par catégorie', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                Text('${service.expenses.length} dépenses',
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+              ],
+            ),
             const SizedBox(height: 12),
-            ...service.categories.map((cat) {
-              final spent = service.getSpentByCategory(cat.id);
-              final budget = cat.budget;
-              final progress = budget > 0 ? (spent / budget).clamp(0.0, 1.0) : 0.0;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(cat.emoji, style: const TextStyle(fontSize: 18)),
-                        const SizedBox(width: 8),
-                        Expanded(child: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.w500))),
-                        Text('${spent.toStringAsFixed(0)} / ${budget.toStringAsFixed(0)} TL',
-                            style: TextStyle(fontSize: 13, color: spent > budget ? AppColors.error : AppColors.textSecondary)),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: AppColors.divider,
-                        color: spent > budget ? AppColors.error : AppColors.primary,
-                        minHeight: 6,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+            ...report.categories.map((cat) => CategoryCard(report: cat)),
             const SizedBox(height: 8),
             Center(
               child: TextButton.icon(
@@ -289,6 +274,12 @@ class BudgetScreen extends StatelessWidget {
                         controller: ctrl,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8)),
+                        onChanged: (v) {
+                          final budget = double.tryParse(v);
+                          if (budget != null) {
+                            service.setCategoryBudget(cat.id, budget);
+                          }
+                        },
                       ),
                     ),
                     const Text(' TL', style: TextStyle(fontSize: 12)),
@@ -299,13 +290,7 @@ class BudgetScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-            },
-            child: const Text('Enregistrer'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Fermer')),
         ],
       ),
     );

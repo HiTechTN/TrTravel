@@ -3,46 +3,259 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
-import '../services/assistant_service.dart';
-import '../models/assistant_models.dart';
-import '../widgets/itinerary_sharing.dart';
+import 'package:trtravel/features/assistant/services/assistant_service.dart';
+import 'package:trtravel/features/assistant/widgets/chat_bubble.dart';
+import 'package:trtravel/features/assistant/widgets/quick_replies.dart';
 
-class AssistantScreen extends StatelessWidget {
+class AssistantScreen extends StatefulWidget {
   const AssistantScreen({super.key});
+
+  @override
+  State<AssistantScreen> createState() => _AssistantScreenState();
+}
+
+class _AssistantScreenState extends State<AssistantScreen> {
+  final TextEditingController _textCtrl = TextEditingController();
+  final ScrollController _scrollCtrl = ScrollController();
+
+  @override
+  void dispose() {
+    _textCtrl.dispose();
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollCtrl.hasClients) {
+        _scrollCtrl.animateTo(
+          _scrollCtrl.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _sendMessage(AssistantService service, String text) {
+    if (text.trim().isEmpty) return;
+    service.askQuestion(text.trim());
+    _textCtrl.clear();
+    _scrollToBottom();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Assistant Voyage',
             subtitle: 'Votre guide personnel intelligent',
             icon: Icons.auto_awesome_rounded,
+            trailing: Consumer<AssistantService>(
+              builder: (_, service, __) {
+                if (service.messages.isEmpty) return const SizedBox.shrink();
+                return IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Effacer la conversation'),
+                        content: const Text('Voulez-vous effacer tout l\'historique de la conversation ?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            child: const Text('Annuler'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              service.clearConversation();
+                              Navigator.pop(ctx);
+                            },
+                            child: const Text('Effacer', style: TextStyle(color: AppColors.error)),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
           Expanded(
             child: Consumer<AssistantService>(
-              builder: (_, service, __) => SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildCitySelector(service),
-                    const SizedBox(height: 16),
-                    _buildDurationSlider(service),
-                    const SizedBox(height: 16),
-                    _buildInterests(service),
-                    const SizedBox(height: 16),
-                    _buildQuestionInput(service),
-                    if (service.answer != null) ...[
-                      const SizedBox(height: 16),
-                      _buildAnswer(service),
-                    ],
-                    const SizedBox(height: 16),
-                    _buildGeneratePlan(context, service),
-                  ],
+              builder: (_, service, __) {
+                if (service.messages.isEmpty) {
+                  return _buildEmptyState(service);
+                }
+                return _buildConversation(service);
+              },
+            ),
+          ),
+          _buildInputBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(AssistantService service) {
+    final suggestions = [
+      const SuggestionItem(icon: Icons.restaurant_rounded, label: 'Où manger ?', colors: [Color(0xFFF97316), Color(0xFFFB923C)]),
+      const SuggestionItem(icon: Icons.map_rounded, label: 'Que visiter ?', colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)]),
+      const SuggestionItem(icon: Icons.wb_sunny_rounded, label: 'Météo', colors: [Color(0xFF3B82F6), Color(0xFF60A5FA)]),
+      const SuggestionItem(icon: Icons.directions_bus_rounded, label: 'Transport', colors: [Color(0xFF06B6D4), Color(0xFF22D3EE)]),
+      const SuggestionItem(icon: Icons.account_balance_wallet_rounded, label: 'Budget', colors: [Color(0xFF10B981), Color(0xFF34D399)]),
+      const SuggestionItem(icon: Icons.translate_rounded, label: 'Traduction', colors: [Color(0xFFEC4899), Color(0xFFF472B6)]),
+    ];
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const SizedBox(height: 32),
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: AppColors.primaryGradient),
+              borderRadius: BorderRadius.circular(AppRadius.xl),
+            ),
+            child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 40),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Bonjour ! Je suis votre assistant de voyage.',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Posez-moi une question ou choisissez une suggestion :',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1.4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: suggestions.length,
+            itemBuilder: (context, index) {
+              final item = suggestions[index];
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _sendMessage(service, item.label),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: item.colors,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(AppRadius.lg),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(item.icon, color: Colors.white, size: 28),
+                        const SizedBox(height: 8),
+                        Text(
+                          item.label,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConversation(AssistantService service) {
+    return ListView.builder(
+      controller: _scrollCtrl,
+      padding: const EdgeInsets.all(12),
+      itemCount: service.messages.length + (service.isLoading ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == service.messages.length && service.isLoading) {
+          return _buildTypingIndicator();
+        }
+        final msg = service.messages[index];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ChatBubble(message: msg),
+            if (!msg.isUser &&
+                msg.response != null &&
+                msg.response!.suggestions.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 48),
+                child: QuickReplies(
+                  suggestions: msg.response!.suggestions,
+                  onTap: (s) {
+                    _sendMessage(service, s);
+                  },
                 ),
               ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: AppColors.primaryGradient),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+            ),
+            child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _dot(0),
+                const SizedBox(width: 4),
+                _dot(300),
+                const SizedBox(width: 4),
+                _dot(600),
+              ],
             ),
           ),
         ],
@@ -50,314 +263,96 @@ class AssistantScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCitySelector(AssistantService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('📍 Ville', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: AssistantService.cities.map((city) {
-                final selected = service.selectedCity == city;
-                return ChoiceChip(
-                  label: Text(city),
-                  selected: selected,
-                  onSelected: (_) => service.setCity(city),
-                  selectedColor: AppColors.primary,
-                  labelStyle: TextStyle(color: selected ? Colors.white : null),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDurationSlider(AssistantService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('📅 Durée : ${service.tripDuration} jour${service.tripDuration > 1 ? 's' : ''}',
-                style: const TextStyle(fontWeight: FontWeight.w600)),
-            Slider(
-              value: service.tripDuration.toDouble(),
-              min: 1,
-              max: 7,
-              divisions: 6,
-              activeColor: AppColors.primary,
-              onChanged: (v) => service.setDuration(v.round()),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInterests(AssistantService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('🎯 Centres d\'intérêt', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: TravelInterest.all.map((interest) {
-                final selected = service.selectedInterests.contains(interest.id);
-                return FilterChip(
-                  avatar: Text(interest.emoji, style: const TextStyle(fontSize: 16)),
-                  label: Text(interest.name, style: const TextStyle(fontSize: 12)),
-                  selected: selected,
-                  onSelected: (_) => service.toggleInterest(interest.id),
-                  selectedColor: AppColors.primary.withValues(alpha: 0.15),
-                  checkmarkColor: AppColors.primary,
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuestionInput(AssistantService service) {
-    final ctrl = TextEditingController();
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('💬 Posez votre question', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: ctrl,
-                    decoration: const InputDecoration(
-                      hintText: 'Où manger ? Que visiter ? Budget ?',
-                      isDense: true,
-                    ),
-                    onSubmitted: (v) {
-                      if (v.trim().isNotEmpty) {
-                        service.askQuestion(v.trim());
-                        ctrl.clear();
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton.filled(
-                  onPressed: service.isLoading ? null : () {
-                    if (ctrl.text.trim().isNotEmpty) {
-                      service.askQuestion(ctrl.text.trim());
-                      ctrl.clear();
-                    }
-                  },
-                  icon: service.isLoading
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Icon(Icons.send_rounded),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: [
-                'Où manger ?', 'Que visiter ?', 'Budget ?', 'Transport ?', 'Hôtels ?', 'Activités ?'
-              ].map((q) => ActionChip(
-                label: Text(q, style: const TextStyle(fontSize: 11)),
-                onPressed: () => service.askQuestion(q),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
-              )).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnswer(AssistantService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          gradient: LinearGradient(
-            colors: [AppColors.secondary.withValues(alpha: 0.05), AppColors.primary.withValues(alpha: 0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+  Widget _dot(int delay) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.3, end: 1.0),
+      duration: Duration(milliseconds: 600 + delay),
+      builder: (context, value, child) {
+        return Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: value),
+            shape: BoxShape.circle,
           ),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
-                  child: const Icon(Icons.auto_awesome, color: Colors.white, size: 16),
-                ),
-                const SizedBox(width: 8),
-                const Text('Assistant TrTravel', style: TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(service.answer!, style: const TextStyle(fontSize: 14, height: 1.6)),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildGeneratePlan(BuildContext context, AssistantService service) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () {
-          final plan = service.generatePlan();
-          _showPlan(context, plan);
-        },
-        icon: const Icon(Icons.map_rounded),
-        label: Text('Générer mon itinéraire (${service.tripDuration} jours)'),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-      ),
-    );
-  }
-
-  void _showPlan(BuildContext context, TripPlan plan) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.8,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (_, scrollCtrl) => SingleChildScrollView(
-          controller: scrollCtrl,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40, height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.divider, borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
+  Widget _buildInputBar() {
+    return Consumer<AssistantService>(
+      builder: (_, service, __) {
+        return Container(
+          padding: EdgeInsets.only(
+            left: 12,
+            right: 12,
+            top: 8,
+            bottom: MediaQuery.of(context).padding.bottom + 8,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(plan.title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  ),
-                  ShareButton(plan: plan),
-                ],
-              ),
-              Text('📍 ${plan.city} • ${plan.duration} jours', style: const TextStyle(color: AppColors.textSecondary, fontSize: 16)),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppRadius.round),
-                ),
-                child: Text('💰 Budget estimé: ${plan.estimatedBudget}',
-                    style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
-              ),
-              const SizedBox(height: 20),
-              ...plan.days.map((day) => Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 32, height: 32,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text('${day.dayNumber}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(child: Text(day.theme, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16))),
-                          Text(day.estimatedCost, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      ...day.activities.map((a) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.check_circle_outline, size: 18, color: AppColors.success),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(a)),
-                          ],
-                        ),
-                      )),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.food.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.restaurant, size: 16, color: AppColors.food),
-                            const SizedBox(width: 8),
-                            Expanded(child: Text(day.mealSuggestion, style: const TextStyle(fontSize: 13))),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )),
             ],
           ),
-        ),
-      ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _textCtrl,
+                  decoration: const InputDecoration(
+                    hintText: 'Posez votre question...',
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                  onSubmitted: (v) => _sendMessage(service, v),
+                  textInputAction: TextInputAction.send,
+                ),
+              ),
+              const SizedBox(width: 8),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                child: IconButton.filled(
+                  onPressed: service.isLoading
+                      ? null
+                      : () => _sendMessage(service, _textCtrl.text),
+                  icon: service.isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.send_rounded),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
+}
+
+class SuggestionItem {
+  final IconData icon;
+  final String label;
+  final List<Color> colors;
+
+  const SuggestionItem({
+    required this.icon,
+    required this.label,
+    required this.colors,
+  });
 }

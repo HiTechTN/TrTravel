@@ -14,14 +14,24 @@ import 'features/journal/services/journal_service.dart';
 import 'features/assistant/services/assistant_service.dart';
 import 'features/settings/services/settings_service.dart';
 import 'features/budget/services/budget_service.dart';
+import 'features/ar/services/ar_service.dart';
+import 'features/bookings/services/booking_service.dart';
+import 'features/voice_journal/services/voice_journal_service.dart';
 import 'features/weather/services/weather_service.dart';
 import 'features/settings/services/offline_map_service.dart';
 import 'features/itinerary/services/itinerary_service.dart';
+import 'features/share/services/share_service.dart';
+import 'features/collaboration/services/collaboration_service.dart';
+import 'features/notifications/services/notification_service.dart';
+import 'features/offline/services/offline_service.dart';
+import 'features/platform/services/platform_service.dart';
+import 'services/push_notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await LocalStorage.init();
+  await PushNotificationService().initialize();
   runApp(const TrTravelApp());
 }
 
@@ -69,10 +79,18 @@ class _TrTravelAppState extends State<TrTravelApp> {
         ChangeNotifierProvider(create: (_) => JournalService()),
         ChangeNotifierProvider(create: (_) => AssistantService()),
         ChangeNotifierProvider(create: (_) => BudgetService()),
+        ChangeNotifierProvider(create: (_) => ARService()),
+        ChangeNotifierProvider(create: (_) => BookingService()),
+        ChangeNotifierProvider(create: (_) => VoiceJournalService()),
         ChangeNotifierProvider(create: (_) => WeatherService()),
         ChangeNotifierProvider(create: (_) => OfflineMapService()..init()),
         ChangeNotifierProvider(create: (_) => TranslationPackService()),
         ChangeNotifierProvider(create: (_) => ItineraryService()),
+        ChangeNotifierProvider(create: (_) => ShareService(_authService)),
+        ChangeNotifierProvider(create: (_) => CollaborationService(_authService)),
+        ChangeNotifierProvider(create: (_) => NotificationService(_authService)),
+        ChangeNotifierProvider(create: (_) => OfflineService()),
+        ChangeNotifierProvider(create: (_) => PlatformService()),
       ],
       child: MaterialApp(
         title: 'TrTravel - Voyage en Turquie',

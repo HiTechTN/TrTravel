@@ -176,20 +176,16 @@ class OfflineMapManager extends ChangeNotifier {
         ),
       );
 
-      final stream = s.download.startForeground(
+      final downloadHandle = s.download.startForeground(
         region: downloadable,
         parallelThreads: 4,
         maxBufferLength: 200,
         skipSeaTiles: true,
       );
 
-      await for (final event in stream) {
-        if (event is DownloadProgress) {
-          region.downloadProgress = event.percentageProgress / 100;
-          region.tileCount = event.attemptedTiles;
-          region.totalTiles = event.maxTiles;
-          notifyListeners();
-        }
+      await for (final progress in downloadHandle.downloadProgress) {
+        region.downloadProgress = progress.percentageProgress / 100;
+        notifyListeners();
       }
 
       region.isDownloaded = true;
@@ -246,7 +242,9 @@ class OfflineMapManager extends ChangeNotifier {
 
   FMTCTileProvider? getTileProvider() {
     try {
-      return store?.getTileProvider();
+      final s = store;
+      if (s == null) return null;
+      return FMTCTileProvider(stores: {s.storeName: BrowseStoreStrategy.readUpdateCreate});
     } catch (_) {
       return null;
     }
