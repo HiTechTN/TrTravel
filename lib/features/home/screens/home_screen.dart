@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/section_card.dart';
 import 'package:trtravel/features/transport/screens/transport_screen.dart';
@@ -25,15 +26,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _quickServices = [
-    _ServiceCard(icon: Icons.directions_bus_rounded, label: 'Transport', color: AppColors.transport, screen: TransportScreen()),
-    _ServiceCard(icon: Icons.account_balance_wallet_rounded, label: 'Budget', color: AppColors.success, screen: BudgetScreen()),
-    _ServiceCard(icon: Icons.wb_sunny_rounded, label: 'Météo', color: AppColors.gold, screen: WeatherScreen()),
-    _ServiceCard(icon: Icons.calendar_month_rounded, label: 'Itinéraire', color: AppColors.primary, screen: ItineraryListScreen()),
-    _ServiceCard(icon: Icons.shopping_bag_rounded, label: 'Shopping', color: AppColors.shop, screen: ShoppingScreen()),
-    _ServiceCard(icon: Icons.currency_exchange_rounded, label: 'Change', color: AppColors.mosque, screen: ExchangeScreen()),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -44,12 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final quickServices = [
+      _ServiceCard(icon: Icons.directions_bus_rounded, label: l.transport, color: AppColors.transport, screen: TransportScreen()),
+      _ServiceCard(icon: Icons.account_balance_wallet_rounded, label: l.budget, color: AppColors.success, screen: BudgetScreen()),
+      _ServiceCard(icon: Icons.wb_sunny_rounded, label: l.weather, color: AppColors.gold, screen: WeatherScreen()),
+      _ServiceCard(icon: Icons.calendar_month_rounded, label: l.itinerary, color: AppColors.primary, screen: ItineraryListScreen()),
+      _ServiceCard(icon: Icons.shopping_bag_rounded, label: l.shopping, color: AppColors.shop, screen: ShoppingScreen()),
+      _ServiceCard(icon: Icons.currency_exchange_rounded, label: l.change, color: AppColors.mosque, screen: ExchangeScreen()),
+    ];
+
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Bienvenue en Turquie !',
-            subtitle: 'Votre voyage commence ici',
+          GradientHeader(
+            title: l.welcomeTitle,
+            subtitle: l.welcomeSubtitle,
             icon: Icons.flight_rounded,
             height: 180,
           ),
@@ -57,29 +59,29 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 4, top: 12, bottom: 12),
-                  child: Text('⚡ Services rapides', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, top: 12, bottom: 12),
+                  child: Text('⚡ ${l.quickServices}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
-                  children: _quickServices.map((s) => _QuickServiceCard(service: s)).toList(),
+                  children: quickServices.map((s) => _QuickServiceCard(service: s)).toList(),
                 ),
                 const SizedBox(height: 20),
                 _buildInfoCard(
                   context,
                   icon: Icons.info_rounded,
-                  title: 'Conseil du jour',
-                  subtitle: 'Pensez à acheter une Istanbulkart à l\'aéroport pour vos déplacements.',
+                  title: l.tipOfDay,
+                  subtitle: l.tipContent,
                   color: AppColors.info,
                 ),
                 const SizedBox(height: 12),
                 _buildInfoCard(
                   context,
                   icon: Icons.wb_sunny_rounded,
-                  title: 'Météo à Istanbul',
-                  subtitle: '28°C - Ensoleillé. Idéal pour visiter !',
+                  title: l.weatherIstanbul,
+                  subtitle: l.weatherContent,
                   color: AppColors.gold,
                 ),
                 const SizedBox(height: 12),
@@ -90,11 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     final eurToTnd = CurrencyData.convert(1, 'EUR', 'TND');
                     final subtitle = service.lastUpdated != null
                         ? '1 € ≈ $eurToTry TL • 1 \$ ≈ $usdToTry TL • 1 € ≈ $eurToTnd TND'
-                        : 'Chargement...';
+                        : l.rateLoading;
                     return _buildInfoCard(
                       context,
                       icon: Icons.monetization_on_rounded,
-                      title: 'Taux du jour',
+                      title: l.rateToday,
                       subtitle: subtitle,
                       color: AppColors.success,
                     );
@@ -123,8 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: _buildInfoCard(
                     context,
                     icon: Icons.cloud_off_rounded,
-                    title: 'Mode Hors-ligne',
-                    subtitle: 'Gérez vos téléchargements et la file d\'attente de synchronisation',
+                    title: l.offlineMode,
+                    subtitle: l.offlineDesc,
                     color: AppColors.info,
                   ),
                 ),
@@ -136,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(const BudgetScreen()),
         icon: const Icon(Icons.account_balance_wallet_rounded),
-        label: const Text('Ajouter dépense'),
+        label: Text(l.addExpense),
       ),
     );
   }

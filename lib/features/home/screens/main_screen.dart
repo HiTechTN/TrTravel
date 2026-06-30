@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/map/screens/map_screen.dart';
 import 'package:trtravel/features/journal/screens/journal_screen.dart';
 import 'package:trtravel/features/translation/screens/translation_screen.dart';
@@ -22,21 +23,23 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  static const _tabs = [
-    _TabItem(icon: Icons.home_rounded, label: 'Accueil'),
-    _TabItem(icon: Icons.translate_rounded, label: 'Traduire'),
-    _TabItem(icon: Icons.calendar_month_rounded, label: 'Itinéraire'),
-    _TabItem(icon: Icons.monetization_on_rounded, label: 'Change'),
-    _TabItem(icon: Icons.map_rounded, label: 'Carte'),
-    _TabItem(icon: Icons.article_rounded, label: 'Journal'),
-    _TabItem(icon: Icons.auto_awesome_rounded, label: 'Assistant'),
-    _TabItem(icon: Icons.emergency_rounded, label: 'Urgence'),
-    _TabItem(icon: Icons.menu_book_rounded, label: 'Wiki'),
-    _TabItem(icon: Icons.settings_rounded, label: 'Paramètres'),
+  List<_TabItem> _buildTabs(AppLocalizations l) => [
+    _TabItem(icon: Icons.home_rounded, label: l.home),
+    _TabItem(icon: Icons.translate_rounded, label: l.translate),
+    _TabItem(icon: Icons.calendar_month_rounded, label: l.itinerary),
+    _TabItem(icon: Icons.monetization_on_rounded, label: l.change),
+    _TabItem(icon: Icons.map_rounded, label: l.map),
+    _TabItem(icon: Icons.article_rounded, label: l.journal),
+    _TabItem(icon: Icons.auto_awesome_rounded, label: l.assistant),
+    _TabItem(icon: Icons.emergency_rounded, label: l.emergency),
+    _TabItem(icon: Icons.menu_book_rounded, label: l.wiki),
+    _TabItem(icon: Icons.settings_rounded, label: l.settingsTab),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final tabs = _buildTabs(l);
     final bottomPad = MediaQuery.of(context).padding.bottom;
     return ResponsiveLayout(
       mobile: (context, width) => Scaffold(
@@ -62,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
             onDestinationSelected: (index) => setState(() => _currentIndex = index),
             height: 64 + (bottomPad > 0 ? 0 : 4),
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: _tabs
+            destinations: tabs
                 .map((t) => NavigationDestination(
                       icon: Icon(t.icon),
                       selectedIcon: Icon(t.icon, color: AppColors.primary),
@@ -83,7 +86,7 @@ class _MainScreenState extends State<MainScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Icon(Icons.flight_rounded, color: AppColors.primary, size: 32),
               ),
-              destinations: _tabs
+              destinations: tabs
                   .map((t) => NavigationRailDestination(
                         icon: Icon(t.icon),
                         selectedIcon: Icon(t.icon, color: AppColors.primary),

@@ -23,6 +23,7 @@ import 'features/itinerary/services/itinerary_service.dart';
 import 'features/share/services/share_service.dart';
 import 'features/collaboration/services/collaboration_service.dart';
 import 'features/notifications/services/notification_service.dart';
+import 'l10n/app_localizations.dart';
 import 'features/offline/services/offline_service.dart';
 import 'features/platform/services/platform_service.dart';
 import 'services/push_notification_service.dart';
@@ -67,6 +68,15 @@ class _TrTravelAppState extends State<TrTravelApp> {
   void _onSettingsChanged() => setState(() {});
   void _onAuthChanged() => setState(() {});
 
+  Locale _getLocale() {
+    switch (_settingsService.language) {
+      case 'en': return const Locale('en', 'US');
+      case 'tr': return const Locale('tr', 'TR');
+      case 'ar': return const Locale('ar', 'AR');
+      default: return const Locale('fr', 'FR');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -99,6 +109,7 @@ class _TrTravelAppState extends State<TrTravelApp> {
         darkTheme: AppTheme.dark,
         themeMode: _settingsService.darkMode ? ThemeMode.dark : ThemeMode.light,
         localizationsDelegates: const [
+          AppLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -107,8 +118,9 @@ class _TrTravelAppState extends State<TrTravelApp> {
           Locale('fr', 'FR'),
           Locale('en', 'US'),
           Locale('tr', 'TR'),
+          Locale('ar', 'AR'),
         ],
-        locale: const Locale('fr', 'FR'),
+        locale: _getLocale(),
         home: const SplashScreen(),
       ),
     );

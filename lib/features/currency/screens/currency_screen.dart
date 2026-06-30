@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
@@ -42,12 +43,13 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return ModernScaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Convertisseur',
-            subtitle: 'Taux de change en temps réel',
+          GradientHeader(
+            title: l.converter,
+            subtitle: l.converterSubtitle,
             icon: Icons.monetization_on_rounded,
           ),
           Expanded(
@@ -67,15 +69,15 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _buildCurrencySelector(service),
+                      _buildCurrencySelector(service, l),
                       const SizedBox(height: 16),
-                      _buildAmountInput(service),
+                      _buildAmountInput(service, l),
                       const SizedBox(height: 16),
-                      _buildResultCard(service),
+                      _buildResultCard(service, l),
                       const SizedBox(height: 16),
-                      _buildQuickAmounts(service),
+                      _buildQuickAmounts(service, l),
                       const SizedBox(height: 16),
-                      _buildAllRates(service),
+                      _buildAllRates(service, l),
                     ],
                   ),
                 );
@@ -87,7 +89,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     );
   }
 
-  Widget _buildCurrencySelector(CurrencyService service) {
+  Widget _buildCurrencySelector(CurrencyService service, AppLocalizations l) {
     return GlassEffect(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -114,7 +116,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '1 ${service.fromCurrency} = ${CurrencyData.convert(1, service.fromCurrency, service.toCurrency)} ${service.toCurrency}',
+            l.rateEurToX(CurrencyData.convert(1, service.fromCurrency, service.toCurrency), service.toCurrency),
             style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
         ],
@@ -122,13 +124,13 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     );
   }
 
-  Widget _buildAmountInput(CurrencyService service) {
+  Widget _buildAmountInput(CurrencyService service, AppLocalizations l) {
     return GlassEffect(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Montant', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+          Text(l.amount, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
           const SizedBox(height: 8),
           TextField(
             controller: _amountCtrl,
@@ -147,7 +149,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     );
   }
 
-  Widget _buildResultCard(CurrencyService service) {
+  Widget _buildResultCard(CurrencyService service, AppLocalizations l) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -180,7 +182,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           if (service.lastUpdated != null) ...[
             const SizedBox(height: 8),
             Text(
-              'Dernière mise à jour: ${service.lastUpdated!.substring(0, 10)}',
+              l.lastUpdate(service.lastUpdated!.substring(0, 10)),
               style: const TextStyle(color: Colors.white60, fontSize: 12),
             ),
           ],
@@ -189,13 +191,13 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     );
   }
 
-  Widget _buildQuickAmounts(CurrencyService service) {
+  Widget _buildQuickAmounts(CurrencyService service, AppLocalizations l) {
     return GlassEffect(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Montants rapides', style: TextStyle(fontWeight: FontWeight.w600)),
+          Text(l.quickAmounts, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -221,7 +223,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     );
   }
 
-  Widget _buildAllRates(CurrencyService service) {
+  Widget _buildAllRates(CurrencyService service, AppLocalizations l) {
     return GlassEffect(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -230,13 +232,13 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Tous les taux', style: TextStyle(fontWeight: FontWeight.w600)),
+              Text(l.allRates, style: const TextStyle(fontWeight: FontWeight.w600)),
               TextButton.icon(
                 onPressed: () => service.updateRates(),
                 icon: service.isLoading
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.refresh, size: 18),
-                label: const Text('Actualiser'),
+                label: Text(l.refresh),
               ),
             ],
           ),
@@ -261,7 +263,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                   children: [
                     Text('${CurrencyData.convert(1, service.fromCurrency, c.code)} ${c.code}',
                         style: const TextStyle(fontWeight: FontWeight.w500)),
-                    Text('1 € = ${c.rateToEur.toStringAsFixed(2)} ${c.code}',
+                    Text(l.rateEurToX(c.rateToEur.toStringAsFixed(2), c.code),
                         style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                   ],
                 ),
