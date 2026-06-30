@@ -2,9 +2,9 @@ name: Build and Release
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, feature/v3.1.0-sync-cloud]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, feature/v3.1.0-sync-cloud]
   release:
     types: [created]
 
