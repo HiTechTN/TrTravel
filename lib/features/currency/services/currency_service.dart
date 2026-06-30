@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:trtravel/core/services/local_storage.dart';
@@ -97,6 +98,21 @@ class CurrencyService extends ChangeNotifier {
       final url = Uri.parse('https://api.exchangerate-api.com/v4/latest/EUR');
       final response = await http.get(url).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final rates = data['rates'] as Map<String, dynamic>? ?? {};
+        
+        final updatedCurrencies = CurrencyData.currencies.map((c) {
+          if (c.code == 'EUR') return c;
+          final rate = rates[c.code] as num? ?? c.rateToEur;
+          return CurrencyRate(
+            code: c.code,
+            name: c.name,
+            flag: c.flag,
+            rateToEur: rate.toDouble(),
+            rateToUsd: c.code == 'USD' ? 1.0 : (rate / (rates['USD'] as num? ?? 1.0)).toDouble(),
+          );
+        }).toList();
+        
         _lastUpdated = DateTime.now().toIso8601String();
         LocalStorage.setString('currency_updated', _lastUpdated!);
         doConvert();
