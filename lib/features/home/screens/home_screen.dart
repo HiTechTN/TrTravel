@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/section_card.dart';
@@ -12,6 +13,9 @@ import 'package:trtravel/features/exchange/screens/exchange_screen.dart';
 import 'package:trtravel/features/itinerary/screens/itinerary_list_screen.dart';
 import 'package:trtravel/features/currency/services/currency_service.dart';
 import 'package:trtravel/features/currency/models/currency_rate.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
+import 'package:trtravel/features/offline/screens/offline_dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -113,6 +117,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {},
                   ),
                 ),
+                const SizedBox(height: 12),
+                GestureDetector(
+                  onTap: () => context.push(const OfflineDashboardScreen()),
+                  child: _buildInfoCard(
+                    context,
+                    icon: Icons.cloud_off_rounded,
+                    title: 'Mode Hors-ligne',
+                    subtitle: 'Gérez vos téléchargements et la file d\'attente de synchronisation',
+                    color: AppColors.info,
+                  ),
+                ),
               ],
             ),
           ),
@@ -127,13 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildInfoCard(BuildContext context, {required IconData icon, required String title, required String subtitle, required Color color}) {
-    return SectionCard(
+    return GlassEffect(
+      padding: const EdgeInsets.all(4),
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: color.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: Icon(icon, color: color),
         ),
@@ -160,23 +176,13 @@ class _QuickServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return AnimatedCard(
       onTap: () => context.push(service.screen),
+      elevation: 1,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
       child: Container(
-        width: (MediaQuery.of(context).size.width - 56) / 3,
+        width: (MediaQuery.of(context).size.width - 56) / 3 - 32,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.divider),
-          boxShadow: [
-            BoxShadow(
-              color: service.color.withValues(alpha: 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -184,7 +190,7 @@ class _QuickServiceCard extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: service.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Icon(service.icon, color: service.color, size: 24),
             ),

@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
 import '../services/currency_service.dart';
 import '../models/currency_rate.dart';
 
@@ -39,7 +42,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           const GradientHeader(
@@ -50,9 +53,14 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           Expanded(
             child: Consumer<CurrencyService>(
               builder: (_, service, __) {
+                if (service.isLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: ShimmerList(itemCount: 4),
+                  );
+                }
                 if (!_amountCtrl.text.isNotEmpty ||
                     double.tryParse(_amountCtrl.text) != service.amount) {
-                  // Sync controller when amount changes from quick amounts
                   _amountCtrl.text = _formatAmount(service.amount);
                 }
                 return SingleChildScrollView(
@@ -80,67 +88,61 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildCurrencySelector(CurrencyService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(child: _CurrencyDropdown(service: service, isFrom: true)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: IconButton(
-                    onPressed: () => service.swapCurrencies(),
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppRadius.round),
-                      ),
-                      child: const Icon(Icons.swap_vert_rounded, color: AppColors.primary),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: _CurrencyDropdown(service: service, isFrom: true)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: IconButton(
+                  onPressed: () => service.swapCurrencies(),
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppRadius.round),
                     ),
+                    child: const Icon(Icons.swap_vert_rounded, color: AppColors.primary),
                   ),
                 ),
-                Expanded(child: _CurrencyDropdown(service: service, isFrom: false)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '1 ${service.fromCurrency} = ${CurrencyData.convert(1, service.fromCurrency, service.toCurrency)} ${service.toCurrency}',
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-            ),
-          ],
-        ),
+              ),
+              Expanded(child: _CurrencyDropdown(service: service, isFrom: false)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '1 ${service.fromCurrency} = ${CurrencyData.convert(1, service.fromCurrency, service.toCurrency)} ${service.toCurrency}',
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildAmountInput(CurrencyService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Montant', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _amountCtrl,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                prefixText: '${service.getFromSymbol()} ',
-                prefixStyle: const TextStyle(fontSize: 18),
-              ),
-              onChanged: (v) {
-                final parsed = double.tryParse(v);
-                if (parsed != null) service.setAmount(parsed);
-              },
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Montant', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _amountCtrl,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              prefixText: '${service.getFromSymbol()} ',
+              prefixStyle: const TextStyle(fontSize: 18),
             ),
-          ],
-        ),
+            onChanged: (v) {
+              final parsed = double.tryParse(v);
+              if (parsed != null) service.setAmount(parsed);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -188,91 +190,85 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildQuickAmounts(CurrencyService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Montants rapides', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: service.quickAmounts.map((qa) {
-                final isSelected = service.amount.toStringAsFixed(0) == qa['amount'];
-                return ActionChip(
-                  label: Text(qa['label']!),
-                  onPressed: () {
-                    final amt = double.parse(qa['amount']!);
-                    service.setAmount(amt);
-                    _amountCtrl.text = _formatAmount(amt);
-                  },
-                  color: WidgetStatePropertyAll(isSelected ? AppColors.primary : null),
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : AppColors.textPrimary,
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Montants rapides', style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: service.quickAmounts.map((qa) {
+              final isSelected = service.amount.toStringAsFixed(0) == qa['amount'];
+              return ActionChip(
+                label: Text(qa['label']!),
+                onPressed: () {
+                  final amt = double.parse(qa['amount']!);
+                  service.setAmount(amt);
+                  _amountCtrl.text = _formatAmount(amt);
+                },
+                color: WidgetStatePropertyAll(isSelected ? AppColors.primary : null),
+                labelStyle: TextStyle(
+                  color: isSelected ? Colors.white : AppColors.textPrimary,
+                ),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildAllRates(CurrencyService service) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Tous les taux', style: TextStyle(fontWeight: FontWeight.w600)),
+              TextButton.icon(
+                onPressed: () => service.updateRates(),
+                icon: service.isLoading
+                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.refresh, size: 18),
+                label: const Text('Actualiser'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...service.currencies.map((c) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
               children: [
-                const Text('Tous les taux', style: TextStyle(fontWeight: FontWeight.w600)),
-                TextButton.icon(
-                  onPressed: () => service.updateRates(),
-                  icon: service.isLoading
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.refresh, size: 18),
-                  label: const Text('Actualiser'),
+                Text(c.flag, style: const TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(c.code, style: const TextStyle(fontWeight: FontWeight.w600)),
+                      Text(c.name, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('${CurrencyData.convert(1, service.fromCurrency, c.code)} ${c.code}',
+                        style: const TextStyle(fontWeight: FontWeight.w500)),
+                    Text('1 € = ${c.rateToEur.toStringAsFixed(2)} ${c.code}',
+                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            ...service.currencies.map((c) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Text(c.flag, style: const TextStyle(fontSize: 24)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(c.code, style: const TextStyle(fontWeight: FontWeight.w600)),
-                        Text(c.name, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('${CurrencyData.convert(1, service.fromCurrency, c.code)} ${c.code}',
-                          style: const TextStyle(fontWeight: FontWeight.w500)),
-                      Text('1 € = ${c.rateToEur.toStringAsFixed(2)} ${c.code}',
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                    ],
-                  ),
-                ],
-              ),
-            )),
-          ],
-        ),
+          )),
+        ],
       ),
     );
   }
