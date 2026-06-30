@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
@@ -9,10 +10,17 @@ import 'package:trtravel/features/weather/screens/weather_screen.dart';
 import 'package:trtravel/features/shopping/screens/shopping_screen.dart';
 import 'package:trtravel/features/exchange/screens/exchange_screen.dart';
 import 'package:trtravel/features/itinerary/screens/itinerary_list_screen.dart';
+import 'package:trtravel/features/currency/services/currency_service.dart';
+import 'package:trtravel/features/currency/models/currency_rate.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   static const _quickServices = [
     _ServiceCard(icon: Icons.directions_bus_rounded, label: 'Transport', color: AppColors.transport, screen: TransportScreen()),
     _ServiceCard(icon: Icons.account_balance_wallet_rounded, label: 'Budget', color: AppColors.success, screen: BudgetScreen()),
@@ -21,6 +29,14 @@ class HomeScreen extends StatelessWidget {
     _ServiceCard(icon: Icons.shopping_bag_rounded, label: 'Shopping', color: AppColors.shop, screen: ShoppingScreen()),
     _ServiceCard(icon: Icons.currency_exchange_rounded, label: 'Change', color: AppColors.mosque, screen: ExchangeScreen()),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CurrencyService>().updateRates();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +79,22 @@ class HomeScreen extends StatelessWidget {
                   color: AppColors.gold,
                 ),
                 const SizedBox(height: 12),
-                _buildInfoCard(
-                  context,
-                  icon: Icons.monetization_on_rounded,
-                  title: 'Taux du jour',
-                  subtitle: '1 € ≈ 35.20 TL • 1 \$ ≈ 33.10 TL',
-                  color: AppColors.success,
+                Consumer<CurrencyService>(
+                  builder: (_, service, __) {
+                    final eurToTry = CurrencyData.convert(1, 'EUR', 'TRY');
+                    final usdToTry = CurrencyData.convert(1, 'USD', 'TRY');
+                    final eurToTnd = CurrencyData.convert(1, 'EUR', 'TND');
+                    final subtitle = service.lastUpdated != null
+                        ? '1 € ≈ $eurToTry TL • 1 \$ ≈ $usdToTry TL • 1 € ≈ $eurToTnd TND'
+                        : 'Chargement...';
+                    return _buildInfoCard(
+                      context,
+                      icon: Icons.monetization_on_rounded,
+                      title: 'Taux du jour',
+                      subtitle: subtitle,
+                      color: AppColors.success,
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
                 SectionCard(

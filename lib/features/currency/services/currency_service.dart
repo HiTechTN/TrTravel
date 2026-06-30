@@ -12,14 +12,7 @@ class CurrencyService extends ChangeNotifier {
   String _result = '';
   bool _isLoading = false;
   String? _lastUpdated;
-  bool _useOffline = true;
-  List<Map<String, String>> _quickAmounts = [
-    {'label': '50 €', 'amount': '50'},
-    {'label': '100 €', 'amount': '100'},
-    {'label': '200 €', 'amount': '200'},
-    {'label': '500 €', 'amount': '500'},
-    {'label': '1000 €', 'amount': '1000'},
-  ];
+  final bool _useOffline = true;
 
   String get fromCurrency => _fromCurrency;
   String get toCurrency => _toCurrency;
@@ -29,7 +22,13 @@ class CurrencyService extends ChangeNotifier {
   String? get lastUpdated => _lastUpdated;
   bool get useOffline => _useOffline;
   List<CurrencyRate> get currencies => CurrencyData.currencies;
-  List<Map<String, String>> get quickAmounts => _quickAmounts;
+  List<Map<String, String>> get quickAmounts => [
+    {'label': '50 ${getFromSymbol()}', 'amount': '50'},
+    {'label': '100 ${getFromSymbol()}', 'amount': '100'},
+    {'label': '200 ${getFromSymbol()}', 'amount': '200'},
+    {'label': '500 ${getFromSymbol()}', 'amount': '500'},
+    {'label': '1000 ${getFromSymbol()}', 'amount': '1000'},
+  ];
 
   CurrencyService() {
     _loadState();
@@ -103,7 +102,8 @@ class CurrencyService extends ChangeNotifier {
         
         final updatedCurrencies = CurrencyData.currencies.map((c) {
           if (c.code == 'EUR') return c;
-          final rate = rates[c.code] as num? ?? c.rateToEur;
+          final rate = rates[c.code] as num?;
+          if (rate == null) return c;
           return CurrencyRate(
             code: c.code,
             name: c.name,
@@ -113,7 +113,8 @@ class CurrencyService extends ChangeNotifier {
           );
         }).toList();
         
-        _lastUpdated = DateTime.now().toIso8601String();
+        CurrencyData.currencies = updatedCurrencies;
+        _lastUpdated = _formatDate(DateTime.now());
         LocalStorage.setString('currency_updated', _lastUpdated!);
         doConvert();
       }
@@ -123,5 +124,9 @@ class CurrencyService extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 }

@@ -21,6 +21,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     super.initState();
     final service = context.read<CurrencyService>();
     _amountCtrl = TextEditingController(text: _formatAmount(service.amount));
+    WidgetsBinding.instance.addPostFrameCallback((_) => service.updateRates());
   }
 
   @override
@@ -287,7 +288,7 @@ class _CurrencyDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = isFrom ? service.fromCurrency : service.toCurrency;
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: const InputDecoration(
         isDense: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -301,8 +302,11 @@ class _CurrencyDropdown extends StatelessWidget {
       }).toList(),
       onChanged: (v) {
         if (v != null) {
-          if (isFrom) service.setFromCurrency(v);
-          else service.setToCurrency(v);
+          if (isFrom) {
+            service.setFromCurrency(v);
+          } else {
+            service.setToCurrency(v);
+          }
         }
       },
     );
