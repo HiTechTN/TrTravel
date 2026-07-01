@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 
 class CameraTranslationScreen extends StatefulWidget {
   const CameraTranslationScreen({super.key});
@@ -109,17 +109,14 @@ class _CameraTranslationScreenState extends State<CameraTranslationScreen> with 
 
   String _translateOffline(String text) {
     final lower = text.toLowerCase().trim();
-    // Direct match
     if (_dictionary.containsKey(lower)) {
       return _dictionary[lower]!;
     }
-    // Partial match
     for (final entry in _dictionary.entries) {
       if (lower.contains(entry.key)) {
         return entry.value;
       }
     }
-    // Word by word
     final words = lower.split(RegExp(r'[\s,;:.!?]+'));
     final translated = <String>[];
     for (final word in words) {
@@ -132,7 +129,7 @@ class _CameraTranslationScreenState extends State<CameraTranslationScreen> with 
     if (translated.join(' ') != lower) {
       return translated.join(' ');
     }
-    return text; // No translation found, show original
+    return text;
   }
 
   Future<void> _captureAndTranslate() async {
@@ -170,10 +167,10 @@ class _CameraTranslationScreenState extends State<CameraTranslationScreen> with 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          const AppHeader(
             title: 'Traduction Caméra',
             subtitle: 'Scannez le texte - 100% hors-ligne',
             icon: Icons.camera_alt_rounded,

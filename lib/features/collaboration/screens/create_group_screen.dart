@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
 
 class CreateGroupScreen extends StatefulWidget {
@@ -54,10 +52,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: 'Nouveau groupe',
             subtitle: 'Créez un groupe de voyage',
             icon: Icons.group_add_rounded,
@@ -68,7 +66,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _nameController,
@@ -81,7 +79,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _descController,

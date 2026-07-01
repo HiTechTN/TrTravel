@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/notifications/services/notification_service.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
@@ -114,10 +111,10 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.settings,
             subtitle: 'Gérer les notifications',
             icon: Icons.settings_rounded,
@@ -128,7 +125,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +200,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                       ),
                     ),
                     const SizedBox(height: 24),
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +219,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                       ),
                     ),
                     const SizedBox(height: 24),
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,8 +232,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                           if (service.reminders.isEmpty)
                             const Text('Aucun rappel actif', style: TextStyle(color: AppColors.textSecondary))
                           else
-                            ...service.reminders.map((r) => AnimatedCard(
-                              padding: EdgeInsets.zero,
+                            ...service.reminders.map((r) => AppCard(
                               margin: const EdgeInsets.symmetric(vertical: 2),
                               child: ListTile(
                                 title: Text(r.title),

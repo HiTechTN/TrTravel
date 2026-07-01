@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/shared/widgets/app_header.dart';
+import 'package:trtravel/shared/widgets/app_card.dart';
+import 'package:trtravel/shared/widgets/app_shimmer.dart';
+import 'package:trtravel/shared/widgets/app_scaffold.dart';
 import '../services/currency_service.dart';
 import '../models/currency_rate.dart';
 
@@ -44,10 +43,10 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.converter,
             subtitle: l.converterSubtitle,
             icon: Icons.monetization_on_rounded,
@@ -58,7 +57,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 if (service.isLoading) {
                   return const Padding(
                     padding: EdgeInsets.all(16),
-                    child: ShimmerList(itemCount: 4),
+                    child: AppShimmerList(itemCount: 4),
                   );
                 }
                 if (!_amountCtrl.text.isNotEmpty ||
@@ -90,8 +89,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildCurrencySelector(CurrencyService service, AppLocalizations l) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         children: [
           Row(
@@ -105,7 +103,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppRadius.round),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: const Icon(Icons.swap_vert_rounded, color: AppColors.primary),
                   ),
@@ -125,8 +123,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildAmountInput(CurrencyService service, AppLocalizations l) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,7 +156,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.3),
@@ -192,8 +189,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildQuickAmounts(CurrencyService service, AppLocalizations l) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -224,8 +220,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Widget _buildAllRates(CurrencyService service, AppLocalizations l) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -237,7 +232,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 onPressed: () => service.updateRates(),
                 icon: service.isLoading
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.refresh, size: 18),
+                    : const Icon(Icons.refresh_rounded, size: 18),
                 label: Text(l.refresh),
               ),
             ],
@@ -290,7 +285,6 @@ class _CurrencyDropdown extends StatelessWidget {
       decoration: const InputDecoration(
         isDense: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        border: OutlineInputBorder(),
       ),
       items: service.currencies.map((c) {
         return DropdownMenuItem(

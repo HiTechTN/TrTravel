@@ -4,11 +4,11 @@ import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/shared/widgets/empty_state.dart';
+import 'package:trtravel/shared/widgets/app_scaffold.dart';
+import 'package:trtravel/shared/widgets/app_card.dart';
+import 'package:trtravel/shared/widgets/app_header.dart';
+import 'package:trtravel/shared/widgets/app_shimmer.dart';
+import 'package:trtravel/shared/widgets/app_empty.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
 import 'add_journal_screen.dart';
@@ -20,10 +20,10 @@ class JournalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.journalTitle,
             subtitle: l.journalSubtitle,
             icon: Icons.article_rounded,
@@ -32,10 +32,10 @@ class JournalScreen extends StatelessWidget {
             child: Consumer<JournalService>(
               builder: (_, service, __) {
                 if (service.isLoading) {
-                  return const ShimmerList(itemCount: 5);
+                  return const AppShimmerList(itemCount: 5);
                 }
                 if (service.entries.isEmpty) {
-                  return EmptyState(
+                  return AppEmpty(
                     icon: Icons.book_rounded,
                     title: l.noEntries,
                     subtitle: l.startWritingJournal,
@@ -56,7 +56,7 @@ class JournalScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(const AddJournalScreen()),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
@@ -69,12 +69,14 @@ class _JournalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+    final months = [
+      'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
+      'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'
+    ];
 
-    return AnimatedCard(
+    return AppCard(
       onTap: () => context.push(JournalDetailScreen(entry: entry)),
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -87,8 +89,11 @@ class _JournalCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('${entry.date.day}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.primary)),
-                Text(months[entry.date.month - 1], style: const TextStyle(fontSize: 11, color: AppColors.primary)),
+                Text('${entry.date.day}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.primary)),
+                Text(months[entry.date.month - 1],
+                    style: const TextStyle(fontSize: 11, color: AppColors.primary)),
               ],
             ),
           ),
@@ -97,14 +102,16 @@ class _JournalCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                Text(entry.title,
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                 if (entry.location != null) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 14, color: AppColors.textSecondary),
+                      Icon(Icons.location_on_rounded, size: 14, color: AppColors.textSecondary),
                       const SizedBox(width: 4),
-                      Text(entry.location!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                      Text(entry.location!,
+                          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
                     ],
                   ),
                 ],

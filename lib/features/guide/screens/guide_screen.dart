@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 
 class GuideScreen extends StatelessWidget {
   const GuideScreen({super.key});
@@ -9,11 +10,9 @@ class GuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: Text(l.guide),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/shared/widgets/empty_state.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import '../services/booking_service.dart';
 import '../models/booking_models.dart';
 import '../widgets/booking_card.dart';
@@ -16,10 +15,10 @@ class BookingListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: 'Mes Réservations',
             subtitle: 'Gérez vos hôtels, activités et transports',
             icon: Icons.book_online_rounded,
@@ -32,7 +31,7 @@ class BookingListScreen extends StatelessWidget {
                 }
 
                 if (service.bookings.isEmpty) {
-                  return const EmptyState(
+                  return AppEmpty(
                     icon: Icons.book_online_rounded,
                     title: 'Aucune réservation',
                     subtitle: 'Ajoutez votre première réservation',
@@ -75,7 +74,7 @@ class BookingListScreen extends StatelessWidget {
     final upcoming = service.getUpcomingBookings();
     if (upcoming.isEmpty) return const SizedBox.shrink();
 
-    return Card(
+    return AppCard(
       margin: EdgeInsets.zero,
       child: Container(
         padding: const EdgeInsets.all(16),

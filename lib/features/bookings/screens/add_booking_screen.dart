@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import '../services/booking_service.dart';
 import '../models/booking_models.dart';
 
@@ -91,10 +91,10 @@ class _AddBookingScreenState extends State<AddBookingScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: 'Nouvelle réservation',
             subtitle: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
             icon: Icons.add_circle_rounded,

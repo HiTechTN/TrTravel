@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/itinerary/models/day_trip.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
 
 class DayTripEditScreen extends StatefulWidget {
   final String tripId;
@@ -123,7 +123,7 @@ class _DayTripEditScreenState extends State<DayTripEditScreen> {
     ];
     final color = dayColors[(day?.dayNumber ?? 1) % dayColors.length];
 
-    return ModernScaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: Text('Jour ${day?.dayNumber ?? ''}'),
         actions: [

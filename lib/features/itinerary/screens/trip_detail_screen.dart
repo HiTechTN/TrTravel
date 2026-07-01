@@ -3,12 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 import 'package:trtravel/features/itinerary/screens/day_trip_edit_screen.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
 
 class TripDetailScreen extends StatelessWidget {
   final String tripId;
@@ -22,20 +19,19 @@ class TripDetailScreen extends StatelessWidget {
       builder: (context, service, _) {
         final trip = service.getTrip(tripId);
         if (trip == null) {
-          return ModernScaffold(
+          return AppScaffold(
             appBar: AppBar(title: Text(l.itinerary)),
             body: const Center(child: Text('Voyage introuvable')),
           );
         }
 
-        return ModernScaffold(
+        return AppScaffold(
           body: Column(
             children: [
-              GradientHeader(
+              AppHeader(
                 title: trip.title,
                 subtitle: trip.description.replaceAll('\n', ' · '),
                 icon: Icons.flight_rounded,
-                height: 140,
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline_rounded, color: Colors.white),
                   onPressed: () => _deleteTrip(context, service, trip.id),
@@ -111,8 +107,7 @@ class _DayCard extends StatelessWidget {
 
     final color = dayColors[day.dayNumber % dayColors.length];
 
-    return GlassEffect(
-      padding: EdgeInsets.zero,
+    return AppCard(
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
         tilePadding: const EdgeInsets.fromLTRB(16, 8, 8, 8),

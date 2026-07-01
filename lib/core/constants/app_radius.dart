@@ -8,4 +8,5 @@ class AppRadius {
   static const double xl = 20.0;
   static const double xxl = 24.0;
   static const double round = 100.0;
+  static const double full = 100.0;
 }

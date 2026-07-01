@@ -5,10 +5,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../models/map_place.dart';
 import '../data/map_places_data.dart';
 import '../services/routing_service.dart';
@@ -223,9 +221,9 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(children: [
-        GradientHeader(title: l.mapTitle, subtitle: l.mapSubtitle, icon: Icons.map_rounded, height: 110),
+        AppHeader(title: l.mapTitle, subtitle: l.mapSubtitle, icon: Icons.map_rounded, height: 110),
         _buildTopBar(l),
         Expanded(child: Stack(children: [
           FlutterMap(
@@ -303,7 +301,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
   Widget _locationBanner() {
     final l = AppLocalizations.of(context);
-    return GlassEffect(
+    return AppCard(
       padding: const EdgeInsets.all(12),
         child: Row(children: [
           const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
@@ -404,7 +402,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => _selectedPlace = null)),
             ]),
             const SizedBox(height: 12),
-            Text(p.description, style: const TextStyle(fontSize: 14, height: 1.5, color: Color(0xFF6B7280))),
+            Text(p.description, style: const TextStyle(fontSize: 14, height: 1.5, color: const Color(0xFF6B7280))),
             const SizedBox(height: 12),
             if (p.address != null) _il(Icons.location_on, p.address!),
             if (p.openingHours != null) _il(Icons.access_time, '${p.openingHours} - ${p.closingHours}'),

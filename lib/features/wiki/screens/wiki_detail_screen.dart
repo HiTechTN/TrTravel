@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/assistant/widgets/itinerary_sharing.dart';
 import '../models/wiki_models.dart';
@@ -33,7 +32,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final item = widget.item;
-    return ModernScaffold(
+    return AppScaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -84,7 +83,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
                     _buildInfoCards(item),
                   if (item.tags.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(12),
                       child: Wrap(
                         spacing: 6, runSpacing: 4,
@@ -110,7 +109,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   }
 
   Widget _buildInfoCards(WikiItem item) {
-    return GlassEffect(
+    return AppCard(
       padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -162,8 +161,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   }
 
   Widget _buildSection(BuildContext context, WikiSection section) {
-    return GlassEffect(
-      padding: EdgeInsets.zero,
+    return AppCard(
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
         title: Row(

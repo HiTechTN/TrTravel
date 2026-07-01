@@ -3,13 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/features/assistant/services/assistant_service.dart';
-import 'package:trtravel/features/assistant/widgets/chat_bubble.dart';
-import 'package:trtravel/features/assistant/widgets/quick_replies.dart';
+import 'package:trtravel/shared/widgets/app_scaffold.dart';
+import 'package:trtravel/shared/widgets/app_header.dart';
+import 'package:trtravel/shared/widgets/app_card.dart';
+import '../services/assistant_service.dart';
+import '../widgets/chat_bubble.dart';
+import '../widgets/quick_replies.dart';
 
 class AssistantScreen extends StatefulWidget {
   const AssistantScreen({super.key});
@@ -51,10 +50,10 @@ class _AssistantScreenState extends State<AssistantScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.assistantTitle,
             subtitle: l.assistantSubtitle,
             icon: Icons.auto_awesome_rounded,
@@ -62,7 +61,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
               builder: (_, service, __) {
                 if (service.messages.isEmpty) return const SizedBox.shrink();
                 return IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.white),
+                  icon: const Icon(Icons.delete_outline_rounded, color: Colors.white),
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -125,7 +124,8 @@ class _AssistantScreenState extends State<AssistantScreen> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: AppColors.primaryGradient),
+              gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFFE53935)],
+                begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(AppRadius.xl),
             ),
             child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 40),
@@ -142,10 +142,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
           const SizedBox(height: 8),
           Text(
             l.assistantPrompt,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -241,18 +238,15 @@ class _AssistantScreenState extends State<AssistantScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: AppColors.primaryGradient),
+              gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFFE53935)],
+                begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 12),
-          Container(
+          AppCard(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -298,13 +292,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
           ),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
+            boxShadow: AppShadows.subtle,
           ),
           child: Row(
             children: [

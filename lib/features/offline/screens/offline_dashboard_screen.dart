@@ -3,10 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/offline/services/offline_service.dart';
 import 'package:trtravel/features/offline/widgets/offline_indicator.dart';
 import 'package:trtravel/features/offline/widgets/sync_queue_tile.dart';
@@ -22,10 +19,10 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.offlineMode,
             subtitle: 'Gérez vos données hors connexion',
             icon: Icons.wifi_off_rounded,
@@ -57,7 +54,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
 
   Widget _buildConnectionCard(OfflineService service) {
     final online = service.isOnline;
-    return GlassEffect(
+    return AppCard(
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
@@ -142,7 +139,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
     required Color color,
   }) {
     return Expanded(
-      child: GlassEffect(
+      child: AppCard(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -172,7 +169,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
 
   Widget _buildSyncActions(OfflineService service) {
     final l = AppLocalizations.of(context);
-    return GlassEffect(
+    return AppCard(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

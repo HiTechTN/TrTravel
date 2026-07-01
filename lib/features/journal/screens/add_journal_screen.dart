@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
 
@@ -73,10 +71,10 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: 'Nouvelle entrée',
             subtitle: '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
             icon: Icons.edit_rounded,
@@ -92,7 +90,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _titleCtrl,
@@ -104,7 +102,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _contentCtrl,
@@ -118,7 +116,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _locationCtrl,
@@ -131,7 +129,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       children: [
@@ -148,7 +146,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GlassEffect(
+                  AppCard(
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       children: [
@@ -174,7 +172,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                   ),
                   if (_tags.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(12),
                       child: Wrap(
                         spacing: 6,

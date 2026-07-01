@@ -3,11 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/shared/widgets/empty_state.dart';
+import 'package:trtravel/shared/widgets/app_scaffold.dart';
+import 'package:trtravel/shared/widgets/app_card.dart';
+import 'package:trtravel/shared/widgets/app_header.dart';
+import 'package:trtravel/shared/widgets/app_empty.dart';
 import '../services/budget_service.dart';
 import '../models/budget_models.dart';
 import '../widgets/expense_chart.dart';
@@ -19,10 +18,10 @@ class BudgetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.budgetTitle,
             subtitle: l.budgetSubtitle,
             icon: Icons.account_balance_wallet_rounded,
@@ -50,7 +49,7 @@ class BudgetScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddExpenseDialog(context),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
@@ -61,8 +60,8 @@ class BudgetScreen extends StatelessWidget {
         ? (report.totalSpent / report.totalBudget).clamp(0.0, 1.0)
         : 0.0;
 
-    return Card(
-      margin: EdgeInsets.zero,
+    return AppCard(
+      padding: EdgeInsets.zero,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -107,55 +106,53 @@ class BudgetScreen extends StatelessWidget {
 
   Widget _buildCategoryBudgets(BuildContext context, BudgetService service, BudgetReport report) {
     final l = AppLocalizations.of(context);
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l.budgetByCategory, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                Text('${service.expenses.length} ${l.expenses}',
-                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-              ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(l.budgetByCategory, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              Text('${service.expenses.length} ${l.expenses}',
+                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...report.categories.map((cat) => CategoryCard(report: cat)),
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton.icon(
+              onPressed: () => _showBudgetEditor(context, service),
+              icon: const Icon(Icons.edit_rounded, size: 18),
+              label: Text(l.editBudgets),
             ),
-            const SizedBox(height: 12),
-            ...report.categories.map((cat) => CategoryCard(report: cat)),
-            const SizedBox(height: 8),
-            Center(
-              child: TextButton.icon(
-                onPressed: () => _showBudgetEditor(context, service),
-                icon: const Icon(Icons.edit, size: 18),
-                label: Text(l.editBudgets),
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildRecentExpenses(BuildContext context, BudgetService service) {
     final l = AppLocalizations.of(context);
     if (service.expenses.isEmpty) {
-      return EmptyState(
+      return AppEmpty(
         icon: Icons.receipt_long_rounded,
         title: l.noExpenses,
         subtitle: l.addFirstExpense,
       );
     }
 
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Text(l.recentExpenses, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-            const SizedBox(height: 8),
-            ...service.expenses.take(10).map((e) => AnimatedCard(
-              padding: EdgeInsets.zero,
-              margin: const EdgeInsets.symmetric(vertical: 2),
-              child: ListTile(
+          Text(l.recentExpenses, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+          const SizedBox(height: 8),
+          ...service.expenses.take(10).map((e) => AppCard(
+            padding: EdgeInsets.zero,
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            child: ListTile(
               dense: true,
               leading: Text(_getCategoryEmoji(e.category), style: const TextStyle(fontSize: 24)),
               title: Text(e.description, style: const TextStyle(fontWeight: FontWeight.w500)),
@@ -164,10 +161,11 @@ class BudgetScreen extends StatelessWidget {
                 '-${e.amount.toStringAsFixed(0)} TL',
                 style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.bold, fontSize: 16),
               ),
-            ))),
-          ],
-        ),
-      );
+            ),
+          )),
+        ],
+      ),
+    );
   }
 
   String _getCategoryEmoji(String id) {

@@ -3,10 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
 import 'package:trtravel/features/collaboration/screens/create_group_screen.dart';
 import 'package:trtravel/features/collaboration/screens/group_detail_screen.dart';
@@ -49,10 +46,10 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: 'Collaboration',
             subtitle: 'Voyagez ensemble',
             icon: Icons.groups_rounded,
@@ -63,7 +60,7 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    GlassEffect(
+                    AppCard(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,9 +119,8 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                         ),
                       )
                     else
-                      ...service.groups.map((group) => AnimatedCard(
+                      ...service.groups.map((group) => AppCard(
                         onTap: () => context.push(GroupDetailScreen(group: group)),
-                        padding: EdgeInsets.zero,
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
                           leading: Container(

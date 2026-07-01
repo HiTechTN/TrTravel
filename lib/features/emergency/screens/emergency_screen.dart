@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/app_scaffold.dart';
+import 'package:trtravel/shared/widgets/app_header.dart';
+import 'package:trtravel/shared/widgets/app_card.dart';
 import '../models/emergency_data.dart';
 
 class EmergencyScreen extends StatelessWidget {
@@ -15,10 +13,10 @@ class EmergencyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.emergencyTitle,
             subtitle: l.emergencySubtitle,
             icon: Icons.emergency_rounded,
@@ -26,16 +24,16 @@ class EmergencyScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               children: [
                 _buildUrgentNumbers(),
                 const SizedBox(height: 16),
                 _buildSection(l.embassiesAndConsulates, EmergencyInfo.embassyPhones),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildSection(l.hospitals, EmergencyInfo.hospitals),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildSection(l.pharmacies, EmergencyInfo.pharmacies),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildTips(l),
               ],
             ),
@@ -60,7 +58,7 @@ class EmergencyScreen extends StatelessWidget {
   }
 
   Widget _buildUrgentCard(EmergencyContact contact) {
-    return AnimatedCard(
+    return AppCard(
       onTap: () => _call(contact.number),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(16),
@@ -69,7 +67,7 @@ class EmergencyScreen extends StatelessWidget {
           Text(contact.emoji, style: const TextStyle(fontSize: 32)),
           const SizedBox(height: 8),
           Text(contact.number,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.error)),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.error)),
           const SizedBox(height: 4),
           Text(contact.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
         ],
@@ -78,23 +76,23 @@ class EmergencyScreen extends StatelessWidget {
   }
 
   Widget _buildSection(String title, List<EmergencyContact> contacts) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(4),
+    return AppCard(
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-              child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-            ),
-            ...contacts.map((c) => _buildContactTile(c)),
-          ],
-        ),
-      );
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+          ),
+          ...contacts.map((c) => _buildContactTile(c)),
+        ],
+      ),
+    );
   }
 
   Widget _buildContactTile(EmergencyContact contact) {
-    return AnimatedCard(
+    return AppCard(
       padding: EdgeInsets.zero,
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       onTap: () => _call(contact.number),
@@ -105,10 +103,10 @@ class EmergencyScreen extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(contact.number, style: const TextStyle(
-              color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(contact.number,
+                style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(width: 8),
-            Icon(Icons.phone_in_talk_rounded, color: AppColors.primary, size: 22),
+            const Icon(Icons.phone_in_talk_rounded, color: AppColors.primary, size: 22),
           ],
         ),
       ),
@@ -116,8 +114,7 @@ class EmergencyScreen extends StatelessWidget {
   }
 
   Widget _buildTips(AppLocalizations l) {
-    return GlassEffect(
-      padding: const EdgeInsets.all(16),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -125,7 +122,7 @@ class EmergencyScreen extends StatelessWidget {
             children: [
               const Icon(Icons.lightbulb_rounded, color: AppColors.warning),
               const SizedBox(width: 8),
-              Text(l.safetyTips, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(l.safetyTips, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
             ],
           ),
           const SizedBox(height: 12),
@@ -158,9 +155,9 @@ class _Tip extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.check, size: 16, color: AppColors.success),
+          const Icon(Icons.check_rounded, size: 16, color: AppColors.success),
           const SizedBox(width: 8),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, height: 1.3))),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 13, height: 1.4))),
         ],
       ),
     );

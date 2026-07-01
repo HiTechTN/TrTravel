@@ -11,11 +11,13 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeIn;
   late Animation<double> _scale;
   late Animation<double> _slideUp;
+  late Animation<double> _subtitleFade;
 
   @override
   void initState() {
@@ -25,16 +27,34 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: AppDurations.splash,
     );
     _fadeIn = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0, 0.4, curve: Curves.easeOut)),
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 0.4, curve: Curves.easeOut),
+      ),
     );
-    _scale = Tween<double>(begin: 0.5, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0, 0.4, curve: Curves.elasticOut)),
+    _scale = Tween<double>(begin: 0.3, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 0.5, curve: Curves.elasticOut),
+      ),
     );
     _slideUp = Tween<double>(begin: 30, end: 0).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.3, 0.6, curve: Curves.easeOut)),
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.3, 0.6, curve: Curves.easeOutCubic),
+      ),
+    );
+    _subtitleFade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.4, 0.7, curve: Curves.easeOut),
+      ),
     );
     _controller.forward();
-    Future.delayed(AppDurations.splash + const Duration(milliseconds: 500), _navigateToHome);
+    Future.delayed(
+      AppDurations.splash + const Duration(milliseconds: 800),
+      _navigateToHome,
+    );
   }
 
   void _navigateToHome() {
@@ -59,19 +79,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: AppColors.primaryGradient,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            colors: [Color(0xFF8E0000), Color(0xFFC62828), Color(0xFFE53935)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(flex: 2),
               AnimatedBuilder(
                 animation: _controller,
-                builder: (context, child) => Opacity(
+                builder: (_, child) => Opacity(
                   opacity: _fadeIn.value,
                   child: Transform.scale(
                     scale: _scale.value,
@@ -79,30 +99,30 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
                 child: Container(
-                  width: 120,
-                  height: 120,
+                  width: 130,
+                  height: 130,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(32),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+                        color: Colors.black.withValues(alpha: 0.25),
+                        blurRadius: 30,
+                        offset: const Offset(0, 15),
                       ),
                     ],
                   ),
                   child: const Icon(
                     Icons.flight_rounded,
-                    size: 60,
+                    size: 64,
                     color: AppColors.primary,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               AnimatedBuilder(
                 animation: _controller,
-                builder: (context, child) => Opacity(
+                builder: (_, child) => Opacity(
                   opacity: _fadeIn.value,
                   child: Transform.translate(
                     offset: Offset(0, _slideUp.value),
@@ -113,19 +133,28 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   children: [
                     Text(
                       l.appTitle,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -1,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      l.appSubtitle,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.85),
-                        fontSize: 16,
+                    AnimatedBuilder(
+                      animation: _controller,
+                      builder: (_, child) => Opacity(
+                        opacity: _subtitleFade.value,
+                        child: child,
+                      ),
+                      child: Text(
+                        l.appSubtitle,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ],
@@ -134,18 +163,26 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               const Spacer(),
               AnimatedBuilder(
                 animation: _controller,
-                builder: (context, child) => Opacity(
-                  opacity: _fadeIn.value >= 0.6 ? (_fadeIn.value - 0.6) / 0.4 : 0,
-                  child: const Padding(
-                    padding: EdgeInsets.only(bottom: 48),
+                builder: (_, child) => Opacity(
+                  opacity: _fadeIn.value >= 0.6
+                      ? (_fadeIn.value - 0.6) / 0.4
+                      : 0,
+                  child: child,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 60),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white.withValues(alpha: 0.7),
+                      ),
+                      strokeWidth: 2.5,
                     ),
                   ),
                 ),
               ),
-              const Spacer(),
             ],
           ),
         ),

@@ -24,16 +24,16 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   List<_TabItem> _buildTabs(AppLocalizations l) => [
-    _TabItem(icon: Icons.home_rounded, label: l.home),
-    _TabItem(icon: Icons.translate_rounded, label: l.translate),
-    _TabItem(icon: Icons.calendar_month_rounded, label: l.itinerary),
-    _TabItem(icon: Icons.monetization_on_rounded, label: l.change),
-    _TabItem(icon: Icons.map_rounded, label: l.map),
-    _TabItem(icon: Icons.article_rounded, label: l.journal),
-    _TabItem(icon: Icons.auto_awesome_rounded, label: l.assistant),
-    _TabItem(icon: Icons.emergency_rounded, label: l.emergency),
-    _TabItem(icon: Icons.menu_book_rounded, label: l.wiki),
-    _TabItem(icon: Icons.settings_rounded, label: l.settingsTab),
+    _TabItem(icon: Icons.home_rounded, activeIcon: Icons.home_rounded, label: l.home),
+    _TabItem(icon: Icons.translate_rounded, activeIcon: Icons.translate_rounded, label: l.translate),
+    _TabItem(icon: Icons.calendar_month_rounded, activeIcon: Icons.calendar_month_rounded, label: l.itinerary),
+    _TabItem(icon: Icons.monetization_on_rounded, activeIcon: Icons.monetization_on_rounded, label: l.change),
+    _TabItem(icon: Icons.map_rounded, activeIcon: Icons.map_rounded, label: l.map),
+    _TabItem(icon: Icons.article_rounded, activeIcon: Icons.article_rounded, label: l.journal),
+    _TabItem(icon: Icons.auto_awesome_rounded, activeIcon: Icons.auto_awesome_rounded, label: l.assistant),
+    _TabItem(icon: Icons.emergency_rounded, activeIcon: Icons.emergency_rounded, label: l.emergency),
+    _TabItem(icon: Icons.menu_book_rounded, activeIcon: Icons.menu_book_rounded, label: l.wiki),
+    _TabItem(icon: Icons.settings_rounded, activeIcon: Icons.settings_rounded, label: l.settingsTab),
   ];
 
   @override
@@ -41,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
     final l = AppLocalizations.of(context);
     final tabs = _buildTabs(l);
     final bottomPad = MediaQuery.of(context).padding.bottom;
+
     return ResponsiveLayout(
       mobile: (context, width) => Scaffold(
         body: IndexedStack(
@@ -59,19 +60,34 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         bottomNavigationBar: Container(
-          padding: EdgeInsets.only(bottom: bottomPad > 0 ? 0 : 4),
-          child: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) => setState(() => _currentIndex = index),
-            height: 64 + (bottomPad > 0 ? 0 : 4),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: tabs
-                .map((t) => NavigationDestination(
-                      icon: Icon(t.icon),
-                      selectedIcon: Icon(t.icon, color: AppColors.primary),
-                      label: t.label,
-                    ))
-                .toList(),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardTheme.color,
+            boxShadow: AppShadows.subtle,
+          ),
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: bottomPad > 0 ? 0 : 4,
+                left: 8,
+                right: 8,
+                top: 4,
+              ),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (i) => setState(() => _currentIndex = i),
+                height: 64,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                animationDuration: const Duration(milliseconds: 300),
+                destinations: tabs
+                    .map((t) => NavigationDestination(
+                          icon: Icon(t.icon),
+                          selectedIcon: Icon(t.activeIcon, color: AppColors.primary),
+                          label: t.label,
+                        ))
+                    .toList(),
+              ),
+            ),
           ),
         ),
       ),
@@ -80,16 +96,24 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             NavigationRail(
               selectedIndex: _currentIndex,
-              onDestinationSelected: (index) => setState(() => _currentIndex = index),
+              onDestinationSelected: (i) => setState(() => _currentIndex = i),
               labelType: NavigationRailLabelType.all,
               leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Icon(Icons.flight_rounded, color: AppColors.primary, size: 32),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(Icons.flight_rounded, color: Colors.white, size: 28),
+                ),
               ),
               destinations: tabs
                   .map((t) => NavigationRailDestination(
                         icon: Icon(t.icon),
-                        selectedIcon: Icon(t.icon, color: AppColors.primary),
+                        selectedIcon: Icon(t.activeIcon, color: AppColors.primary),
                         label: Text(t.label, style: const TextStyle(fontSize: 11)),
                       ))
                   .toList(),
@@ -121,6 +145,7 @@ class _MainScreenState extends State<MainScreen> {
 
 class _TabItem {
   final IconData icon;
+  final IconData activeIcon;
   final String label;
-  const _TabItem({required this.icon, required this.label});
+  const _TabItem({required this.icon, required this.activeIcon, required this.label});
 }

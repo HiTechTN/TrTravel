@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
-import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
-import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
-import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import '../data/shopping_data.dart';
 
 class ShoppingScreen extends StatelessWidget {
@@ -15,10 +11,10 @@ class ShoppingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return ModernScaffold(
+    return AppScaffold(
       body: Column(
         children: [
-          GradientHeader(
+          AppHeader(
             title: l.shopping,
             subtitle: 'Centres commerciaux & Bazars',
             icon: Icons.shopping_bag_rounded,
@@ -60,15 +56,14 @@ class ShoppingScreen extends StatelessWidget {
   }
 
   Widget _buildCenterCard(ShoppingCenter center) {
-    return GlassEffect(
-      padding: EdgeInsets.zero,
+    return AppCard(
       margin: const EdgeInsets.only(bottom: 8),
       child: ExpansionTile(
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             center.type == 'Bazar' ? Icons.store_rounded : Icons.store_mall_directory_rounded,
@@ -137,7 +132,7 @@ class ShoppingScreen extends StatelessWidget {
   }
 
   Widget _buildTips() {
-    return GlassEffect(
+    return AppCard(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

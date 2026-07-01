@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
-import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
-import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/shared/widgets/widgets.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
@@ -18,7 +17,7 @@ class JournalDetailScreen extends StatelessWidget {
     final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
                     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-    return ModernScaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: Text(entry.title),
         actions: [
@@ -52,7 +51,7 @@ class JournalDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GlassEffect(
+            AppCard(
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
@@ -78,7 +77,7 @@ class JournalDetailScreen extends StatelessWidget {
             ),
             if (entry.tags.isNotEmpty) ...[
               const SizedBox(height: 16),
-              GlassEffect(
+              AppCard(
                 padding: const EdgeInsets.all(12),
                 child: Wrap(
                   spacing: 6,
@@ -88,7 +87,7 @@ class JournalDetailScreen extends StatelessWidget {
             ],
             if (entry.photoPaths.isNotEmpty) ...[
               const SizedBox(height: 16),
-              GlassEffect(
+              AppCard(
                 padding: const EdgeInsets.all(12),
                 child: SizedBox(
                   height: 120,
