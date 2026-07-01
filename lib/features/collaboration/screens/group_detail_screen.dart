@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/collaboration/models/collaboration_models.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
@@ -49,13 +50,14 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
   }
 
   void _leaveGroup() async {
+    final al = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Quitter le groupe'),
         content: const Text('Voulez-vous vraiment quitter ce groupe ?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(al.cancel)),
           TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Quitter', style: TextStyle(color: AppColors.error))),
         ],
       ),
@@ -74,6 +76,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final authService = context.read<AuthService>();
     final currentUserId = authService.userId;
 
@@ -91,13 +94,13 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
                 if (value == 'copy_code') {
                   Clipboard.setData(ClipboardData(text: widget.group.inviteCode));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Code copié !'), behavior: SnackBarBehavior.floating),
+                    SnackBar(content: Text(l.copied), behavior: SnackBarBehavior.floating),
                   );
                 }
               },
               itemBuilder: (_) => [
-                const PopupMenuItem(value: 'copy_code', child: ListTile(leading: Icon(Icons.copy), title: Text('Copier le code'))),
-                const PopupMenuItem(value: 'leave', child: ListTile(leading: Icon(Icons.exit_to_app, color: AppColors.error), title: Text('Quitter le groupe'))),
+                PopupMenuItem(value: 'copy_code', child: ListTile(leading: const Icon(Icons.copy), title: Text('Copier le code'))),
+                PopupMenuItem(value: 'leave', child: ListTile(leading: const Icon(Icons.exit_to_app, color: AppColors.error), title: Text('Quitter le groupe'))),
               ],
             ),
           ),
@@ -115,8 +118,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildChatTab(currentUserId),
-                _buildMembersTab(currentUserId),
+                _buildChatTab(l, currentUserId),
+                _buildMembersTab(l, currentUserId),
               ],
             ),
           ),
@@ -125,7 +128,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
     );
   }
 
-  Widget _buildChatTab(String? currentUserId) {
+  Widget _buildChatTab(AppLocalizations l, String? currentUserId) {
     return Column(
       children: [
         Expanded(
@@ -194,7 +197,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
     );
   }
 
-  Widget _buildMembersTab(String? currentUserId) {
+  Widget _buildMembersTab(AppLocalizations l, String? currentUserId) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -232,7 +235,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: widget.group.inviteCode));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Code copié !'), behavior: SnackBarBehavior.floating),
+                          SnackBar(content: Text(l.copied), behavior: SnackBarBehavior.floating),
                         );
                       },
                     ),

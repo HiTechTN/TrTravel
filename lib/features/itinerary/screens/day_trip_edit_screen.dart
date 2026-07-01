@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/itinerary/models/day_trip.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 
@@ -105,6 +106,7 @@ class _DayTripEditScreenState extends State<DayTripEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final day = context
         .read<ItineraryService>()
         .getTrip(widget.tripId)
@@ -126,7 +128,7 @@ class _DayTripEditScreenState extends State<DayTripEditScreen> {
         actions: [
           TextButton(
             onPressed: _save,
-            child: const Text('Enregistrer', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(l.save, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -171,7 +173,7 @@ class _DayTripEditScreenState extends State<DayTripEditScreen> {
               TextButton.icon(
                 onPressed: _addEntry,
                 icon: const Icon(Icons.add_rounded, size: 18),
-                label: const Text('Ajouter'),
+                label: Text(l.add),
               ),
             ],
           ),

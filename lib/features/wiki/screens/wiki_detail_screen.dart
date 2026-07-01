@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/assistant/widgets/itinerary_sharing.dart';
 import '../models/wiki_models.dart';
 import '../widgets/audio_guide.dart';
@@ -28,6 +29,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final item = widget.item;
     return Scaffold(
       body: CustomScrollView(

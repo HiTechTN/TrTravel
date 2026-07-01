@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../models/emergency_data.dart';
 
@@ -10,12 +11,13 @@ class EmergencyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
           GradientHeader(
-            title: 'Urgences',
-            subtitle: 'Numéros importants',
+            title: l.emergencyTitle,
+            subtitle: l.emergencySubtitle,
             icon: Icons.emergency_rounded,
             gradientColors: [AppColors.error, const Color(0xFF991B1B)],
           ),
@@ -25,13 +27,13 @@ class EmergencyScreen extends StatelessWidget {
               children: [
                 _buildUrgentNumbers(),
                 const SizedBox(height: 16),
-                _buildSection('📞 Ambassades & Consulats', EmergencyInfo.embassyPhones),
+                _buildSection(l.embassiesAndConsulates, EmergencyInfo.embassyPhones),
                 const SizedBox(height: 16),
-                _buildSection('🏥 Hôpitaux', EmergencyInfo.hospitals),
+                _buildSection(l.hospitals, EmergencyInfo.hospitals),
                 const SizedBox(height: 16),
-                _buildSection('💊 Pharmacies', EmergencyInfo.pharmacies),
+                _buildSection(l.pharmacies, EmergencyInfo.pharmacies),
                 const SizedBox(height: 16),
-                _buildTips(),
+                _buildTips(l),
               ],
             ),
           ),
@@ -114,7 +116,7 @@ class EmergencyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTips() {
+  Widget _buildTips(AppLocalizations l) {
     return Card(
       margin: EdgeInsets.zero,
       color: AppColors.warning.withValues(alpha: 0.08),
@@ -123,19 +125,19 @@ class EmergencyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.lightbulb_rounded, color: AppColors.warning),
-                SizedBox(width: 8),
-                Text('Conseils de sécurité', style: TextStyle(fontWeight: FontWeight.w600)),
+                const Icon(Icons.lightbulb_rounded, color: AppColors.warning),
+                const SizedBox(width: 8),
+                Text(l.safetyTips, style: const TextStyle(fontWeight: FontWeight.w600)),
               ],
             ),
             const SizedBox(height: 12),
-            const _Tip(text: 'Gardez une copie numérique de vos papiers d\'identité'),
-            _Tip(text: 'Notez l\'adresse de votre ambassade avant le départ'),
-            _Tip(text: 'Souscrivez une assurance voyage avec rapatriement'),
-            _Tip(text: 'Ayez toujours du liquide (TL) pour les urgences'),
-            _Tip(text: 'Téléchargez les cartes hors-ligne avant le départ'),
+            _Tip(text: l.tipCopyId),
+            _Tip(text: l.tipEmbassyAddress),
+            _Tip(text: l.tipTravelInsurance),
+            _Tip(text: l.tipCash),
+            _Tip(text: l.tipOfflineMaps),
           ],
         ),
       ),

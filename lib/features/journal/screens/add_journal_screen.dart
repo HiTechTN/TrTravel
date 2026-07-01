@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
@@ -69,6 +70,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
@@ -166,7 +168,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _save,
                       icon: const Icon(Icons.save),
-                      label: const Text('Enregistrer'),
+                      label: Text(l.save),
                     ),
                   ),
                 ],

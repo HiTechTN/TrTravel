@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/booking_service.dart';
@@ -14,10 +15,11 @@ class BookingListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Mes Réservations',
             subtitle: 'Gérez vos hôtels, activités et transports',
             icon: Icons.book_online_rounded,

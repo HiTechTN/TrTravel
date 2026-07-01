@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/share/services/share_service.dart';
 import 'package:trtravel/features/share/widgets/qr_code_widget.dart';
 import 'package:trtravel/features/share/widgets/share_actions.dart';
@@ -59,10 +60,11 @@ class _ShareScreenState extends State<ShareScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Partager',
             subtitle: 'Partagez votre itinéraire',
             icon: Icons.share_rounded,

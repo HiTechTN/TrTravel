@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/offline/services/offline_service.dart';
 import 'package:trtravel/features/offline/widgets/offline_indicator.dart';
@@ -17,11 +18,12 @@ class OfflineDashboardScreen extends StatefulWidget {
 class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Mode Hors-ligne',
+          GradientHeader(
+            title: l.offlineMode,
             subtitle: 'Gérez vos données hors connexion',
             icon: Icons.wifi_off_rounded,
           ),
@@ -186,6 +188,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
   }
 
   Widget _buildSyncActions(OfflineService service) {
+    final l = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -229,7 +232,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
                       ? null
                       : () => service.retryFailed(),
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Réessayer'),
+                      label: Text(l.retry),
                 ),
               ),
             ],
@@ -248,7 +251,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx),
-                          child: const Text('Annuler'),
+                          child: Text(l.cancel),
                         ),
                         TextButton(
                           onPressed: () {

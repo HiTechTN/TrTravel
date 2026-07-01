@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/transport_data.dart';
 
@@ -8,11 +9,12 @@ class TransportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Transport',
+          GradientHeader(
+            title: l.transport,
             subtitle: 'Se déplacer en Turquie',
             icon: Icons.directions_bus_rounded,
           ),

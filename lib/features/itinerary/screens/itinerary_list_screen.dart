@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 import 'package:trtravel/features/itinerary/screens/trip_detail_screen.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
@@ -12,11 +13,12 @@ class ItineraryListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Mon Itinéraire',
+          GradientHeader(
+            title: l.itinerary,
             subtitle: 'Votre programme de voyage',
             icon: Icons.map_rounded,
             height: 160,

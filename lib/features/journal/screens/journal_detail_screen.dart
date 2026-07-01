@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
 
@@ -11,6 +12,7 @@ class JournalDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
                     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
@@ -24,17 +26,17 @@ class JournalDetailScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Supprimer'),
+                  title: Text(l.delete),
                   content: const Text('Voulez-vous vraiment supprimer cette entrée ?'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.cancel)),
                     TextButton(
                       onPressed: () {
                         context.read<JournalService>().deleteEntry(entry.id);
                         Navigator.pop(ctx);
                         Navigator.pop(context);
                       },
-                      child: const Text('Supprimer', style: TextStyle(color: Colors.red)),
+                      child: Text(l.delete, style: const TextStyle(color: Colors.red)),
                     ),
                   ],
                 ),

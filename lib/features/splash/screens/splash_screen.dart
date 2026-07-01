@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_durations.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/home/screens/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -109,8 +111,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ),
                 child: Column(
                   children: [
-                    const Text(
-                      'TrTravel',
+                    Text(
+                      l.appTitle,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 36,
@@ -120,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Votre compagnon de voyage en Turquie',
+                      l.appSubtitle,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.85),
                         fontSize: 16,

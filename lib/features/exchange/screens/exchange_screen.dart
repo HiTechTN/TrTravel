@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/exchange_data.dart';
 
@@ -10,10 +11,11 @@ class ExchangeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Bureaux de Change',
             subtitle: '30+ bureaux à Istanbul & Antalya',
             icon: Icons.monetization_on_rounded,

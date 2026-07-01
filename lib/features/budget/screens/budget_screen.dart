@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/budget_service.dart';
@@ -14,12 +15,13 @@ class BudgetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Budget de Voyage',
-            subtitle: 'Suivez vos dépenses',
+          GradientHeader(
+            title: l.budgetTitle,
+            subtitle: l.budgetSubtitle,
             icon: Icons.account_balance_wallet_rounded,
           ),
           Expanded(

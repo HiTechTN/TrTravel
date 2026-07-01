@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/voice_journal_service.dart';
@@ -28,10 +29,11 @@ class _VoiceJournalScreenState extends State<VoiceJournalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Journal Vocal',
             subtitle: 'Enregistrez vos souvenirs',
             icon: Icons.mic_rounded,
@@ -190,20 +192,21 @@ class _VoiceJournalScreenState extends State<VoiceJournalScreen> {
   }
 
   void _confirmDelete(BuildContext context, VoiceNote note, VoiceJournalService service) {
+    final l = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Supprimer'),
+        title: Text(l.delete),
         content: const Text('Supprimer cet enregistrement ?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.cancel)),
           ElevatedButton(
             onPressed: () {
               service.deleteNote(note.id);
               Navigator.pop(ctx);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Supprimer'),
+            child: Text(l.delete),
           ),
         ],
       ),

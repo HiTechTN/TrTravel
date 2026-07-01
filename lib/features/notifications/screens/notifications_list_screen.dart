@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/features/notifications/services/notification_service.dart';
@@ -12,11 +13,12 @@ class NotificationsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Notifications',
+          GradientHeader(
+            title: l.notifications,
             subtitle: 'Rappels et suggestions',
             icon: Icons.notifications_rounded,
           ),

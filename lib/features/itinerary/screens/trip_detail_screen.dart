@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 import 'package:trtravel/features/itinerary/screens/day_trip_edit_screen.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
@@ -13,12 +14,13 @@ class TripDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Consumer<ItineraryService>(
       builder: (context, service, _) {
         final trip = service.getTrip(tripId);
         if (trip == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Itinéraire')),
+            appBar: AppBar(title: Text(l.itinerary)),
             body: const Center(child: Text('Voyage introuvable')),
           );
         }
@@ -60,20 +62,21 @@ class TripDetailScreen extends StatelessWidget {
   }
 
   void _deleteTrip(BuildContext context, ItineraryService service, String id) {
+    final l = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Supprimer le voyage'),
         content: const Text('Voulez-vous vraiment supprimer cet itinéraire ?'),
         actions: [
-          TextButton(onPressed: () => ctx.pop(), child: const Text('Annuler')),
+          TextButton(onPressed: () => ctx.pop(), child: Text(l.cancel)),
           TextButton(
             onPressed: () {
               service.deleteTrip(id);
               ctx.pop();
               context.pop();
             },
-            child: const Text('Supprimer', style: TextStyle(color: AppColors.error)),
+            child: Text(l.delete, style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),

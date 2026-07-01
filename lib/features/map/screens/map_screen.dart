@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../models/map_place.dart';
 import '../data/map_places_data.dart';
@@ -219,10 +220,11 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(children: [
-        const GradientHeader(title: 'Carte Interactive', subtitle: 'Istanbul & Antalya - 20+ lieux', icon: Icons.map_rounded, height: 110),
-        _buildTopBar(),
+        GradientHeader(title: l.mapTitle, subtitle: l.mapSubtitle, icon: Icons.map_rounded, height: 110),
+        _buildTopBar(l),
         Expanded(child: Stack(children: [
           FlutterMap(
             mapController: _mapController,
@@ -298,6 +300,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   }
 
   Widget _locationBanner() {
+    final l = AppLocalizations.of(context);
     return Card(
       color: AppColors.secondary,
       child: Padding(
@@ -305,25 +308,25 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         child: Row(children: [
           const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
           const SizedBox(width: 12),
-          const Text('Localisation...', style: TextStyle(color: Colors.white, fontSize: 14)),
+          Text(l.locating, style: const TextStyle(color: Colors.white, fontSize: 14)),
           const Spacer(),
           TextButton(
             onPressed: _initLocation,
-            child: const Text('Réessayer', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(l.retry, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ]),
       ),
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildTopBar(AppLocalizations l) {
     return Container(
       color: Colors.white, padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       child: Column(children: [
         SizedBox(height: 38, child: TextField(
           controller: _searchCtrl,
           decoration: InputDecoration(
-            hintText: 'Chercher musée, restaurant, plage...',
+            hintText: l.searchMapHint,
             prefixIcon: const Icon(Icons.search, size: 20),
             suffixIcon: _searchCtrl.text.isNotEmpty
                 ? IconButton(icon: const Icon(Icons.clear, size: 18), onPressed: () { _searchCtrl.clear(); setState(() => _isSearching = false); })
@@ -334,11 +337,11 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         )),
         const SizedBox(height: 6),
         SizedBox(height: 34, child: ListView(scrollDirection: Axis.horizontal, children: [
-          ...['Tout', 'Istanbul', 'Antalya'].map((c) {
-            final sel = (_selectedCity == 'all' && c == 'Tout') || _selectedCity.toLowerCase() == c.toLowerCase();
+          ...[l.allItems, 'Istanbul', 'Antalya'].map((c) {
+            final sel = (_selectedCity == 'all' && c == l.allItems) || _selectedCity.toLowerCase() == c.toLowerCase();
             return Padding(padding: const EdgeInsets.only(right: 6), child: ChoiceChip(
               label: Text(c, style: const TextStyle(fontSize: 12)), selected: sel,
-              onSelected: (_) { setState(() { _selectedCity = c == 'Tout' ? 'all' : c.toLowerCase(); _filterPlaces(); }); },
+              onSelected: (_) { setState(() { _selectedCity = c == l.allItems ? 'all' : c.toLowerCase(); _filterPlaces(); }); },
               visualDensity: VisualDensity.compact, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ));
           }),
@@ -371,6 +374,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   );
 
   Widget _placePanel() {
+    final l = AppLocalizations.of(context);
     final p = _selectedPlace!;
     final c = _catColor(p.category);
     return Positioned(bottom: 0, left: 0, right: 0,
@@ -414,16 +418,16 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             )).toList()),
             const SizedBox(height: 16),
             Row(children: [
-              Expanded(child: OutlinedButton.icon(onPressed: () => _openGoogleMaps(p.location), icon: const Icon(Icons.directions, size: 18), label: const Text('Itinéraire', style: TextStyle(fontSize: 13)))),
+              Expanded(child: OutlinedButton.icon(onPressed: () => _openGoogleMaps(p.location), icon: const Icon(Icons.directions, size: 18), label: Text(l.itinerary, style: const TextStyle(fontSize: 13)))),
               const SizedBox(width: 8),
               Expanded(child: ElevatedButton.icon(
                 onPressed: () => _calculateRoute(p),
                 icon: _isRouting ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.navigation, size: 18),
-                label: Text(_isRouting ? 'Calcul...' : 'Y aller', style: const TextStyle(fontSize: 13)),
+                label: Text(_isRouting ? l.calculating : l.goThere, style: const TextStyle(fontSize: 13)),
               )),
               if (p.website != null) const SizedBox(width: 4),
-              if (p.website != null) IconButton(icon: const Icon(Icons.language, size: 22), onPressed: () => launchUrl(Uri.parse(p.website!)), tooltip: 'Site'),
-              if (p.phone != null) IconButton(icon: const Icon(Icons.phone, size: 22), onPressed: () => launchUrl(Uri.parse('tel:${p.phone}')), tooltip: 'Appeler'),
+              if (p.website != null) IconButton(icon: const Icon(Icons.language, size: 22), onPressed: () => launchUrl(Uri.parse(p.website!)), tooltip: l.website),
+              if (p.phone != null) IconButton(icon: const Icon(Icons.phone, size: 22), onPressed: () => launchUrl(Uri.parse('tel:${p.phone}')), tooltip: l.call),
             ]),
           ]),
         ),
@@ -435,6 +439,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     child: Row(children: [Icon(icon, size: 16, color: Color(0xFF6B7280)), const SizedBox(width: 6), Expanded(child: Text(text, style: const TextStyle(fontSize: 13)))]) );
 
   Widget _routePanel() {
+    final l = AppLocalizations.of(context);
     if (_route == null) return const SizedBox.shrink();
     final r = _route!;
     return Positioned(bottom: 0, left: 0, right: 0,
@@ -465,13 +470,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   IconButton(
                     icon: const Icon(Icons.play_circle_fill_rounded, color: AppColors.success),
                     onPressed: _startNavigation,
-                    tooltip: 'Commencer la navigation',
+                    tooltip: l.startNavigation,
                   ),
                 if (_isNavigating)
                   IconButton(
                     icon: const Icon(Icons.stop_circle_rounded, color: AppColors.error),
                     onPressed: _stopNavigation,
-                    tooltip: 'Arrêter la navigation',
+                    tooltip: l.stopNavigation,
                   ),
                 IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => _showRoutePanel = false)),
               ]),

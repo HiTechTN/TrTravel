@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/section_card.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
@@ -45,10 +46,11 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
+          GradientHeader(
             title: 'Collaboration',
             subtitle: 'Voyagez ensemble',
             icon: Icons.groups_rounded,

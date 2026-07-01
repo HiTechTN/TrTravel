@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/weather_data.dart';
 
@@ -9,11 +10,12 @@ class WeatherScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Météo',
+          GradientHeader(
+            title: l.weather,
             subtitle: 'Prévisions pour la Turquie',
             icon: Icons.wb_sunny_rounded,
             gradientColors: AppColors.sunsetGradient,

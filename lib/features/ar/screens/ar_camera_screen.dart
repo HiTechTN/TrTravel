@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/ar/services/ar_service.dart';
 import 'package:trtravel/features/ar/models/ar_models.dart';
 import 'package:trtravel/features/ar/widgets/ar_overlay.dart';
@@ -32,6 +33,7 @@ class _ARCameraScreenState extends State<ARCameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Consumer<ARService>(
         builder: (_, service, __) {
