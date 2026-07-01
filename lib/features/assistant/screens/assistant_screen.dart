@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/assistant/services/assistant_service.dart';
 import 'package:trtravel/features/assistant/widgets/chat_bubble.dart';
@@ -46,12 +47,13 @@ class _AssistantScreenState extends State<AssistantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
           GradientHeader(
-            title: 'Assistant Voyage',
-            subtitle: 'Votre guide personnel intelligent',
+            title: l.assistantTitle,
+            subtitle: l.assistantSubtitle,
             icon: Icons.auto_awesome_rounded,
             trailing: Consumer<AssistantService>(
               builder: (_, service, __) {
@@ -62,19 +64,19 @@ class _AssistantScreenState extends State<AssistantScreen> {
                     showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text('Effacer la conversation'),
-                        content: const Text('Voulez-vous effacer tout l\'historique de la conversation ?'),
+                        title: Text(l.clearConversation),
+                        content: Text(l.clearConversationConfirm),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: const Text('Annuler'),
+                            child: Text(l.cancel),
                           ),
                           TextButton(
                             onPressed: () {
                               service.clearConversation();
                               Navigator.pop(ctx);
                             },
-                            child: const Text('Effacer', style: TextStyle(color: AppColors.error)),
+                            child: Text(l.clear, style: const TextStyle(color: AppColors.error)),
                           ),
                         ],
                       ),
@@ -101,13 +103,14 @@ class _AssistantScreenState extends State<AssistantScreen> {
   }
 
   Widget _buildEmptyState(AssistantService service) {
+    final l = AppLocalizations.of(context);
     final suggestions = [
-      const SuggestionItem(icon: Icons.restaurant_rounded, label: 'Où manger ?', colors: [Color(0xFFF97316), Color(0xFFFB923C)]),
-      const SuggestionItem(icon: Icons.map_rounded, label: 'Que visiter ?', colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)]),
-      const SuggestionItem(icon: Icons.wb_sunny_rounded, label: 'Météo', colors: [Color(0xFF3B82F6), Color(0xFF60A5FA)]),
-      const SuggestionItem(icon: Icons.directions_bus_rounded, label: 'Transport', colors: [Color(0xFF06B6D4), Color(0xFF22D3EE)]),
-      const SuggestionItem(icon: Icons.account_balance_wallet_rounded, label: 'Budget', colors: [Color(0xFF10B981), Color(0xFF34D399)]),
-      const SuggestionItem(icon: Icons.translate_rounded, label: 'Traduction', colors: [Color(0xFFEC4899), Color(0xFFF472B6)]),
+      SuggestionItem(icon: Icons.restaurant_rounded, label: l.whereToEat, colors: const [Color(0xFFF97316), Color(0xFFFB923C)]),
+      SuggestionItem(icon: Icons.map_rounded, label: l.whatToVisit, colors: const [Color(0xFF8B5CF6), Color(0xFFA78BFA)]),
+      SuggestionItem(icon: Icons.wb_sunny_rounded, label: l.weather, colors: const [Color(0xFF3B82F6), Color(0xFF60A5FA)]),
+      SuggestionItem(icon: Icons.directions_bus_rounded, label: l.transport, colors: const [Color(0xFF06B6D4), Color(0xFF22D3EE)]),
+      SuggestionItem(icon: Icons.account_balance_wallet_rounded, label: l.budget, colors: const [Color(0xFF10B981), Color(0xFF34D399)]),
+      SuggestionItem(icon: Icons.translate_rounded, label: l.translation, colors: const [Color(0xFFEC4899), Color(0xFFF472B6)]),
     ];
 
     return SingleChildScrollView(
@@ -125,18 +128,18 @@ class _AssistantScreenState extends State<AssistantScreen> {
             child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 40),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Bonjour ! Je suis votre assistant de voyage.',
-            style: TextStyle(
+          Text(
+            l.assistantGreeting,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Posez-moi une question ou choisissez une suggestion :',
-            style: TextStyle(
+          Text(
+            l.assistantPrompt,
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
@@ -305,10 +308,10 @@ class _AssistantScreenState extends State<AssistantScreen> {
               Expanded(
                 child: TextField(
                   controller: _textCtrl,
-                  decoration: const InputDecoration(
-                    hintText: 'Posez votre question...',
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context).askQuestion,
                     isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
                     ),

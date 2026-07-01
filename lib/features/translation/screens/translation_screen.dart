@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../services/translation_service.dart';
 import '../models/translation_phrase.dart';
@@ -51,12 +52,13 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Traducteur',
-            subtitle: 'Français ↔ Türkçe ↔ English',
+          GradientHeader(
+            title: l.translatorTitle,
+            subtitle: l.translatorSubtitle,
             icon: Icons.translate_rounded,
           ),
           Padding(
@@ -66,15 +68,15 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
               child: OutlinedButton.icon(
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CameraTranslationScreen())),
                 icon: const Icon(Icons.camera_alt_rounded),
-                label: const Text('Traduire avec la caméra'),
+                label: Text(l.cameraTranslation),
               ),
             ),
           ),
           TabBar(
             controller: _tabController,
-            tabs: const [
-              Tab(text: 'Traduire', icon: Icon(Icons.text_fields)),
-              Tab(text: 'Phrases utiles', icon: Icon(Icons.forum)),
+            tabs: [
+              Tab(text: l.translate, icon: const Icon(Icons.text_fields)),
+              Tab(text: l.usefulPhrases, icon: const Icon(Icons.forum)),
             ],
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.textSecondary,
@@ -85,9 +87,9 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
               controller: _tabController,
               children: [
                 Consumer<TranslationService>(
-                  builder: (_, service, __) => _buildTranslationTab(service),
+                  builder: (ctx, service, __) => _buildTranslationTab(service, ctx),
                 ),
-                _buildPhrasesTab(),
+                _buildPhrasesTab(l),
               ],
             ),
           ),
@@ -96,7 +98,8 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
     );
   }
 
-  Widget _buildTranslationTab(TranslationService service) {
+  Widget _buildTranslationTab(TranslationService service, BuildContext context) {
+    final l = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -115,8 +118,8 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
-                      items: TranslationLanguage.values.map((l) {
-                        return DropdownMenuItem(value: l, child: Text(l.label, style: const TextStyle(fontWeight: FontWeight.w500)));
+                      items: TranslationLanguage.values.map((lang) {
+                        return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
                       }).toList(),
                       onChanged: (lang) {
                         if (lang != null) service.setFrom(lang);
@@ -135,8 +138,8 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
-                      items: TranslationLanguage.values.map((l) {
-                        return DropdownMenuItem(value: l, child: Text(l.label, style: const TextStyle(fontWeight: FontWeight.w500)));
+                      items: TranslationLanguage.values.map((lang) {
+                        return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
                       }).toList(),
                       onChanged: (lang) {
                         if (lang != null) service.setTo(lang);
@@ -152,7 +155,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
             controller: _inputCtrl,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Entrez votre texte ou une phrase...',
+              hintText: l.inputHint,
               alignLabelWithHint: true,
               suffixIcon: _inputCtrl.text.isNotEmpty
                   ? IconButton(
@@ -171,7 +174,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
               icon: service.isLoading
                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.translate),
-              label: Text(service.isLoading ? 'Traduction...' : 'Traduire'),
+              label: Text(service.isLoading ? l.translating : l.translate),
             ),
           ),
           if (service.error != null) ...[
@@ -215,7 +218,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
                       ),
                       IconButton(
                         icon: const Icon(Icons.copy, size: 20),
-                        onPressed: () => context.showSnackBar('Copié dans le presse-papier'),
+                        onPressed: () => context.showSnackBar(l.copiedToClipboard),
                       ),
                     ],
                   ),
@@ -230,7 +233,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
     );
   }
 
-  Widget _buildPhrasesTab() {
+  Widget _buildPhrasesTab(AppLocalizations l) {
     final book = TranslationPhraseBook.all;
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -242,7 +245,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
           child: ExpansionTile(
             leading: Text(category.emoji, style: const TextStyle(fontSize: 28)),
             title: Text(category.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Text('${category.phrases.length} phrases'),
+            subtitle: Text(l.phrasesCount(category.phrases.length)),
             children: category.phrases.map((phrase) {
               return ListTile(
                 dense: true,
@@ -252,7 +255,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(icon: const Icon(Icons.volume_up, size: 18), onPressed: () => _speak(phrase.turkish, 'tr-TR')),
-                    IconButton(icon: const Icon(Icons.copy, size: 18), onPressed: () => context.showSnackBar('Copié !')),
+                    IconButton(icon: const Icon(Icons.copy, size: 18), onPressed: () => context.showSnackBar(l.copied)),
                   ],
                 ),
                 onTap: () {

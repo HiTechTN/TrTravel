@@ -6,7 +6,8 @@ import 'package:trtravel/core/services/logger.dart';
 enum TranslatableLanguage {
   french('fr', 'Français', 'FR', TranslateLanguage.french),
   turkish('tr', 'Türkçe', 'TR', TranslateLanguage.turkish),
-  english('en', 'English', 'US', TranslateLanguage.english);
+  english('en', 'English', 'US', TranslateLanguage.english),
+  arabic('ar', 'العربية', 'AR', TranslateLanguage.arabic);
 
   final String code;
   final String name;

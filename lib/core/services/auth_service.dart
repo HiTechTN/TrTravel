@@ -9,7 +9,7 @@ enum AuthStatus { uninitialized, authenticated, unauthenticated, loading }
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   User? _user;
   AuthStatus _status = AuthStatus.uninitialized;
   String? _error;
@@ -60,18 +60,18 @@ class AuthService extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      // final googleUser = await _googleSignIn.signIn();
-      // if (googleUser == null) {
-      //   _status = AuthStatus.unauthenticated;
-      //   notifyListeners();
-      //   return false;
-      // }
-      // final auth = await googleUser.authentication;
-      // final credential = GoogleAuthProvider.credential(
-      //   accessToken: auth.accessToken,
-      //   idToken: auth.idToken,
-      // );
-      // await _auth.signInWithCredential(credential);
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+      final auth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
+      await _auth.signInWithCredential(credential);
       return true;
     } catch (e) {
       _error = 'Échec de la connexion Google';
@@ -136,7 +136,7 @@ class AuthService extends ChangeNotifier {
 
   Future<void> signOut() async {
     await _auth.signOut();
-    // await _googleSignIn.signOut();
+    await _googleSignIn.signOut();
     await FacebookAuth.instance.logOut();
     _status = AuthStatus.unauthenticated;
     notifyListeners();

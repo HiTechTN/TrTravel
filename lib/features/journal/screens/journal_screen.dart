@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
+import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/journal_service.dart';
@@ -15,12 +16,13 @@ class JournalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         children: [
-          const GradientHeader(
-            title: 'Journal de Bord',
-            subtitle: 'Mes souvenirs de voyage',
+          GradientHeader(
+            title: l.journalTitle,
+            subtitle: l.journalSubtitle,
             icon: Icons.article_rounded,
           ),
           Expanded(
@@ -30,10 +32,10 @@ class JournalScreen extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (service.entries.isEmpty) {
-                  return const EmptyState(
+                  return EmptyState(
                     icon: Icons.book_rounded,
-                    title: 'Aucune entrée',
-                    subtitle: 'Commencez à écrire votre journal de voyage',
+                    title: l.noEntries,
+                    subtitle: l.startWritingJournal,
                   );
                 }
                 return ListView.builder(
