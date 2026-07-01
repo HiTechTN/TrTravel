@@ -3,6 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/exchange_data.dart';
 
@@ -12,7 +15,7 @@ class ExchangeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -45,35 +48,24 @@ class ExchangeScreen extends StatelessWidget {
     final bestIstanbul = ExchangeData.getBestRate('Istanbul');
     final bestAntalya = ExchangeData.getBestRate('Antalya');
 
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          gradient: LinearGradient(
-            colors: [AppColors.gold.withValues(alpha: 0.15), Colors.white],
-            begin: Alignment.topLeft, end: Alignment.bottomRight,
+    return GlassEffect(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 36),
+          const SizedBox(height: 8),
+          const Text('Meilleurs taux', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          const Text('1 € → TL (achat)', style: TextStyle(color: AppColors.textSecondary)),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(child: _miniRateCard('Istanbul', bestIstanbul)),
+              const SizedBox(width: 12),
+              Expanded(child: _miniRateCard('Antalya', bestAntalya)),
+            ],
           ),
-          border: Border.all(color: AppColors.gold.withValues(alpha: 0.2)),
-        ),
-        child: Column(
-          children: [
-            const Icon(Icons.emoji_events_rounded, color: AppColors.gold, size: 36),
-            const SizedBox(height: 8),
-            const Text('Meilleurs taux', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            const Text('1 € → TL (achat)', style: TextStyle(color: AppColors.textSecondary)),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(child: _miniRateCard('Istanbul', bestIstanbul)),
-                const SizedBox(width: 12),
-                Expanded(child: _miniRateCard('Antalya', bestAntalya)),
-              ],
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -113,14 +105,12 @@ class ExchangeScreen extends StatelessWidget {
   }
 
   Widget _buildRateChart() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Comparateur de taux', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Comparateur de taux', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -144,13 +134,12 @@ class ExchangeScreen extends StatelessWidget {
             )),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildCitySection(String city, List<ExchangeOffice> offices) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return GlassEffect(
+      padding: const EdgeInsets.all(4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -173,77 +162,81 @@ class ExchangeScreen extends StatelessWidget {
   }
 
   Widget _buildOfficeTile(ExchangeOffice office) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.success.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppRadius.md),
+    return AnimatedCard(
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      onTap: () => _openDirections(office),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.success.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          child: const Icon(Icons.currency_exchange, color: AppColors.success, size: 20),
         ),
-        child: const Icon(Icons.currency_exchange, color: AppColors.success, size: 20),
-      ),
-      title: Row(
-        children: [
-          Expanded(child: Text(office.name, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14))),
-          if (office.rating >= 4.5)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(4)),
-              child: Text('TOP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white)),
-            ),
-        ],
-      ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(top: 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            Row(
-              children: [
-                Icon(Icons.location_on, size: 13, color: AppColors.textSecondary),
-                const SizedBox(width: 4),
-                Expanded(child: Text('${office.district} • ${office.address}', style: const TextStyle(fontSize: 11))),
-              ],
-            ),
-            if (office.openingHours != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Row(
-                  children: [
-                    Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
-                    const SizedBox(width: 4),
-                    Text(office.openingHours!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                  ],
-                ),
+            Expanded(child: Text(office.name, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14))),
+            if (office.rating >= 4.5)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(4)),
+                child: Text('TOP', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white)),
               ),
           ],
         ),
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('A:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-              const SizedBox(width: 2),
-              Text(office.buyRate.toStringAsFixed(3), style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold, fontSize: 14)),
+              Row(
+                children: [
+                  Icon(Icons.location_on, size: 13, color: AppColors.textSecondary),
+                  const SizedBox(width: 4),
+                  Expanded(child: Text('${office.district} • ${office.address}', style: const TextStyle(fontSize: 11))),
+                ],
+              ),
+              if (office.openingHours != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
+                      const SizedBox(width: 4),
+                      Text(office.openingHours!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
             ],
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('V:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-              const SizedBox(width: 2),
-              Text(office.sellRate.toStringAsFixed(3), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-            ],
-          ),
-        ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('A:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                const SizedBox(width: 2),
+                Text(office.buyRate.toStringAsFixed(3), style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.bold, fontSize: 14)),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('V:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                const SizedBox(width: 2),
+                Text(office.sellRate.toStringAsFixed(3), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              ],
+            ),
+          ],
+        ),
+        isThreeLine: true,
       ),
-      isThreeLine: true,
-      onTap: () => _openDirections(office),
     );
   }
 
@@ -255,28 +248,24 @@ class ExchangeScreen extends StatelessWidget {
   }
 
   Widget _buildTips() {
-    return Card(
-      margin: EdgeInsets.zero,
-      color: AppColors.info.withValues(alpha: 0.05),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.lightbulb_rounded, color: AppColors.info),
-                SizedBox(width: 8), Text('Conseils change', style: TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _tip('Comparez toujours entre plusieurs bureaux pour obtenir le meilleur taux'),
-            _tip('Évitez les bureaux à l\'aéroport (taux jusqu\'à 5% moins avantageux)'),
-            _tip('Les Grands Bazars ont souvent les meilleurs taux - négociez !'),
-            _tip('Préférez les bureaux dans les quartiers résidentiels pour de meilleurs taux'),
-            _tip('1 € ≈ ${ExchangeData.getBestRate("Istanbul")?.buyRate.toStringAsFixed(2) ?? "35"} TL (moyenne)'),
-          ],
-        ),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.lightbulb_rounded, color: AppColors.info),
+              SizedBox(width: 8), Text('Conseils change', style: TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _tip('Comparez toujours entre plusieurs bureaux pour obtenir le meilleur taux'),
+          _tip('Évitez les bureaux à l\'aéroport (taux jusqu\'à 5% moins avantageux)'),
+          _tip('Les Grands Bazars ont souvent les meilleurs taux - négociez !'),
+          _tip('Préférez les bureaux dans les quartiers résidentiels pour de meilleurs taux'),
+          _tip('1 € ≈ ${ExchangeData.getBestRate("Istanbul")?.buyRate.toStringAsFixed(2) ?? "35"} TL (moyenne)'),
+        ],
       ),
     );
   }

@@ -4,6 +4,9 @@ import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
+import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../services/journal_service.dart';
@@ -17,7 +20,7 @@ class JournalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -29,7 +32,7 @@ class JournalScreen extends StatelessWidget {
             child: Consumer<JournalService>(
               builder: (_, service, __) {
                 if (service.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const ShimmerList(itemCount: 5);
                 }
                 if (service.entries.isEmpty) {
                   return EmptyState(
@@ -68,72 +71,67 @@ class _JournalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 
-    return Card(
+    return AnimatedCard(
+      onTap: () => context.push(JournalDetailScreen(entry: entry)),
       margin: const EdgeInsets.only(bottom: 8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        onTap: () => context.push(JournalDetailScreen(entry: entry)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Column(
-                  children: [
-                    Text('${entry.date.day}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.primary)),
-                    Text(months[entry.date.month - 1], style: const TextStyle(fontSize: 11, color: AppColors.primary)),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(entry.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                    if (entry.location != null) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on, size: 14, color: AppColors.textSecondary),
-                          const SizedBox(width: 4),
-                          Text(entry.location!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
-                        ],
-                      ),
-                    ],
-                    const SizedBox(height: 6),
-                    Text(
-                      entry.content,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 14, color: AppColors.textSecondary, height: 1.4),
-                    ),
-                    if (entry.tags.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 4,
-                        children: entry.tags.map((t) => Chip(
-                          label: Text(t, style: const TextStyle(fontSize: 11)),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          visualDensity: VisualDensity.compact,
-                          padding: EdgeInsets.zero,
-                          labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                        )).toList(),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 48,
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            child: Column(
+              children: [
+                Text('${entry.date.day}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.primary)),
+                Text(months[entry.date.month - 1], style: const TextStyle(fontSize: 11, color: AppColors.primary)),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(entry.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                if (entry.location != null) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, size: 14, color: AppColors.textSecondary),
+                      const SizedBox(width: 4),
+                      Text(entry.location!, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 6),
+                Text(
+                  entry.content,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14, color: AppColors.textSecondary, height: 1.4),
+                ),
+                if (entry.tags.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 4,
+                    children: entry.tags.map((t) => Chip(
+                      label: Text(t, style: const TextStyle(fontSize: 11)),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+                    )).toList(),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

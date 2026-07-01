@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 import 'package:trtravel/features/itinerary/screens/day_trip_edit_screen.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
@@ -19,13 +22,13 @@ class TripDetailScreen extends StatelessWidget {
       builder: (context, service, _) {
         final trip = service.getTrip(tripId);
         if (trip == null) {
-          return Scaffold(
+          return ModernScaffold(
             appBar: AppBar(title: Text(l.itinerary)),
             body: const Center(child: Text('Voyage introuvable')),
           );
         }
 
-        return Scaffold(
+        return ModernScaffold(
           body: Column(
             children: [
               GradientHeader(
@@ -108,13 +111,9 @@ class _DayCard extends StatelessWidget {
 
     final color = dayColors[day.dayNumber % dayColors.length];
 
-    return Card(
-      elevation: 0,
+    return GlassEffect(
+      padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: AppColors.divider, width: 0.5),
-      ),
       child: ExpansionTile(
         tilePadding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
@@ -71,7 +73,7 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -90,76 +92,98 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  TextField(
-                    controller: _titleCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Titre',
-                      hintText: 'Qu\'avez-vous fait aujourd\'hui ?',
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _contentCtrl,
-                    maxLines: 8,
-                    decoration: const InputDecoration(
-                      labelText: 'Récit',
-                      hintText: 'Racontez votre journée...',
-                      alignLabelWithHint: true,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _locationCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Lieu (optionnel)',
-                      hintText: 'Où étiez-vous ?',
-                      prefixIcon: Icon(Icons.location_on),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 20, color: AppColors.textSecondary),
-                      const SizedBox(width: 8),
-                      TextButton(
-                        onPressed: _pickDate,
-                        child: Text(
-                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
+                  GlassEffect(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _titleCtrl,
+                      decoration: const InputDecoration(
+                        labelText: 'Titre',
+                        hintText: 'Qu\'avez-vous fait aujourd\'hui ?',
+                        border: InputBorder.none,
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _tagCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'Tags (optionnel)',
-                            hintText: 'Ajouter un tag',
-                            prefixIcon: Icon(Icons.label),
+                  GlassEffect(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _contentCtrl,
+                      maxLines: 8,
+                      decoration: const InputDecoration(
+                        labelText: 'Récit',
+                        hintText: 'Racontez votre journée...',
+                        alignLabelWithHint: true,
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GlassEffect(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _locationCtrl,
+                      decoration: const InputDecoration(
+                        labelText: 'Lieu (optionnel)',
+                        hintText: 'Où étiez-vous ?',
+                        prefixIcon: Icon(Icons.location_on),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GlassEffect(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_today, size: 20, color: AppColors.textSecondary),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: _pickDate,
+                          child: Text(
+                            '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                            style: const TextStyle(fontSize: 16),
                           ),
-                          onSubmitted: (_) => _addTag(),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: _addTag,
-                        icon: const Icon(Icons.add_circle, color: AppColors.primary),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GlassEffect(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _tagCtrl,
+                            decoration: const InputDecoration(
+                              labelText: 'Tags (optionnel)',
+                              hintText: 'Ajouter un tag',
+                              prefixIcon: Icon(Icons.label),
+                              border: InputBorder.none,
+                            ),
+                            onSubmitted: (_) => _addTag(),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: _addTag,
+                          icon: const Icon(Icons.add_circle, color: AppColors.primary),
+                        ),
+                      ],
+                    ),
                   ),
                   if (_tags.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 4,
-                      children: _tags.map((t) => Chip(
-                        label: Text(t),
-                        onDeleted: () => setState(() => _tags.remove(t)),
-                      )).toList(),
+                    GlassEffect(
+                      padding: const EdgeInsets.all(12),
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: _tags.map((t) => Chip(
+                          label: Text(t),
+                          onDeleted: () => setState(() => _tags.remove(t)),
+                        )).toList(),
+                      ),
                     ),
                   ],
                   const SizedBox(height: 24),

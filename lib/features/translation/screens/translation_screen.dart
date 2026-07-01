@@ -5,6 +5,9 @@ import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../services/translation_service.dart';
 import '../models/translation_phrase.dart';
@@ -53,7 +56,7 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -104,50 +107,47 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Card(
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<TranslationLanguage>(
-                      value: service.from,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      items: TranslationLanguage.values.map((lang) {
-                        return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
-                      }).toList(),
-                      onChanged: (lang) {
-                        if (lang != null) service.setFrom(lang);
-                      },
+          GlassEffect(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<TranslationLanguage>(
+                    value: service.from,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      border: OutlineInputBorder(),
+                      isDense: true,
                     ),
+                    items: TranslationLanguage.values.map((lang) {
+                      return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
+                    }).toList(),
+                    onChanged: (lang) {
+                      if (lang != null) service.setFrom(lang);
+                    },
                   ),
-                  IconButton(
-                    onPressed: () => service.swapLanguages(),
-                    icon: const Icon(Icons.swap_horiz_rounded, color: AppColors.primary),
-                  ),
-                  Expanded(
-                    child: DropdownButtonFormField<TranslationLanguage>(
-                      value: service.to,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      items: TranslationLanguage.values.map((lang) {
-                        return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
-                      }).toList(),
-                      onChanged: (lang) {
-                        if (lang != null) service.setTo(lang);
-                      },
+                ),
+                IconButton(
+                  onPressed: () => service.swapLanguages(),
+                  icon: const Icon(Icons.swap_horiz_rounded, color: AppColors.primary),
+                ),
+                Expanded(
+                  child: DropdownButtonFormField<TranslationLanguage>(
+                    value: service.to,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      border: OutlineInputBorder(),
+                      isDense: true,
                     ),
+                    items: TranslationLanguage.values.map((lang) {
+                      return DropdownMenuItem(value: lang, child: Text(lang.label, style: const TextStyle(fontWeight: FontWeight.w500)));
+                    }).toList(),
+                    onChanged: (lang) {
+                      if (lang != null) service.setTo(lang);
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 12),
@@ -179,12 +179,8 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
           ),
           if (service.error != null) ...[
             const SizedBox(height: 8),
-            Container(
-              width: double.infinity, padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-              ),
+            GlassEffect(
+              padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
                   const Icon(Icons.error_outline, color: AppColors.error, size: 20),
@@ -196,13 +192,8 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
           ],
           if (service.translatedText.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Container(
-              width: double.infinity, padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(color: AppColors.success.withValues(alpha: 0.2)),
-              ),
+            GlassEffect(
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -240,24 +231,16 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
       itemCount: book.length,
       itemBuilder: (context, index) {
         final category = book[index];
-        return Card(
+        return GlassEffect(
+          padding: EdgeInsets.zero,
           margin: const EdgeInsets.only(bottom: 8),
           child: ExpansionTile(
             leading: Text(category.emoji, style: const TextStyle(fontSize: 28)),
             title: Text(category.name, style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: Text(l.phrasesCount(category.phrases.length)),
             children: category.phrases.map((phrase) {
-              return ListTile(
-                dense: true,
-                title: Text(phrase.french, style: const TextStyle(fontSize: 13)),
-                subtitle: Text(phrase.turkish, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 14)),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(icon: const Icon(Icons.volume_up, size: 18), onPressed: () => _speak(phrase.turkish, 'tr-TR')),
-                    IconButton(icon: const Icon(Icons.copy, size: 18), onPressed: () => context.showSnackBar(l.copied)),
-                  ],
-                ),
+              return AnimatedCard(
+                padding: EdgeInsets.zero,
                 onTap: () {
                   final service = context.read<TranslationService>();
                   _inputCtrl.text = phrase.french;
@@ -267,6 +250,18 @@ class _TranslationScreenState extends State<TranslationScreen> with SingleTicker
                   _tabController.animateTo(0);
                   service.translate();
                 },
+                child: ListTile(
+                  dense: true,
+                title: Text(phrase.french, style: const TextStyle(fontSize: 13)),
+                subtitle: Text(phrase.turkish, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 14)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(icon: const Icon(Icons.volume_up, size: 18), onPressed: () => _speak(phrase.turkish, 'tr-TR')),
+                    IconButton(icon: const Icon(Icons.copy, size: 18), onPressed: () => context.showSnackBar(l.copied)),
+                  ],
+                ),
+              ),
               );
             }).toList(),
           ),

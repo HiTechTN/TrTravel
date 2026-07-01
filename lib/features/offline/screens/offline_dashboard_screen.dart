@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/offline/services/offline_service.dart';
 import 'package:trtravel/features/offline/widgets/offline_indicator.dart';
@@ -19,7 +22,7 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -54,23 +57,8 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
 
   Widget _buildConnectionCard(OfflineService service) {
     final online = service.isOnline;
-    return Container(
+    return GlassEffect(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: online
-              ? [AppColors.success.withValues(alpha: 0.1), AppColors.success.withValues(alpha: 0.05)]
-              : [AppColors.error.withValues(alpha: 0.1), AppColors.error.withValues(alpha: 0.05)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(
-          color: online
-              ? AppColors.success.withValues(alpha: 0.2)
-              : AppColors.error.withValues(alpha: 0.2),
-        ),
-      ),
       child: Row(
         children: [
           Container(
@@ -154,13 +142,8 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
     required Color color,
   }) {
     return Expanded(
-      child: Container(
+      child: GlassEffect(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: AppColors.divider),
-        ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
@@ -189,13 +172,8 @@ class _OfflineDashboardScreenState extends State<OfflineDashboardScreen> {
 
   Widget _buildSyncActions(OfflineService service) {
     final l = AppLocalizations.of(context);
-    return Container(
+    return GlassEffect(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.divider),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -46,6 +46,7 @@ class AppLocalizations {
   String get offlineMode => _strings.offlineMode;
   String get offlineDesc => _strings.offlineDesc;
   String get addExpense => _strings.addExpense;
+  String get expenses => _strings.expenses;
   String get settings => _strings.settings;
   String get settingsSubtitle => _strings.settingsSubtitle;
   String get accountGoogle => _strings.accountGoogle;
@@ -224,6 +225,7 @@ abstract class _StringsBase {
   String get offlineMode;
   String get offlineDesc;
   String get addExpense;
+  String get expenses;
   String get settings;
   String get settingsSubtitle;
   String get accountGoogle;
@@ -391,6 +393,7 @@ class _StringsFr implements _StringsBase {
   @override String get offlineMode => 'Mode Hors-ligne';
   @override String get offlineDesc => 'Gérez vos téléchargements et la file d\'attente de synchronisation';
   @override String get addExpense => 'Ajouter dépense';
+  @override String get expenses => 'dépenses';
   @override String get settings => 'Paramètres';
   @override String get settingsSubtitle => 'Hors-ligne, langues, cartes';
   @override String get accountGoogle => 'Compte Google';
@@ -558,6 +561,7 @@ class _StringsEn implements _StringsBase {
   @override String get offlineMode => 'Offline Mode';
   @override String get offlineDesc => 'Manage downloads and sync queue';
   @override String get addExpense => 'Add Expense';
+  @override String get expenses => 'expenses';
   @override String get settings => 'Settings';
   @override String get settingsSubtitle => 'Offline, languages, maps';
   @override String get accountGoogle => 'Google Account';
@@ -725,6 +729,7 @@ class _StringsTr implements _StringsBase {
   @override String get offlineMode => 'Çevrimdışı Mod';
   @override String get offlineDesc => 'İndirmeleri ve senkronizasyon kuyruğunu yönetin';
   @override String get addExpense => 'Masraf Ekle';
+  @override String get expenses => 'masraf';
   @override String get settings => 'Ayarlar';
   @override String get settingsSubtitle => 'Çevrimdışı, diller, haritalar';
   @override String get accountGoogle => 'Google Hesabı';
@@ -892,6 +897,7 @@ class _StringsAr implements _StringsBase {
   @override String get offlineMode => 'وضع غير متصل';
   @override String get offlineDesc => 'إدارة التنزيلات وقائمة انتظار المزامنة';
   @override String get addExpense => 'إضافة مصروف';
+  @override String get expenses => 'مصروفات';
   @override String get settings => 'الإعدادات';
   @override String get settingsSubtitle => 'غير متصل، اللغات، الخرائط';
   @override String get accountGoogle => 'حساب Google';

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/notifications/services/notification_service.dart';
 
@@ -111,7 +114,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -125,84 +128,128 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    const Text(
-                      'Créer un rappel géolocalisé',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(labelText: 'Titre'),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _bodyController,
-                      decoration: const InputDecoration(labelText: 'Message'),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _placeController,
-                      decoration: const InputDecoration(labelText: 'Nom du lieu'),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _latController,
-                            decoration: const InputDecoration(labelText: 'Latitude'),
-                            keyboardType: TextInputType.number,
+                    GlassEffect(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Créer un rappel géolocalisé',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _lngController,
-                            decoration: const InputDecoration(labelText: 'Longitude'),
-                            keyboardType: TextInputType.number,
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _titleController,
+                            decoration: const InputDecoration(
+                              labelText: 'Titre',
+                              border: InputBorder.none,
+                              filled: true,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton.icon(
-                      onPressed: _createGeofenceReminder,
-                      icon: const Icon(Icons.location_on_rounded),
-                      label: const Text('Ajouter rappel géolocalisé'),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _bodyController,
+                            decoration: const InputDecoration(
+                              labelText: 'Message',
+                              border: InputBorder.none,
+                              filled: true,
+                            ),
+                            maxLines: 2,
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _placeController,
+                            decoration: const InputDecoration(
+                              labelText: 'Nom du lieu',
+                              border: InputBorder.none,
+                              filled: true,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _latController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Latitude',
+                                    border: InputBorder.none,
+                                    filled: true,
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: _lngController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Longitude',
+                                    border: InputBorder.none,
+                                    filled: true,
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            onPressed: _createGeofenceReminder,
+                            icon: const Icon(Icons.location_on_rounded),
+                            label: const Text('Ajouter rappel géolocalisé'),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 24),
-                    const Divider(),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Créer un rappel temporel',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    OutlinedButton.icon(
-                      onPressed: _createTimeReminder,
-                      icon: const Icon(Icons.access_alarm_rounded),
-                      label: const Text('Choisir date et heure'),
+                    GlassEffect(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Créer un rappel temporel',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 12),
+                          OutlinedButton.icon(
+                            onPressed: _createTimeReminder,
+                            icon: const Icon(Icons.access_alarm_rounded),
+                            label: const Text('Choisir date et heure'),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 24),
-                    const Divider(),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Rappels actifs',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    GlassEffect(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Rappels actifs',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          if (service.reminders.isEmpty)
+                            const Text('Aucun rappel actif', style: TextStyle(color: AppColors.textSecondary))
+                          else
+                            ...service.reminders.map((r) => AnimatedCard(
+                              padding: EdgeInsets.zero,
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              child: ListTile(
+                                title: Text(r.title),
+                                subtitle: Text(r.isGeofence ? 'Géolocalisé: ${r.placeName}' : 'Temporel'),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: AppColors.error),
+                                  onPressed: () => service.removeReminder(r.id),
+                                ),
+                              ),
+                            )),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    if (service.reminders.isEmpty)
-                      const Text('Aucun rappel actif', style: TextStyle(color: AppColors.textSecondary))
-                    else
-                      ...service.reminders.map((r) => ListTile(
-                        title: Text(r.title),
-                        subtitle: Text(r.isGeofence ? 'Géolocalisé: ${r.placeName}' : 'Temporel'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline, color: AppColors.error),
-                          onPressed: () => service.removeReminder(r.id),
-                        ),
-                      )),
                   ],
                 );
               },

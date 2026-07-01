@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/collaboration/models/collaboration_models.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
@@ -80,7 +83,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
     final authService = context.read<AuthService>();
     final currentUserId = authService.userId;
 
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -201,14 +204,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-            side: const BorderSide(color: AppColors.divider),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+        GlassEffect(
+          padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -244,19 +241,22 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> with SingleTicker
               ],
             ),
           ),
-        ),
         const SizedBox(height: 16),
         const Text('Membres', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        ...widget.group.members.map((member) => ListTile(
-          leading: member.photoUrl != null
-              ? CircleAvatar(backgroundImage: NetworkImage(member.photoUrl!))
-              : const CircleAvatar(child: Icon(Icons.person)),
-          title: Text(member.displayName, style: const TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: Text(member.roleLabel, style: const TextStyle(fontSize: 12)),
-          trailing: member.userId == currentUserId
-              ? const Chip(label: Text('Vous', style: TextStyle(fontSize: 11)), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)
-              : null,
+        ...widget.group.members.map((member) => AnimatedCard(
+          padding: EdgeInsets.zero,
+          margin: const EdgeInsets.symmetric(vertical: 2),
+          child: ListTile(
+            leading: member.photoUrl != null
+                ? CircleAvatar(backgroundImage: NetworkImage(member.photoUrl!))
+                : const CircleAvatar(child: Icon(Icons.person)),
+            title: Text(member.displayName, style: const TextStyle(fontWeight: FontWeight.w500)),
+            subtitle: Text(member.roleLabel, style: const TextStyle(fontSize: 12)),
+            trailing: member.userId == currentUserId
+                ? const Chip(label: Text('Vous', style: TextStyle(fontSize: 11)), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)
+                : null,
+          ),
         )),
       ],
     );

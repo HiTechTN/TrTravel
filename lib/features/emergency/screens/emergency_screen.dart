@@ -3,6 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../models/emergency_data.dart';
 
@@ -12,7 +15,7 @@ class EmergencyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -57,89 +60,81 @@ class EmergencyScreen extends StatelessWidget {
   }
 
   Widget _buildUrgentCard(EmergencyContact contact) {
-    return Card(
+    return AnimatedCard(
+      onTap: () => _call(contact.number),
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        onTap: () => _call(contact.number),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Text(contact.emoji, style: const TextStyle(fontSize: 32)),
-              const SizedBox(height: 8),
-              Text(contact.number,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.error)),
-              const SizedBox(height: 4),
-              Text(contact.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-            ],
-          ),
-        ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Text(contact.emoji, style: const TextStyle(fontSize: 32)),
+          const SizedBox(height: 8),
+          Text(contact.number,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.error)),
+          const SizedBox(height: 4),
+          Text(contact.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }
 
   Widget _buildSection(String title, List<EmergencyContact> contacts) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
+    return GlassEffect(
+      padding: const EdgeInsets.all(4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
             ),
             ...contacts.map((c) => _buildContactTile(c)),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildContactTile(EmergencyContact contact) {
-    return ListTile(
-      leading: Text(contact.emoji, style: const TextStyle(fontSize: 28)),
-      title: Text(contact.name, style: const TextStyle(fontWeight: FontWeight.w500)),
-      subtitle: Text(contact.description, style: const TextStyle(fontSize: 13)),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(contact.number, style: const TextStyle(
-            color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(width: 8),
-          Icon(Icons.phone_in_talk_rounded, color: AppColors.primary, size: 22),
-        ],
-      ),
+    return AnimatedCard(
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       onTap: () => _call(contact.number),
+      child: ListTile(
+        leading: Text(contact.emoji, style: const TextStyle(fontSize: 28)),
+        title: Text(contact.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+        subtitle: Text(contact.description, style: const TextStyle(fontSize: 13)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(contact.number, style: const TextStyle(
+              color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(width: 8),
+            Icon(Icons.phone_in_talk_rounded, color: AppColors.primary, size: 22),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildTips(AppLocalizations l) {
-    return Card(
-      margin: EdgeInsets.zero,
-      color: AppColors.warning.withValues(alpha: 0.08),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.lightbulb_rounded, color: AppColors.warning),
-                const SizedBox(width: 8),
-                Text(l.safetyTips, style: const TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _Tip(text: l.tipCopyId),
-            _Tip(text: l.tipEmbassyAddress),
-            _Tip(text: l.tipTravelInsurance),
-            _Tip(text: l.tipCash),
-            _Tip(text: l.tipOfflineMaps),
-          ],
-        ),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.lightbulb_rounded, color: AppColors.warning),
+              const SizedBox(width: 8),
+              Text(l.safetyTips, style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _Tip(text: l.tipCopyId),
+          _Tip(text: l.tipEmbassyAddress),
+          _Tip(text: l.tipTravelInsurance),
+          _Tip(text: l.tipCash),
+          _Tip(text: l.tipOfflineMaps),
+        ],
       ),
     );
   }

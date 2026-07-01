@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/features/notifications/services/notification_service.dart';
@@ -14,7 +17,7 @@ class NotificationsListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -94,8 +97,8 @@ class NotificationsListScreen extends StatelessWidget {
   }
 
   Widget _buildSuggestionCard(BuildContext context, dynamic suggestion, NotificationService service) {
-    return Card(
-      elevation: 0,
+    return GlassEffect(
+      padding: EdgeInsets.zero,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: Container(

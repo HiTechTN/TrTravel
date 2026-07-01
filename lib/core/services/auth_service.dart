@@ -9,10 +9,10 @@ enum AuthStatus { uninitialized, authenticated, unauthenticated, loading }
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   User? _user;
   AuthStatus _status = AuthStatus.uninitialized;
   String? _error;
+  bool _googleInitialized = false;
 
   User? get user => _user;
   AuthStatus get status => _status;
@@ -60,15 +60,13 @@ class AuthService extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        _status = AuthStatus.unauthenticated;
-        notifyListeners();
-        return false;
+      if (!_googleInitialized) {
+        await GoogleSignIn.instance.initialize();
+        _googleInitialized = true;
       }
+      final googleUser = await GoogleSignIn.instance.authenticate();
       final auth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
         idToken: auth.idToken,
       );
       await _auth.signInWithCredential(credential);
@@ -136,7 +134,7 @@ class AuthService extends ChangeNotifier {
 
   Future<void> signOut() async {
     await _auth.signOut();
-    await _googleSignIn.signOut();
+    await GoogleSignIn.instance.signOut();
     await FacebookAuth.instance.logOut();
     _status = AuthStatus.unauthenticated;
     notifyListeners();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/features/assistant/widgets/itinerary_sharing.dart';
 import '../models/wiki_models.dart';
@@ -31,7 +33,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final item = widget.item;
-    return Scaffold(
+    return ModernScaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -82,13 +84,16 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
                     _buildInfoCards(item),
                   if (item.tags.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 6, runSpacing: 4,
-                      children: item.tags.map((t) => Chip(
-                        label: Text(t, style: const TextStyle(fontSize: 12)),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        visualDensity: VisualDensity.compact,
-                      )).toList(),
+                    GlassEffect(
+                      padding: const EdgeInsets.all(12),
+                      child: Wrap(
+                        spacing: 6, runSpacing: 4,
+                        children: item.tags.map((t) => Chip(
+                          label: Text(t, style: const TextStyle(fontSize: 12)),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: VisualDensity.compact,
+                        )).toList(),
+                      ),
                     ),
                   ],
                   if (item.sections.isNotEmpty) ...[
@@ -105,10 +110,8 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   }
 
   Widget _buildInfoCards(WikiItem item) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             if (item.price != null) _infoRow(Icons.monetization_on_rounded, 'Prix', item.price!),
@@ -119,8 +122,7 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
             if (item.phone != null) _actionRow(Icons.phone_rounded, 'Téléphone', item.phone!, () => launchUrl(Uri.parse('tel:${item.phone}'))),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _infoRow(IconData icon, String label, String value) {
@@ -160,7 +162,8 @@ class _WikiDetailScreenState extends State<WikiDetailScreen> {
   }
 
   Widget _buildSection(BuildContext context, WikiSection section) {
-    return Card(
+    return GlassEffect(
+      padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
         title: Row(

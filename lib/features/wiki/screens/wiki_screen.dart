@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/shared/widgets/empty_state.dart';
 import '../data/wiki_database.dart';
@@ -31,7 +34,7 @@ class _WikiScreenState extends State<WikiScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           const GradientHeader(
@@ -89,7 +92,8 @@ class _WikiScreenState extends State<WikiScreen> with SingleTickerProviderStateM
                   ? cat.items
                   : cat.items.where((i) => i.city == _selectedCity || i.city == 'general').toList();
               if (items.isEmpty) return const SizedBox.shrink();
-              return Card(
+              return GlassEffect(
+                padding: EdgeInsets.zero,
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ExpansionTile(
                   leading: CircleAvatar(
@@ -98,12 +102,15 @@ class _WikiScreenState extends State<WikiScreen> with SingleTickerProviderStateM
                   ),
                   title: Text(cat.localizedName, style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text('${items.length} articles'),
-                  children: items.map((item) => ListTile(
-                    leading: Icon(item.icon, color: AppColors.textSecondary, size: 20),
-                    title: Text(item.localizedTitle, style: const TextStyle(fontSize: 14)),
-                    subtitle: item.price != null ? Text(item.price!, style: const TextStyle(fontSize: 12, color: AppColors.primary)) : null,
-                    trailing: const Icon(Icons.chevron_right, size: 20),
+                  children: items.map((item) => AnimatedCard(
+                    padding: EdgeInsets.zero,
                     onTap: () => context.push(WikiDetailScreen(item: item)),
+                    child: ListTile(
+                      leading: Icon(item.icon, color: AppColors.textSecondary, size: 20),
+                      title: Text(item.localizedTitle, style: const TextStyle(fontSize: 14)),
+                      subtitle: item.price != null ? Text(item.price!, style: const TextStyle(fontSize: 12, color: AppColors.primary)) : null,
+                      trailing: const Icon(Icons.chevron_right, size: 20),
+                    ),
                   )).toList(),
                 ),
               );
@@ -160,8 +167,10 @@ class _WikiScreenState extends State<WikiScreen> with SingleTickerProviderStateM
       itemCount: results.length,
       itemBuilder: (_, i) {
         final item = results[i];
-        return Card(
+        return AnimatedCard(
+          padding: EdgeInsets.zero,
           margin: const EdgeInsets.only(bottom: 8),
+          onTap: () => context.push(WikiDetailScreen(item: item)),
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: AppColors.primary.withValues(alpha: 0.1),
@@ -170,7 +179,6 @@ class _WikiScreenState extends State<WikiScreen> with SingleTickerProviderStateM
             title: Text(item.localizedTitle),
             subtitle: Text(item.localizedDescription, maxLines: 2, overflow: TextOverflow.ellipsis),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push(WikiDetailScreen(item: item)),
           ),
         );
       },

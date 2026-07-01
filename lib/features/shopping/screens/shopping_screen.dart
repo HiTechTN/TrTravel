@@ -3,6 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/shopping_data.dart';
 
@@ -12,7 +15,7 @@ class ShoppingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -57,7 +60,8 @@ class ShoppingScreen extends StatelessWidget {
   }
 
   Widget _buildCenterCard(ShoppingCenter center) {
-    return Card(
+    return GlassEffect(
+      padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(bottom: 8),
       child: ExpansionTile(
         leading: Container(
@@ -133,29 +137,25 @@ class ShoppingScreen extends StatelessWidget {
   }
 
   Widget _buildTips() {
-    return Card(
-      margin: EdgeInsets.zero,
-      color: AppColors.gold.withValues(alpha: 0.08),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.lightbulb_rounded, color: AppColors.gold),
-                SizedBox(width: 8),
-                Text('Conseils shopping', style: TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _tip('Négociez dans les bazars - proposez 50% du prix annoncé'),
-            _tip('Les cartes de crédit sont acceptées dans les centres commerciaux'),
-            _tip('Préférez le liquide dans les bazars et petites boutiques'),
-            _tip('Tax Free: récupérez la TVA (8-18%) à l\'aéroport'),
-            _tip('Les tapis et céramiques sont moins chers hors des zones touristiques'),
-          ],
-        ),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.lightbulb_rounded, color: AppColors.gold),
+              SizedBox(width: 8),
+              Text('Conseils shopping', style: TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _tip('Négociez dans les bazars - proposez 50% du prix annoncé'),
+          _tip('Les cartes de crédit sont acceptées dans les centres commerciaux'),
+          _tip('Préférez le liquide dans les bazars et petites boutiques'),
+          _tip('Tax Free: récupérez la TVA (8-18%) à l\'aéroport'),
+          _tip('Les tapis et céramiques sont moins chers hors des zones touristiques'),
+        ],
       ),
     );
   }

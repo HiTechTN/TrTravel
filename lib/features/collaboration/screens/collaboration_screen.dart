@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
-import 'package:trtravel/shared/widgets/section_card.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
 import 'package:trtravel/features/collaboration/screens/create_group_screen.dart';
 import 'package:trtravel/features/collaboration/screens/group_detail_screen.dart';
@@ -47,7 +49,7 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -61,37 +63,35 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    SectionCard(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Rejoindre un groupe', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _inviteController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Code à 6 caractères',
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    ),
-                                    textCapitalization: TextCapitalization.characters,
-                                    onSubmitted: (_) => _joinGroup(),
+                    GlassEffect(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Rejoindre un groupe', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _inviteController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Code à 6 caractères',
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   ),
+                                  textCapitalization: TextCapitalization.characters,
+                                  onSubmitted: (_) => _joinGroup(),
                                 ),
-                                const SizedBox(width: 8),
-                                ElevatedButton(
-                                  onPressed: _joinGroup,
-                                  child: const Text('Rejoindre'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                onPressed: _joinGroup,
+                                child: const Text('Rejoindre'),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -122,8 +122,10 @@ class _CollaborationScreenState extends State<CollaborationScreen> {
                         ),
                       )
                     else
-                      ...service.groups.map((group) => SectionCard(
+                      ...service.groups.map((group) => AnimatedCard(
                         onTap: () => context.push(GroupDetailScreen(group: group)),
+                        padding: EdgeInsets.zero,
+                        margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
                           leading: Container(
                             padding: const EdgeInsets.all(8),

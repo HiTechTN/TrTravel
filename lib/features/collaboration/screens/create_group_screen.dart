@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import 'package:trtravel/features/collaboration/services/collaboration_service.dart';
 
@@ -52,7 +54,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -66,23 +68,31 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nom du groupe',
-                      hintText: 'Ex: Voyage à Istanbul',
+                  GlassEffect(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nom du groupe',
+                        hintText: 'Ex: Voyage à Istanbul',
+                        border: InputBorder.none,
+                      ),
+                      textCapitalization: TextCapitalization.sentences,
                     ),
-                    textCapitalization: TextCapitalization.sentences,
                   ),
                   const SizedBox(height: 12),
-                  TextField(
-                    controller: _descController,
-                    decoration: const InputDecoration(
-                      labelText: 'Description (optionnelle)',
-                      hintText: 'Description du voyage...',
+                  GlassEffect(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _descController,
+                      decoration: const InputDecoration(
+                        labelText: 'Description (optionnelle)',
+                        hintText: 'Description du voyage...',
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 3,
+                      textCapitalization: TextCapitalization.sentences,
                     ),
-                    maxLines: 3,
-                    textCapitalization: TextCapitalization.sentences,
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(

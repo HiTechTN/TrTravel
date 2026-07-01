@@ -5,6 +5,8 @@ import '../constants/app_radius.dart';
 class AppTheme {
   AppTheme._();
 
+  static const _smoothCurve = Curves.easeInOutCubic;
+
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
@@ -146,6 +148,25 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
       ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: _SmoothPageTransitionBuilder(),
+          TargetPlatform.iOS: _SmoothPageTransitionBuilder(),
+        },
+      ),
+      dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+      ),
+      drawerTheme: const DrawerThemeData(
+        elevation: 0,
+      ),
     );
   }
 
@@ -164,6 +185,7 @@ class AppTheme {
       appBarTheme: const AppBarTheme(
         centerTitle: false,
         elevation: 0,
+        scrolledUnderElevation: 1,
         backgroundColor: AppColors.surfaceDark,
         foregroundColor: Colors.white,
       ),
@@ -185,6 +207,48 @@ class AppTheme {
         backgroundColor: AppColors.surfaceDark,
         indicatorColor: AppColors.primaryLight.withValues(alpha: 0.15),
       ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: _SmoothPageTransitionBuilder(),
+          TargetPlatform.iOS: _SmoothPageTransitionBuilder(),
+        },
+      ),
+      dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+      ),
+      drawerTheme: const DrawerThemeData(
+        elevation: 0,
+      ),
+    );
+  }
+}
+
+class _SmoothPageTransitionBuilder extends PageTransitionsBuilder {
+  const _SmoothPageTransitionBuilder();
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 300);
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
+      ),
+      child: child,
     );
   }
 }

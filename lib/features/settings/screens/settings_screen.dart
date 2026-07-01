@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/services/auth_service.dart';
 import 'package:trtravel/core/services/sync_service.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../services/settings_service.dart';
 import '../services/offline_map_service.dart';
@@ -17,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -109,12 +112,15 @@ class SettingsScreen extends StatelessWidget {
                   ]),
                   const SizedBox(height: 12),
                   _buildSection('📖 ${l.guide}', [
-                    ListTile(
-                      leading: const Icon(Icons.menu_book_rounded, color: Color(0xFF3B82F6)),
-                      title: Text(l.guide),
-                      subtitle: Text(l.guideSubtitle, style: const TextStyle(fontSize: 12)),
-                      trailing: const Icon(Icons.chevron_right),
+                    AnimatedCard(
+                      padding: EdgeInsets.zero,
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const GuideScreen())),
+                      child: ListTile(
+                        leading: const Icon(Icons.menu_book_rounded, color: Color(0xFF3B82F6)),
+                        title: Text(l.guide),
+                        subtitle: Text(l.guideSubtitle, style: const TextStyle(fontSize: 12)),
+                        trailing: const Icon(Icons.chevron_right),
+                      ),
                     ),
                   ]),
                   const SizedBox(height: 12),
@@ -148,8 +154,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildSection(String title, List<Widget> children) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return GlassEffect(
+      padding: const EdgeInsets.all(4),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),

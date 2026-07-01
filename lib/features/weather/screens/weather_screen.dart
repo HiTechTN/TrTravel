@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../data/weather_data.dart';
 
@@ -11,7 +13,7 @@ class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -36,10 +38,9 @@ class WeatherScreen extends StatelessWidget {
   }
 
   Widget _buildCityWeather(CityWeather weather) {
-    return Card(
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -107,8 +108,7 @@ class WeatherScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _weatherDetail(IconData icon, String value) {
@@ -123,10 +123,8 @@ class WeatherScreen extends StatelessWidget {
   }
 
   Widget _buildSeasonInfo() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return GlassEffect(
+      padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -151,7 +149,6 @@ class WeatherScreen extends StatelessWidget {
             )),
           ],
         ),
-      ),
-    );
+      );
   }
 }

@@ -3,6 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/utils/context_extensions.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
+import 'package:trtravel/features/ui_redesign/widgets/animated_card.dart';
+import 'package:trtravel/features/ui_redesign/widgets/shimmer_loading.dart';
 import 'package:trtravel/features/itinerary/services/itinerary_service.dart';
 import 'package:trtravel/features/itinerary/screens/trip_detail_screen.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
@@ -14,7 +18,7 @@ class ItineraryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(
         children: [
           GradientHeader(
@@ -27,7 +31,7 @@ class ItineraryListScreen extends StatelessWidget {
             child: Consumer<ItineraryService>(
               builder: (context, service, _) {
                 if (service.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const ShimmerList(itemCount: 5);
                 }
                 if (service.trips.isEmpty) {
                   return const EmptyState(
@@ -64,17 +68,11 @@ class _TripCard extends StatelessWidget {
     final startStr = '${trip.startDate.day.toString().padLeft(2, '0')}/${trip.startDate.month.toString().padLeft(2, '0')}/${trip.startDate.year}';
     final endStr = '${trip.endDate.day.toString().padLeft(2, '0')}/${trip.endDate.month.toString().padLeft(2, '0')}/${trip.endDate.year}';
 
-    return Card(
-      elevation: 0,
+    return AnimatedCard(
+      onTap: () => context.push(TripDetailScreen(tripId: trip.id)),
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.divider, width: 0.5),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => context.push(TripDetailScreen(tripId: trip.id)),
-        child: Column(
+      padding: EdgeInsets.zero,
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -139,8 +137,7 @@ class _TripCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

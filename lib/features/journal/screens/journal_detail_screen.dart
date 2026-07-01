@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
 import 'package:trtravel/core/constants/app_radius.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import '../services/journal_service.dart';
 import '../models/journal_entry.dart';
@@ -16,7 +18,7 @@ class JournalDetailScreen extends StatelessWidget {
     final months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
                     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-    return Scaffold(
+    return ModernScaffold(
       appBar: AppBar(
         title: Text(entry.title),
         actions: [
@@ -50,21 +52,24 @@ class JournalDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: AppColors.textSecondary),
-                const SizedBox(width: 6),
-                Text(
-                  '${entry.date.day} ${months[entry.date.month - 1]} ${entry.date.year}',
-                  style: const TextStyle(color: AppColors.textSecondary),
-                ),
-                if (entry.location != null) ...[
-                  const SizedBox(width: 16),
-                  const Icon(Icons.location_on, size: 16, color: AppColors.textSecondary),
+            GlassEffect(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  const Icon(Icons.calendar_today, size: 16, color: AppColors.textSecondary),
                   const SizedBox(width: 6),
-                  Text(entry.location!, style: const TextStyle(color: AppColors.textSecondary)),
+                  Text(
+                    '${entry.date.day} ${months[entry.date.month - 1]} ${entry.date.year}',
+                    style: const TextStyle(color: AppColors.textSecondary),
+                  ),
+                  if (entry.location != null) ...[
+                    const SizedBox(width: 16),
+                    const Icon(Icons.location_on, size: 16, color: AppColors.textSecondary),
+                    const SizedBox(width: 6),
+                    Text(entry.location!, style: const TextStyle(color: AppColors.textSecondary)),
+                  ],
                 ],
-              ],
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -73,22 +78,28 @@ class JournalDetailScreen extends StatelessWidget {
             ),
             if (entry.tags.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Wrap(
-                spacing: 6,
-                children: entry.tags.map((t) => Chip(label: Text(t))).toList(),
+              GlassEffect(
+                padding: const EdgeInsets.all(12),
+                child: Wrap(
+                  spacing: 6,
+                  children: entry.tags.map((t) => Chip(label: Text(t))).toList(),
+                ),
               ),
             ],
             if (entry.photoPaths.isNotEmpty) ...[
               const SizedBox(height: 16),
-              SizedBox(
-                height: 120,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: entry.photoPaths.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (_, i) => ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    child: Image.network(entry.photoPaths[i], width: 120, height: 120, fit: BoxFit.cover),
+              GlassEffect(
+                padding: const EdgeInsets.all(12),
+                child: SizedBox(
+                  height: 120,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: entry.photoPaths.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (_, i) => ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: Image.network(entry.photoPaths[i], width: 120, height: 120, fit: BoxFit.cover),
+                    ),
                   ),
                 ),
               ),

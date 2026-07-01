@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:trtravel/core/constants/app_colors.dart';
+import 'package:trtravel/features/ui_redesign/widgets/modern_scaffold.dart';
+import 'package:trtravel/features/ui_redesign/widgets/glass_effect.dart';
 import 'package:trtravel/l10n/app_localizations.dart';
 import 'package:trtravel/shared/widgets/gradient_header.dart';
 import '../models/map_place.dart';
@@ -221,7 +223,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
+    return ModernScaffold(
       body: Column(children: [
         GradientHeader(title: l.mapTitle, subtitle: l.mapSubtitle, icon: Icons.map_rounded, height: 110),
         _buildTopBar(l),
@@ -301,10 +303,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
   Widget _locationBanner() {
     final l = AppLocalizations.of(context);
-    return Card(
-      color: AppColors.secondary,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
+    return GlassEffect(
+      padding: const EdgeInsets.all(12),
         child: Row(children: [
           const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
           const SizedBox(width: 12),
@@ -315,8 +315,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             child: Text(l.retry, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ]),
-      ),
-    );
+      );
   }
 
   Widget _buildTopBar(AppLocalizations l) {
